@@ -566,7 +566,7 @@
             position: absolute;
             bottom: calc(20px + 500px + 15px); /* above desktop expanded map (500px hover size) */
             right: 20px;
-            max-width: 300px;
+            max-width: 360px;
             font-size: 0.9rem;
             z-index: 112;
             background: rgba(28,28,30,0.97);
@@ -1202,7 +1202,7 @@
             eastAsia: {
                 name: 'East Asia',
                 description: 'Japan, Korea, China, and surrounding regions',
-                bounds: { north: 46, south: 20, east: 146, west: 105 }
+                bounds: { north: 42, south: 20, east: 146, west: 105 }
             },
             australia: {
                 name: 'Australia',
@@ -1824,7 +1824,7 @@
             polylines = [];
             
             let attempts = 0;
-            const maxAttempts = 100; // Increased to find more diverse locations
+            const maxAttempts = 150; // Increased attempts with smaller radius to find urban locations
             
             while (attempts < maxAttempts) {
                 currentLocation = getRandomLocation(currentMapConfig.bounds);
@@ -1847,7 +1847,7 @@
                     const result = await new Promise((resolve, reject) => {
                         streetViewService.getPanorama({
                             location: currentLocation,
-                            radius: 100000, // Large radius to find more locations
+                            radius: 50000, // 50km radius - biases towards areas with denser Street View coverage (urban)
                             source: google.maps.StreetViewSource.OUTDOOR
                         }, (data, status) => {
                             if (status === 'OK') {
