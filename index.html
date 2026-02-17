@@ -434,6 +434,56 @@
             margin: 0;
         }
         
+        .timer-btn {
+            background: rgba(255,255,255,0.15);
+            border: 1px solid rgba(255,255,255,0.35);
+            color: #fff;
+            backdrop-filter: blur(8px);
+            border-radius: 6px;
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            transition: all 0.15s ease;
+        }
+        
+        .timer-btn:hover {
+            background: rgba(255,255,255,0.28);
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .timer-btn.timer-active {
+            background: var(--primary-green) !important;
+            border-color: var(--primary-green) !important;
+            color: #000 !important;
+        }
+        
+        #timerDisplay.timer-warning { color: #FF9500 !important; }
+        #timerDisplay.timer-critical {
+            color: #FF3B30 !important;
+            animation: timerPulse 0.5s ease-in-out infinite alternate;
+        }
+        
+        @keyframes timerPulse {
+            from { opacity: 1; }
+            to { opacity: 0.4; }
+        }
+        
+        /* Review panel - above map */
+        #reviewPanel {
+            position: absolute;
+            bottom: 130px;
+            right: 10px;
+            max-width: 250px;
+            font-size: 0.78rem;
+            z-index: 112;
+            background: rgba(28,28,30,0.97);
+            backdrop-filter: blur(12px);
+            border-radius: 10px;
+            padding: 0.75rem 1rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+        }
+
         .loading {
             text-align: center;
             padding: 2rem;
@@ -776,6 +826,15 @@
             <header>
                 <h1>GeoExplorer</h1>
                 <p class="subtitle">Test your geography knowledge</p>
+                <div style="margin-top: 1.5rem; display: flex; align-items: center; justify-content: center; gap: 0.75rem; flex-wrap: wrap;">
+                    <span style="color: rgba(255,255,255,0.9); font-size: 0.95rem; font-weight: 500; text-shadow: 0 1px 4px rgba(0,0,0,0.3);">⏱ Timer:</span>
+                    <div style="display: flex; gap: 0.5rem;" id="timerButtons">
+                        <button onclick="setTimer(0)"  id="timerBtn-0"   class="timer-btn timer-active" style="padding: 0.4rem 0.9rem; font-size: 0.85rem; min-width: unset;">Off</button>
+                        <button onclick="setTimer(60)" id="timerBtn-60"  class="timer-btn" style="padding: 0.4rem 0.9rem; font-size: 0.85rem; min-width: unset;">60s</button>
+                        <button onclick="setTimer(120)" id="timerBtn-120" class="timer-btn" style="padding: 0.4rem 0.9rem; font-size: 0.85rem; min-width: unset;">2m</button>
+                        <button onclick="setTimer(180)" id="timerBtn-180" class="timer-btn" style="padding: 0.4rem 0.9rem; font-size: 0.85rem; min-width: unset;">3m</button>
+                    </div>
+                </div>
             </header>
             
             <div style="text-align: center; margin-bottom: 2rem; display: flex; flex-direction: column; align-items: center; gap: 1rem;">
@@ -819,10 +878,16 @@
                     </div>
                     <div class="region-info" id="regionName"></div>
                 </div>
-                <div class="score-info" style="border-left: 2px solid var(--bg-light); padding-left: 0.5rem;">
-                    Score: <span id="totalScore">0</span>
+                <div style="display: flex; align-items: center; gap: 0.75rem;">
+                    <div id="timerDisplay" style="display: none; font-size: 1rem; font-weight: 700; color: #00D77E; font-variant-numeric: tabular-nums;"></div>
+                    <div class="score-info" style="border-left: 2px solid var(--bg-light); padding-left: 0.5rem;">
+                        Score: <span id="totalScore">0</span>
+                    </div>
                 </div>
             </div>
+            
+            <!-- Review panel - shows above map during game review -->
+            <div id="reviewPanel" style="display: none; position: absolute; z-index: 112; background: rgba(28,28,30,0.97); backdrop-filter: blur(12px); border-radius: 10px; padding: 0.75rem 1rem; box-shadow: 0 4px 20px rgba(0,0,0,0.5);"></div>
             
             <div class="game-area">
                 <div id="streetview"></div>
@@ -972,6 +1037,9 @@
         let initialPosition, initialPOV;
         let polylines = [];
         let allRoundData = []; // Store all rounds for review
+        let timerDuration = 0; // 0 = off
+        let timerInterval = null;
+        let timerRemaining = 0;
         let usedLocations = []; // Track locations used in current game to prevent duplicates
         let currentMapKey = '';
         const TOTAL_ROUNDS = 5;
@@ -1067,6 +1135,58 @@
             
             // Update history count display
             updateHistoryCount();
+        }
+        
+        function setTimer(seconds) {
+            timerDuration = seconds;
+            // Update button active states
+            document.querySelectorAll('.timer-btn').forEach(btn => btn.classList.remove('timer-active'));
+            document.getElementById(`timerBtn-${seconds}`).classList.add('timer-active');
+        }
+        
+        function startTimer() {
+            stopTimer();
+            if (timerDuration === 0) {
+                document.getElementById('timerDisplay').style.display = 'none';
+                return;
+            }
+            timerRemaining = timerDuration;
+            const display = document.getElementById('timerDisplay');
+            display.style.display = 'block';
+            display.className = '';
+            
+            const updateDisplay = () => {
+                const mins = Math.floor(timerRemaining / 60);
+                const secs = timerRemaining % 60;
+                display.textContent = mins > 0 
+                    ? `${mins}:${String(secs).padStart(2, '0')}`
+                    : `${secs}s`;
+                
+                if (timerRemaining <= 10) display.className = 'timer-critical';
+                else if (timerRemaining <= 30) display.className = 'timer-warning';
+                else display.className = '';
+            };
+            
+            updateDisplay();
+            timerInterval = setInterval(() => {
+                timerRemaining--;
+                updateDisplay();
+                if (timerRemaining <= 0) {
+                    stopTimer();
+                    // Auto-submit guess (even if no marker placed, submit from centre)
+                    if (!guessLocation) {
+                        guessLocation = new google.maps.LatLng(0, 0);
+                    }
+                    makeGuess();
+                }
+            }, 1000);
+        }
+        
+        function stopTimer() {
+            if (timerInterval) {
+                clearInterval(timerInterval);
+                timerInterval = null;
+            }
         }
         
         function updateHistoryCount() {
@@ -1182,6 +1302,8 @@
         }
         
         function backToMenu() {
+            stopTimer();
+            document.getElementById('timerDisplay').style.display = 'none';
             // Hide game screen
             document.getElementById('gameScreen').classList.remove('active');
             document.getElementById('menu-screen').style.display = 'block';
@@ -1211,6 +1333,7 @@
             
             // Ensure guess button is visible and remove finish review button
             document.getElementById('guessButton').style.display = 'block';
+            document.getElementById('reviewPanel').style.display = 'none';
             const finishReviewBtn = document.getElementById('finishReviewButton');
             if (finishReviewBtn) {
                 finishReviewBtn.remove();
@@ -1532,6 +1655,9 @@
                         updateCustomCompass(); // Update for new round
                     }
                     
+                    // Start timer for this round
+                    startTimer();
+                    
                     return;
                     
                 } catch (error) {
@@ -1626,6 +1752,10 @@
                 alert('Please click on the map to make a guess!');
                 return;
             }
+            
+            // Stop the timer
+            stopTimer();
+            document.getElementById('timerDisplay').style.display = 'none';
             
             // Disable map clicking after guess is made
             google.maps.event.clearListeners(map, 'click');
@@ -1819,6 +1949,27 @@
             document.getElementById('resultOverlay').classList.remove('active');
             document.getElementById('resultOverlay').style.display = 'none';
             
+            // Build and show the review panel above the map
+            const panel = document.getElementById('reviewPanel');
+            let panelHTML = `<div style="font-weight:700; color:#fff; margin-bottom:0.6rem; font-size:0.9rem; border-bottom:1px solid rgba(255,255,255,0.15); padding-bottom:0.4rem;">Round Summary</div>`;
+            let grandTotal = 0;
+            allRoundData.forEach(rd => {
+                grandTotal += rd.points;
+                const distStr = rd.distance < 1 ? `${(rd.distance * 1000).toFixed(0)} m` : `${rd.distance.toFixed(1)} km`;
+                panelHTML += `
+                    <div style="display:flex; justify-content:space-between; align-items:center; padding:0.35rem 0; border-bottom:1px solid rgba(255,255,255,0.07); gap:0.75rem;">
+                        <div style="color:rgba(255,255,255,0.6); white-space:nowrap;">Round ${rd.round}</div>
+                        <div style="color:rgba(255,255,255,0.85); white-space:nowrap;">${distStr}</div>
+                        <div style="color:var(--primary-green); font-weight:700; white-space:nowrap;">+${rd.points}</div>
+                    </div>`;
+            });
+            panelHTML += `<div style="display:flex; justify-content:space-between; padding-top:0.5rem; font-weight:700;">
+                <div style="color:#fff;">Total</div>
+                <div style="color:var(--primary-green);">${grandTotal}</div>
+            </div>`;
+            panel.innerHTML = panelHTML;
+            panel.style.display = 'block';
+            
             // Clear current markers and lines
             if (guessMarker) guessMarker.setMap(null);
             if (actualMarker) actualMarker.setMap(null);
@@ -1920,6 +2071,7 @@
                 finishButton.onclick = () => {
                     finishButton.remove();
                     document.getElementById('guessButton').style.display = 'block';
+                    document.getElementById('reviewPanel').style.display = 'none';
                     showFinalScore();
                 };
                 document.querySelector('.controls').appendChild(finishButton);
