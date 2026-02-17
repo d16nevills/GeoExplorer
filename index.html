@@ -323,6 +323,7 @@
             display: flex;
             gap: 1rem;
             z-index: 110;
+            transition: bottom 0.3s ease;
         }
         
         .return-start-btn {
@@ -676,6 +677,7 @@
                 transform: none;
                 gap: 0.5rem;
                 justify-content: flex-start;
+                transition: bottom 0.3s ease;
             }
             
             button {
@@ -1208,19 +1210,22 @@
             
             if (isMobile) {
                 if (expanded) {
-                    // Map is 30vh tall, bottom: 10px → top of map = 10px + 30vh from bottom
+                    // Map expanded: 30vh height, bottom: 10px
+                    // Top of map from bottom = 30vh + 10px
                     const mapTopFromBottom = window.innerHeight * 0.30 + 10;
+                    // Compass sits just above the map
                     compass.style.bottom = (mapTopFromBottom + 10) + 'px';
+                    // Button also sits just above the map
                     if (controls) controls.style.bottom = (mapTopFromBottom + 10) + 'px';
                 } else {
-                    compass.style.bottom = '120px'; // above 100px condensed map
+                    compass.style.bottom = '120px';
                     if (controls) controls.style.bottom = '10px';
                 }
             } else {
                 if (expanded) {
-                    compass.style.bottom = '530px'; // 20px + 500px + 10px
+                    compass.style.bottom = '530px';
                 } else {
-                    compass.style.bottom = '280px'; // 20px + 250px + 10px
+                    compass.style.bottom = '280px';
                 }
             }
         }
