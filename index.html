@@ -212,7 +212,7 @@
         /* Custom compass that we control */
         .custom-compass {
             position: fixed;
-            top: 80px;
+            top: 20px;
             right: 20px;
             width: 50px;
             height: 50px;
@@ -222,22 +222,25 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 24px;
-            font-weight: bold;
-            color: #EA4335;
             z-index: 9999;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: opacity 0.2s ease;
             opacity: 0.7;
         }
         
         .custom-compass:hover {
             opacity: 1;
-            transform: scale(1.1);
         }
         
+        /* Compass needle - red arrow pointing up */
         .custom-compass::before {
-            content: 'N';
+            content: '';
+            width: 0;
+            height: 0;
+            border-left: 6px solid transparent;
+            border-right: 6px solid transparent;
+            border-bottom: 20px solid #EA4335;
+            position: absolute;
         }
         
         .controls {
@@ -646,14 +649,20 @@
                 font-size: 0.85rem;
             }
             
-            /* Custom compass positioning for mobile */
+            /* Custom compass positioning for mobile - slightly above condensed map */
             .custom-compass {
-                top: 25vh;
+                top: auto;
+                bottom: 125px;
                 right: 20px;
                 width: 45px;
                 height: 45px;
-                font-size: 20px;
                 opacity: 0.6;
+            }
+            
+            .custom-compass::before {
+                border-left: 5px solid transparent;
+                border-right: 5px solid transparent;
+                border-bottom: 18px solid #EA4335;
             }
             
             /* Hide map controls on mobile */
