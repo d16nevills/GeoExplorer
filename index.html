@@ -29,34 +29,65 @@
             color: var(--text-light);
             min-height: 100vh;
             overflow-x: hidden;
-        }
-        
-        #menu-screen {
-            min-height: 100vh;
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            background-image: url(''); /* set by JS */
-            position: relative;
-        }
-        
-        #menu-screen::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.35);
-            z-index: 0;
-        }
-        
-        #menu-screen .container {
-            position: relative;
-            z-index: 1;
+            margin: 0;
+            padding: 0;
         }
         
         .container {
             max-width: 1400px;
             margin: 0 auto;
             padding: 2rem;
+        }
+        
+        #menu-screen {
+            position: fixed;
+            inset: 0;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            overflow-y: auto;
+            z-index: 10;
+        }
+        
+        #menu-screen::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.35);
+            z-index: 0;
+            pointer-events: none;
+        }
+        
+        .menu-inner {
+            position: relative;
+            z-index: 1;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        #high-scores-screen {
+            position: fixed;
+            inset: 0;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            overflow-y: auto;
+            z-index: 10;
+        }
+        
+        #high-scores-screen::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.4);
+            z-index: 0;
+            pointer-events: none;
+        }
+        
+        #high-scores-screen .menu-inner {
+            position: relative;
+            z-index: 1;
         }
         
         header {
@@ -725,8 +756,8 @@
     </script>
 </head>
 <body>
-    <div class="container">
-        <div id="menu-screen">
+    <div id="menu-screen">
+        <div class="menu-inner">
             <header>
                 <h1>GeoExplorer</h1>
                 <p class="subtitle">Test your geography knowledge</p>
@@ -746,16 +777,17 @@
             
             <div class="map-selection" id="mapSelection"></div>
         </div>
-        
-        <div id="high-scores-screen" style="display: none; min-height: 100vh; position: relative; background-size: cover; background-position: center;" id="high-scores-screen">
-            <div style="position: absolute; inset: 0; background: rgba(0,0,0,0.4);"></div>
-            <div style="position: relative; z-index: 1; padding: 2rem;">
+    </div>
+    
+    <div id="high-scores-screen" style="display: none;">
+        <div class="menu-inner">
             <button onclick="closeHighScores()" style="margin-bottom: 2rem;">← Back to Menu</button>
             <h2 style="font-size: 2.5rem; margin-bottom: 2rem; text-align: center; text-shadow: 0 2px 8px rgba(0,0,0,0.4);">High Scores</h2>
             <div id="highScoresList" style="max-width: 600px; margin: 0 auto;"></div>
-            </div>
         </div>
-        
+    </div>
+    
+    <div class="container">
         <div class="game-container" id="gameScreen">
             <button class="back-button" onclick="backToMenu()">← Back to Maps</button>
             <button class="mobile-home-btn" onclick="backToMenu()">
@@ -789,7 +821,7 @@
             
             <button class="return-start-btn" onclick="returnToStart()">↺ Return to Start</button>
         </div>
-    </div>
+    </div><!-- end .container -->
     
     <div class="result-overlay" id="resultOverlay">
         <div class="result-content">
