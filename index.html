@@ -469,19 +469,29 @@
             to { opacity: 0.4; }
         }
         
-        /* Review panel - above map */
+        /* Review panel - above EXPANDED map */
         #reviewPanel {
             position: absolute;
-            bottom: 130px;
-            right: 10px;
-            max-width: 250px;
-            font-size: 0.78rem;
+            bottom: calc(20px + 500px + 15px); /* above desktop expanded map (500px hover size) */
+            right: 20px;
+            max-width: 300px;
+            font-size: 0.9rem;
             z-index: 112;
             background: rgba(28,28,30,0.97);
             backdrop-filter: blur(12px);
             border-radius: 10px;
             padding: 0.75rem 1rem;
             box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+        }
+        
+        @media (max-width: 768px) {
+            #reviewPanel {
+                bottom: calc(10px + 30vh + 10px); /* above mobile expanded map (30vh) */
+                right: 10px;
+                left: 10px;
+                max-width: none;
+                font-size: 0.8rem;
+            }
         }
 
         .loading {
@@ -829,10 +839,10 @@
                 <div style="margin-top: 1.5rem; display: flex; align-items: center; justify-content: center; gap: 0.75rem; flex-wrap: wrap;">
                     <span style="color: rgba(255,255,255,0.9); font-size: 0.95rem; font-weight: 500; text-shadow: 0 1px 4px rgba(0,0,0,0.3);">⏱ Timer:</span>
                     <div style="display: flex; gap: 0.5rem;" id="timerButtons">
-                        <button onclick="setTimer(0)"  id="timerBtn-0"   class="timer-btn timer-active" style="padding: 0.4rem 0.9rem; font-size: 0.85rem; min-width: unset;">Off</button>
-                        <button onclick="setTimer(60)" id="timerBtn-60"  class="timer-btn" style="padding: 0.4rem 0.9rem; font-size: 0.85rem; min-width: unset;">60s</button>
-                        <button onclick="setTimer(120)" id="timerBtn-120" class="timer-btn" style="padding: 0.4rem 0.9rem; font-size: 0.85rem; min-width: unset;">2m</button>
-                        <button onclick="setTimer(180)" id="timerBtn-180" class="timer-btn" style="padding: 0.4rem 0.9rem; font-size: 0.85rem; min-width: unset;">3m</button>
+                        <button onclick="setTimer(0)"   id="timerBtn-0"   class="timer-btn timer-active" style="padding: 0.4rem 0.9rem; font-size: 0.85rem; min-width: unset;">Off</button>
+                        <button onclick="setTimer(60)"  id="timerBtn-60"  class="timer-btn" style="padding: 0.4rem 0.9rem; font-size: 0.85rem; min-width: unset;">1 min</button>
+                        <button onclick="setTimer(300)" id="timerBtn-300" class="timer-btn" style="padding: 0.4rem 0.9rem; font-size: 0.85rem; min-width: unset;">5 min</button>
+                        <button onclick="setTimer(600)" id="timerBtn-600" class="timer-btn" style="padding: 0.4rem 0.9rem; font-size: 0.85rem; min-width: unset;">10 min</button>
                     </div>
                 </div>
             </header>
@@ -878,13 +888,13 @@
                     </div>
                     <div class="region-info" id="regionName"></div>
                 </div>
-                <div style="display: flex; align-items: center; gap: 0.75rem;">
-                    <div id="timerDisplay" style="display: none; font-size: 1rem; font-weight: 700; color: #00D77E; font-variant-numeric: tabular-nums;"></div>
-                    <div class="score-info" style="border-left: 2px solid var(--bg-light); padding-left: 0.5rem;">
-                        Score: <span id="totalScore">0</span>
-                    </div>
+                <div class="score-info" style="border-left: 2px solid var(--bg-light); padding-left: 0.5rem;">
+                    Score: <span id="totalScore">0</span>
                 </div>
             </div>
+            
+            <!-- Timer bubble - separate from header -->
+            <div id="timerDisplay" style="display: none; position: absolute; top: 80px; left: 50%; transform: translateX(-50%); background: rgba(28,28,30,0.95); backdrop-filter: blur(10px); border-radius: 20px; padding: 0.35rem 1rem; font-size: 1rem; font-weight: 700; color: #00D77E; z-index: 110; font-variant-numeric: tabular-nums; box-shadow: 0 2px 10px rgba(0,0,0,0.3); white-space: nowrap;"></div>
             
             <!-- Review panel - shows above map during game review -->
             <div id="reviewPanel" style="display: none; position: absolute; z-index: 112; background: rgba(28,28,30,0.97); backdrop-filter: blur(12px); border-radius: 10px; padding: 0.75rem 1rem; box-shadow: 0 4px 20px rgba(0,0,0,0.5);"></div>
@@ -1330,6 +1340,8 @@
             const mapElement = document.getElementById('map');
             mapElement.classList.remove('expanded');
             mapElement.classList.remove('mobile-expanded');
+            mapElement.style.width = '';
+            mapElement.style.height = '';
             
             // Ensure guess button is visible and remove finish review button
             document.getElementById('guessButton').style.display = 'block';
@@ -2052,12 +2064,15 @@
             // Fit map to show all markers
             map.fitBounds(bounds, { padding: 80 });
             
-            // Keep map expanded
+            // Keep map permanently expanded during review
             const mapElement = document.getElementById('map');
             if (window.innerWidth > 768) {
                 mapElement.classList.add('expanded');
+                mapElement.style.width = '600px';
+                mapElement.style.height = '500px';
             } else {
                 mapElement.classList.add('mobile-expanded');
+                mapElement.style.height = '30vh';
             }
             
             // Keep guess button hidden and show finish review button
@@ -2072,6 +2087,10 @@
                     finishButton.remove();
                     document.getElementById('guessButton').style.display = 'block';
                     document.getElementById('reviewPanel').style.display = 'none';
+                    // Reset forced map size
+                    const mapEl = document.getElementById('map');
+                    mapEl.style.width = '';
+                    mapEl.style.height = '';
                     showFinalScore();
                 };
                 document.querySelector('.controls').appendChild(finishButton);
