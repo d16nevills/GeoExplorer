@@ -350,6 +350,15 @@
             }
         }
         
+        @keyframes fadeOut {
+            from {
+                opacity: 1;
+            }
+            to {
+                opacity: 0;
+            }
+        }
+        
         @keyframes slideUp {
             from {
                 transform: translateY(50px);
@@ -399,76 +408,111 @@
             }
             
             .game-header {
-                flex-direction: column;
-                gap: 0.3rem;
-                padding: 0.6rem 1rem;
+                flex-direction: row;
+                gap: 0.5rem;
+                padding: 0.5rem 0.8rem;
                 top: 10px;
-                font-size: 0.85rem;
+                font-size: 0.75rem;
                 left: 10px;
                 right: 10px;
                 transform: none;
+                flex-wrap: wrap;
+                justify-content: center;
             }
             
             .score-info {
-                font-size: 0.95rem;
-            }
-            
-            .round-info, .region-info {
-                border-left: none;
-                padding-left: 0;
                 font-size: 0.85rem;
             }
             
+            .round-info, .region-info {
+                border-left: 1px solid var(--bg-light);
+                padding-left: 0.5rem;
+                font-size: 0.75rem;
+            }
+            
             #map {
-                width: 180px;
-                height: 150px;
-                bottom: 10px;
+                width: 120px;
+                height: 100px;
+                bottom: 70px;
                 right: 10px;
+                border-radius: 8px;
             }
             
             #map:hover {
-                width: 180px;
-                height: 150px;
+                width: 120px;
+                height: 100px;
             }
             
             #map.expanded {
-                width: 180px;
-                height: 150px;
+                width: 120px;
+                height: 100px;
             }
             
             #map.expanded:hover {
-                width: 180px;
-                height: 150px;
+                width: 120px;
+                height: 100px;
+            }
+            
+            #map.mobile-expanded {
+                width: calc(100vw - 20px);
+                height: 50vh;
+                bottom: 70px;
+                right: 10px;
+                left: 10px;
+                z-index: 115;
+            }
+            
+            #map.mobile-expanded:hover {
+                width: calc(100vw - 20px);
+                height: 50vh;
             }
             
             .controls {
                 bottom: 10px;
-                flex-direction: column;
+                left: 60px;
+                right: 10px;
+                transform: none;
                 gap: 0.5rem;
             }
             
             button {
-                padding: 0.75rem 1.5rem;
-                font-size: 0.95rem;
+                padding: 0.7rem 1.2rem;
+                font-size: 0.9rem;
             }
             
             .return-start-btn {
-                bottom: auto;
-                top: 90px;
+                position: absolute;
+                bottom: 10px;
                 left: 10px;
-                padding: 0.6rem 1rem;
-                font-size: 0.85rem;
+                padding: 0.7rem;
+                font-size: 1.2rem;
+                width: 44px;
+                height: 44px;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 0;
+            }
+            
+            .return-start-btn::before {
+                content: '↺';
+                font-size: 1.4rem;
+            }
+            
+            #guessButton {
+                margin-left: 54px;
             }
             
             .back-button {
                 top: 10px;
                 left: 10px;
-                padding: 0.6rem 1rem;
-                font-size: 0.85rem;
+                padding: 0.5rem 0.8rem;
+                font-size: 0.8rem;
             }
             
             .result-overlay {
-                top: 120px;
+                top: 80px;
                 max-width: calc(100% - 20px);
                 left: 10px;
                 right: 10px;
@@ -476,19 +520,23 @@
             }
             
             .result-content {
-                padding: 1.2rem 1.5rem;
+                padding: 1rem 1.2rem;
+                border-radius: 12px;
             }
             
             .result-content h2 {
-                font-size: 1.3rem;
+                font-size: 1.2rem;
+                margin-bottom: 0.8rem;
             }
             
             .distance-info {
-                font-size: 1rem;
+                font-size: 0.9rem;
+                margin: 0.3rem 0;
             }
             
             .points-info {
-                font-size: 1.3rem;
+                font-size: 1.2rem;
+                margin: 0.3rem 0 1rem 0;
             }
             
             .result-buttons {
@@ -498,8 +546,8 @@
             
             .result-buttons button {
                 width: 100%;
-                padding: 0.75rem;
-                font-size: 0.9rem;
+                padding: 0.7rem;
+                font-size: 0.85rem;
             }
         }
     </style>
@@ -858,79 +906,56 @@
         }
         
         function setupMobileMapToggle() {
-            // Add tap to expand/collapse on mobile
-            const mapElement = document.getElementById('map');
-            let tapCount = 0;
-            let tapTimer;
+            // Only run on mobile
+            if (window.innerWidth > 768) return;
             
-            mapElement.addEventListener('touchend', (e) => {
-                // Prevent default to avoid interfering with map interactions
-                if (mapElement.classList.contains('mobile-expanded')) {
-                    return; // Let map handle touches when expanded
+            const mapElement = document.getElementById('map');
+            const streetViewElement = document.getElementById('streetview');
+            
+            // Tap on map to expand
+            mapElement.addEventListener('touchstart', (e) => {
+                if (!mapElement.classList.contains('mobile-expanded')) {
+                    e.stopPropagation();
+                    mapElement.classList.add('mobile-expanded');
+                    google.maps.event.trigger(map, 'resize');
                 }
-                
-                tapCount++;
-                
-                if (tapCount === 1) {
-                    tapTimer = setTimeout(() => {
-                        // Single tap - expand map
-                        if (!mapElement.classList.contains('mobile-expanded')) {
-                            mapElement.classList.add('mobile-expanded');
-                            // Trigger resize event so Google Maps knows to redraw
-                            google.maps.event.trigger(map, 'resize');
-                        }
-                        tapCount = 0;
-                    }, 300);
-                } else if (tapCount === 2) {
-                    // Double tap - collapse map
-                    clearTimeout(tapTimer);
-                    if (mapElement.classList.contains('mobile-expanded')) {
-                        mapElement.classList.remove('mobile-expanded');
-                        google.maps.event.trigger(map, 'resize');
-                    }
-                    tapCount = 0;
+            });
+            
+            // Tap on Street View to collapse map
+            streetViewElement.addEventListener('touchstart', (e) => {
+                if (mapElement.classList.contains('mobile-expanded')) {
+                    mapElement.classList.remove('mobile-expanded');
+                    google.maps.event.trigger(map, 'resize');
                 }
             });
             
             // Add visual indicator for mobile users
-            if (window.innerWidth <= 768) {
-                const indicator = document.createElement('div');
-                indicator.id = 'map-tap-indicator';
-                indicator.innerHTML = 'Tap to expand';
-                indicator.style.cssText = `
-                    position: absolute;
-                    bottom: 165px;
-                    right: 15px;
-                    background: rgba(0, 215, 126, 0.9);
-                    color: #000;
-                    padding: 0.4rem 0.8rem;
-                    border-radius: 6px;
-                    font-size: 0.75rem;
-                    font-weight: 600;
-                    z-index: 106;
-                    pointer-events: none;
-                    animation: fadeOut 3s ease-out 2s forwards;
-                `;
-                
-                // Add fade out animation
-                const style = document.createElement('style');
-                style.textContent = `
-                    @keyframes fadeOut {
-                        from { opacity: 1; }
-                        to { opacity: 0; display: none; }
-                    }
-                `;
-                document.head.appendChild(style);
-                
-                document.querySelector('.game-area').appendChild(indicator);
-                
-                // Remove indicator after animation
-                setTimeout(() => {
-                    if (indicator.parentNode) {
-                        indicator.remove();
-                    }
-                }, 5000);
-            }
+            const indicator = document.createElement('div');
+            indicator.id = 'map-tap-indicator';
+            indicator.innerHTML = 'Tap map to expand';
+            indicator.style.cssText = `
+                position: absolute;
+                bottom: 175px;
+                right: 15px;
+                background: rgba(0, 215, 126, 0.95);
+                color: #000;
+                padding: 0.35rem 0.7rem;
+                border-radius: 6px;
+                font-size: 0.7rem;
+                font-weight: 600;
+                z-index: 106;
+                pointer-events: none;
+                animation: fadeOut 2s ease-out 1s forwards;
+            `;
+            
+            document.querySelector('.game-area').appendChild(indicator);
+            
+            // Remove indicator after animation
+            setTimeout(() => {
+                if (indicator.parentNode) {
+                    indicator.remove();
+                }
+            }, 3000);
         }
         
         function getRandomLocation(bounds) {
