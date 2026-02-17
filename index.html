@@ -192,15 +192,16 @@
             height: 500px;
         }
         
-        /* Position Street View compass directly above the map and make it subtle */
+        /* Position Street View compass in top left on desktop */
         .gm-svpc {
-            position: absolute !important;
-            bottom: 280px !important;
-            right: 30px !important;
-            top: auto !important;
-            left: auto !important;
+            position: fixed !important;
+            top: 80px !important;
+            left: 20px !important;
+            bottom: auto !important;
+            right: auto !important;
             opacity: 0.7 !important;
             transform: scale(0.9) !important;
+            z-index: 108 !important;
         }
         
         .gm-svpc:hover {
@@ -512,39 +513,32 @@
                 bottom: auto;
                 top: 10px;
                 left: 10px;
-                padding: 0;
                 width: 40px;
                 height: 40px;
                 border-radius: 50%;
-                display: flex;
+                display: inline-flex;
                 align-items: center;
                 justify-content: center;
                 z-index: 111;
-                line-height: 1;
                 font-size: 0 !important;
-                overflow: hidden;
                 text-indent: -9999px;
+                white-space: nowrap;
             }
             
             .return-start-btn::before {
                 content: '↺';
-                font-size: 1.6rem;
+                font-size: 1.7rem;
                 font-weight: 700;
-                display: flex;
-                align-items: center;
-                justify-content: center;
                 text-indent: 0;
-                position: absolute;
-                width: 100%;
-                height: 100%;
+                line-height: 0;
+                display: inline-block;
             }
             
             .mobile-home-btn {
-                display: flex;
+                display: inline-flex;
                 position: absolute;
                 top: 10px;
                 right: 10px;
-                padding: 0;
                 width: 40px;
                 height: 40px;
                 border-radius: 50%;
@@ -556,20 +550,18 @@
                 color: var(--text-light);
                 border: none;
                 cursor: pointer;
-                line-height: 1;
-                overflow: hidden;
+                font-size: 0 !important;
+                text-indent: -9999px;
+                white-space: nowrap;
             }
             
             .mobile-home-btn::before {
                 content: '⌂';
-                font-size: 1.6rem;
+                font-size: 1.7rem;
                 font-weight: 700;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                position: absolute;
-                width: 100%;
-                height: 100%;
+                text-indent: 0;
+                line-height: 0;
+                display: inline-block;
             }
             
             .mobile-home-btn:hover {
@@ -619,14 +611,16 @@
                 font-size: 0.85rem;
             }
             
-            /* Position compass directly above collapsed map on mobile */
+            /* Position compass quarter way up screen on mobile */
             .gm-svpc {
-                bottom: 180px !important;
-                right: 20px !important;
-                top: auto !important;
-                left: auto !important;
+                position: fixed !important;
+                top: 25vh !important;
+                left: 20px !important;
+                bottom: auto !important;
+                right: auto !important;
                 opacity: 0.6 !important;
                 transform: scale(0.85) !important;
+                z-index: 108 !important;
             }
             
             /* Hide map controls on mobile */
@@ -647,8 +641,11 @@
             </header>
             
             <div style="text-align: center; margin-bottom: 2rem;">
-                <button class="secondary" style="padding: 0.75rem 1.5rem; font-size: 0.9rem;" onclick="clearLocationHistory()">
+                <button class="secondary" style="padding: 0.75rem 1.5rem; font-size: 0.9rem; margin-right: 1rem;" onclick="clearLocationHistory()">
                     Clear Location History
+                </button>
+                <button style="padding: 0.75rem 1.5rem; font-size: 0.9rem;" onclick="showHighScores()">
+                    View High Scores
                 </button>
                 <p style="font-size: 0.85rem; color: var(--text-gray); margin-top: 0.75rem;">
                     <span id="historyCount">0</span> locations remembered
@@ -656,6 +653,12 @@
             </div>
             
             <div class="map-selection" id="mapSelection"></div>
+        </div>
+        
+        <div id="high-scores-screen" style="display: none;">
+            <button onclick="closeHighScores()" style="margin-bottom: 2rem;">← Back to Menu</button>
+            <h2 style="font-size: 2.5rem; margin-bottom: 2rem; text-align: center;">High Scores</h2>
+            <div id="highScoresList" style="max-width: 600px; margin: 0 auto;"></div>
         </div>
         
         <div class="game-container" id="gameScreen">
@@ -938,6 +941,48 @@
             }
         }
         
+        function showHighScores() {
+            document.getElementById('menu-screen').style.display = 'none';
+            document.getElementById('high-scores-screen').style.display = 'block';
+            
+            const container = document.getElementById('highScoresList');
+            const highScores = localStorage.getItem('geoexplorer_high_scores');
+            const scores = highScores ? JSON.parse(highScores) : {};
+            
+            if (Object.keys(scores).length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: var(--text-gray); margin-top: 2rem;">No high scores yet. Play some games to set records!</p>';
+                return;
+            }
+            
+            // Sort scores by value (highest first)
+            const sortedScores = Object.entries(scores)
+                .map(([key, score]) => ({ key, score, name: MAP_CONFIGS[key]?.name || key }))
+                .sort((a, b) => b.score - a.score);
+            
+            let html = '<div style="display: flex; flex-direction: column; gap: 1rem;">';
+            sortedScores.forEach(({ name, score }) => {
+                const maxScore = 5000 * TOTAL_ROUNDS;
+                const percentage = ((score / maxScore) * 100).toFixed(1);
+                html += `
+                    <div style="background: var(--bg-light); padding: 1.5rem; border-radius: 12px; display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <div style="font-size: 1.2rem; font-weight: 600; color: var(--text-light); margin-bottom: 0.3rem;">${name}</div>
+                            <div style="font-size: 0.9rem; color: var(--text-gray);">${percentage}% Perfect</div>
+                        </div>
+                        <div style="font-size: 1.5rem; font-weight: 700; color: var(--primary-green);">${score}</div>
+                    </div>
+                `;
+            });
+            html += '</div>';
+            
+            container.innerHTML = html;
+        }
+        
+        function closeHighScores() {
+            document.getElementById('high-scores-screen').style.display = 'none';
+            document.getElementById('menu-screen').style.display = 'block';
+        }
+        
         function startGame(mapKey) {
             currentMapConfig = MAP_CONFIGS[mapKey];
             currentMapKey = mapKey;
@@ -1024,7 +1069,8 @@
                 mapTypeControl: false,
                 streetViewControl: false,
                 fullscreenControl: false,
-                scaleControl: false
+                scaleControl: false,
+                gestureHandling: 'greedy'
             };
             
             map = new google.maps.Map(document.getElementById('map'), mapOptions);
@@ -1045,6 +1091,44 @@
             map.addListener('click', (e) => {
                 placeGuessMarker(e.latLng);
             });
+        }
+        
+        function forceCompassPosition() {
+            // Forcefully position the compass in the correct location
+            setTimeout(() => {
+                const compass = document.querySelector('.gm-svpc');
+                if (compass) {
+                    const isMobile = window.innerWidth <= 768;
+                    compass.style.setProperty('position', 'fixed', 'important');
+                    compass.style.setProperty('z-index', '108', 'important');
+                    compass.style.setProperty('opacity', isMobile ? '0.6' : '0.7', 'important');
+                    compass.style.setProperty('transform', isMobile ? 'scale(0.85)' : 'scale(0.9)', 'important');
+                    
+                    if (isMobile) {
+                        compass.style.setProperty('top', '25vh', 'important');
+                        compass.style.setProperty('left', '20px', 'important');
+                    } else {
+                        compass.style.setProperty('top', '80px', 'important');
+                        compass.style.setProperty('left', '20px', 'important');
+                    }
+                    
+                    compass.style.setProperty('bottom', 'auto', 'important');
+                    compass.style.setProperty('right', 'auto', 'important');
+                    
+                    // Watch for Google Maps trying to reposition the compass
+                    if (!compass.hasAttribute('data-observer-set')) {
+                        compass.setAttribute('data-observer-set', 'true');
+                        const observer = new MutationObserver(() => {
+                            const currentTop = compass.style.top;
+                            const expectedTop = isMobile ? '25vh' : '80px';
+                            if (currentTop !== expectedTop) {
+                                forceCompassPosition();
+                            }
+                        });
+                        observer.observe(compass, { attributes: true, attributeFilter: ['style'] });
+                    }
+                }
+            }, 500);
         }
         
         function setupMobileMapToggle() {
@@ -1229,18 +1313,9 @@
                             }
                         );
                         
-                        // Position compass above map after Street View loads
+                        // Force compass positioning after Street View loads
                         google.maps.event.addListenerOnce(streetView, 'position_changed', () => {
-                            setTimeout(() => {
-                                const compass = document.querySelector('.gm-svpc');
-                                if (compass) {
-                                    const isMobile = window.innerWidth <= 768;
-                                    compass.style.bottom = isMobile ? '180px' : '280px';
-                                    compass.style.right = isMobile ? '20px' : '30px';
-                                    compass.style.top = 'auto';
-                                    compass.style.left = 'auto';
-                                }
-                            }, 100);
+                            forceCompassPosition();
                         });
                     } else {
                         streetView.setPosition(currentLocation);
@@ -1251,16 +1326,7 @@
                         });
                         
                         // Reposition compass for new round
-                        setTimeout(() => {
-                            const compass = document.querySelector('.gm-svpc');
-                            if (compass) {
-                                const isMobile = window.innerWidth <= 768;
-                                compass.style.bottom = isMobile ? '180px' : '280px';
-                                compass.style.right = isMobile ? '20px' : '30px';
-                                compass.style.top = 'auto';
-                                compass.style.left = 'auto';
-                            }
-                        }, 100);
+                        forceCompassPosition();
                     }
                     
                     return;
