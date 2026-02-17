@@ -192,7 +192,7 @@
             height: 500px;
         }
         
-        /* Position Street View compass above the map and make it subtle */
+        /* Position Street View compass directly above the map and make it subtle */
         .gm-svpc {
             position: absolute !important;
             bottom: 280px !important;
@@ -528,10 +528,15 @@
             
             .return-start-btn::before {
                 content: '↺';
-                font-size: 1.3rem;
-                display: block;
+                font-size: 1.6rem;
+                font-weight: 700;
+                display: flex;
+                align-items: center;
+                justify-content: center;
                 text-indent: 0;
                 position: absolute;
+                width: 100%;
+                height: 100%;
             }
             
             .mobile-home-btn {
@@ -552,12 +557,19 @@
                 border: none;
                 cursor: pointer;
                 line-height: 1;
+                overflow: hidden;
             }
             
             .mobile-home-btn::before {
                 content: '⌂';
-                font-size: 1.3rem;
-                display: block;
+                font-size: 1.6rem;
+                font-weight: 700;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                position: absolute;
+                width: 100%;
+                height: 100%;
             }
             
             .mobile-home-btn:hover {
@@ -607,12 +619,21 @@
                 font-size: 0.85rem;
             }
             
-            /* Position compass above collapsed map on mobile */
+            /* Position compass directly above collapsed map on mobile */
             .gm-svpc {
                 bottom: 180px !important;
                 right: 20px !important;
+                top: auto !important;
+                left: auto !important;
                 opacity: 0.6 !important;
                 transform: scale(0.85) !important;
+            }
+            
+            /* Hide map controls on mobile */
+            #map .gm-bundled-control,
+            #map .gm-style-mtc,
+            #map .gmnoprint {
+                display: none !important;
             }
         }
     </style>
@@ -993,13 +1014,17 @@
         }
         
         function initializeGame() {
+            const isMobile = window.innerWidth <= 768;
+            
             const mapOptions = {
                 center: { lat: 20, lng: 0 },
                 zoom: 2,
                 disableDefaultUI: false,
-                zoomControl: true,
+                zoomControl: !isMobile,
                 mapTypeControl: false,
-                streetViewControl: false
+                streetViewControl: false,
+                fullscreenControl: false,
+                scaleControl: false
             };
             
             map = new google.maps.Map(document.getElementById('map'), mapOptions);
@@ -1203,6 +1228,20 @@
                                 motionTrackingControl: false
                             }
                         );
+                        
+                        // Position compass above map after Street View loads
+                        google.maps.event.addListenerOnce(streetView, 'position_changed', () => {
+                            setTimeout(() => {
+                                const compass = document.querySelector('.gm-svpc');
+                                if (compass) {
+                                    const isMobile = window.innerWidth <= 768;
+                                    compass.style.bottom = isMobile ? '180px' : '280px';
+                                    compass.style.right = isMobile ? '20px' : '30px';
+                                    compass.style.top = 'auto';
+                                    compass.style.left = 'auto';
+                                }
+                            }, 100);
+                        });
                     } else {
                         streetView.setPosition(currentLocation);
                         streetView.setPov(initialPOV);
@@ -1210,6 +1249,18 @@
                             zoomControl: false,
                             fullscreenControl: false
                         });
+                        
+                        // Reposition compass for new round
+                        setTimeout(() => {
+                            const compass = document.querySelector('.gm-svpc');
+                            if (compass) {
+                                const isMobile = window.innerWidth <= 768;
+                                compass.style.bottom = isMobile ? '180px' : '280px';
+                                compass.style.right = isMobile ? '20px' : '30px';
+                                compass.style.top = 'auto';
+                                compass.style.left = 'auto';
+                            }
+                        }, 100);
                     }
                     
                     return;
