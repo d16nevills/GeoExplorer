@@ -81,6 +81,86 @@
             padding: 2rem;
         }
         
+        /* Corner buttons for homepage */
+        .corner-btn {
+            position: absolute;
+            top: 20px;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: #fff;
+            padding: 0.6rem 1.2rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            z-index: 10;
+        }
+        
+        .corner-btn:hover {
+            background: rgba(255, 255, 255, 0.25);
+            border-color: rgba(255, 255, 255, 0.5);
+            transform: translateY(-2px);
+        }
+        
+        .corner-btn-left {
+            left: 20px;
+        }
+        
+        .corner-btn-right {
+            right: 20px;
+        }
+        
+        .corner-btn svg {
+            flex-shrink: 0;
+        }
+        
+        /* Timer card */
+        .timer-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            padding: 1.25rem 1.5rem;
+            margin: 2rem auto 1.5rem;
+            max-width: 500px;
+        }
+        
+        .timer-card-header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            color: rgba(255, 255, 255, 0.95);
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            text-shadow: 0 1px 4px rgba(0,0,0,0.3);
+        }
+        
+        .timer-options {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0.5rem;
+        }
+        
+        .location-count {
+            text-align: center;
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 2rem;
+            text-shadow: 0 1px 4px rgba(0,0,0,0.3);
+        }
+        
+        .location-count span {
+            font-weight: 700;
+            color: rgba(255, 255, 255, 0.9);
+        }
+        
         #high-scores-screen {
             position: fixed;
             inset: 0;
@@ -108,6 +188,7 @@
         header {
             text-align: center;
             margin-bottom: 3rem;
+            padding-top: 2rem;
             animation: fadeIn 0.8s ease-out;
         }
         
@@ -444,26 +525,29 @@
         
         .timer-btn {
             background: rgba(255,255,255,0.15);
-            border: 1px solid rgba(255,255,255,0.35);
+            border: 1px solid rgba(255,255,255,0.25);
             color: #fff;
             backdrop-filter: blur(8px);
-            border-radius: 6px;
+            border-radius: 8px;
             cursor: pointer;
             font-family: 'Inter', sans-serif;
             font-weight: 600;
+            font-size: 0.9rem;
+            padding: 0.6rem 0.4rem;
             transition: all 0.15s ease;
         }
         
         .timer-btn:hover {
-            background: rgba(255,255,255,0.28);
-            transform: none;
-            box-shadow: none;
+            background: rgba(255,255,255,0.25);
+            border-color: rgba(255,255,255,0.4);
+            transform: translateY(-1px);
         }
         
         .timer-btn.timer-active {
             background: var(--primary-green) !important;
             border-color: var(--primary-green) !important;
             color: #000 !important;
+            box-shadow: 0 2px 8px rgba(0, 215, 126, 0.3);
         }
         
         #timerDisplay.timer-warning { color: #FF9500 !important; }
@@ -507,6 +591,56 @@
             padding: 2rem;
             font-size: 1.5rem;
             color: var(--text-light);
+        }
+        
+        /* Mobile homepage styles */
+        @media (max-width: 768px) {
+            .corner-btn {
+                padding: 0.5rem;
+                top: 10px;
+                border-radius: 50%;
+                width: 40px;
+                height: 40px;
+                min-width: 40px;
+                min-height: 40px;
+                justify-content: center;
+            }
+            
+            .corner-btn-left {
+                left: 10px;
+            }
+            
+            .corner-btn-right {
+                right: 10px;
+            }
+            
+            .corner-btn .btn-text {
+                display: none;
+            }
+            
+            .timer-card {
+                padding: 1rem;
+                margin: 1.5rem auto 1rem;
+            }
+            
+            .timer-card-header {
+                font-size: 0.9rem;
+            }
+            
+            .timer-options {
+                grid-template-columns: repeat(4, 1fr);
+                gap: 0.4rem;
+            }
+            
+            .timer-btn {
+                font-size: 0.8rem;
+                padding: 0.5rem 0.3rem;
+            }
+            
+            .location-count {
+                font-size: 0.8rem;
+                margin-bottom: 1.5rem;
+            }
         }
         
         @keyframes fadeIn {
@@ -851,31 +985,51 @@
 <body>
     <div id="menu-screen">
         <div class="menu-inner">
+            <!-- Top corner buttons -->
+            <button class="corner-btn corner-btn-left" onclick="clearLocationHistory()">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="1 4 1 10 7 10"/>
+                    <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/>
+                </svg>
+                <span class="btn-text">Clear History</span>
+            </button>
+            <button class="corner-btn corner-btn-right" onclick="showHighScores()">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/>
+                    <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/>
+                    <path d="M4 22h16"/>
+                    <path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/>
+                    <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/>
+                    <path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/>
+                </svg>
+                <span class="btn-text">High Scores</span>
+            </button>
+            
             <header>
                 <h1>GeoExplorer</h1>
                 <p class="subtitle">Test your geography knowledge</p>
-                <div style="margin-top: 1.5rem; display: flex; align-items: center; justify-content: center; gap: 0.75rem; flex-wrap: wrap;">
-                    <span style="color: rgba(255,255,255,0.9); font-size: 0.95rem; font-weight: 500; text-shadow: 0 1px 4px rgba(0,0,0,0.3);">⏱ Timer:</span>
-                    <div style="display: flex; gap: 0.5rem;" id="timerButtons">
-                        <button onclick="setTimer(0)"   id="timerBtn-0"   class="timer-btn timer-active" style="padding: 0.4rem 0.9rem; font-size: 0.85rem; min-width: unset;">Off</button>
-                        <button onclick="setTimer(60)"  id="timerBtn-60"  class="timer-btn" style="padding: 0.4rem 0.9rem; font-size: 0.85rem; min-width: unset;">1 min</button>
-                        <button onclick="setTimer(300)" id="timerBtn-300" class="timer-btn" style="padding: 0.4rem 0.9rem; font-size: 0.85rem; min-width: unset;">5 min</button>
-                        <button onclick="setTimer(600)" id="timerBtn-600" class="timer-btn" style="padding: 0.4rem 0.9rem; font-size: 0.85rem; min-width: unset;">10 min</button>
-                    </div>
-                </div>
             </header>
             
-            <div style="text-align: center; margin-bottom: 2rem; display: flex; flex-direction: column; align-items: center; gap: 1rem;">
-                <button class="secondary" style="padding: 0.75rem 1.5rem; font-size: 0.9rem; min-width: 220px; background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.4); color: #fff; backdrop-filter: blur(10px);" onclick="clearLocationHistory()">
-                    Clear Location History
-                </button>
-                <button style="padding: 0.75rem 1.5rem; font-size: 0.9rem; min-width: 220px; background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.4); color: #fff; backdrop-filter: blur(10px);" onclick="showHighScores()">
-                    View High Scores
-                </button>
-                <p style="font-size: 0.85rem; color: rgba(255,255,255,0.8); margin-top: 0; text-shadow: 0 1px 4px rgba(0,0,0,0.3);">
-                    <span id="historyCount">0</span> locations remembered
-                </p>
+            <!-- Timer selection card -->
+            <div class="timer-card">
+                <div class="timer-card-header">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"/>
+                        <polyline points="12 6 12 12 16 14"/>
+                    </svg>
+                    <span>Timer</span>
+                </div>
+                <div class="timer-options">
+                    <button onclick="setTimer(0)" id="timerBtn-0" class="timer-btn timer-active">Off</button>
+                    <button onclick="setTimer(60)" id="timerBtn-60" class="timer-btn">1 min</button>
+                    <button onclick="setTimer(300)" id="timerBtn-300" class="timer-btn">5 min</button>
+                    <button onclick="setTimer(600)" id="timerBtn-600" class="timer-btn">10 min</button>
+                </div>
             </div>
+            
+            <p class="location-count">
+                <span id="historyCount">0</span> locations remembered
+            </p>
             
             <div class="map-selection" id="mapSelection"></div>
         </div>
