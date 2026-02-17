@@ -188,6 +188,35 @@
             height: 500px;
         }
         
+        /* Mobile tap to expand */
+        @media (max-width: 768px) {
+            #map {
+                width: 180px;
+                height: 150px;
+                bottom: 10px;
+                right: 10px;
+            }
+            
+            #map:hover {
+                width: 180px;
+                height: 150px;
+            }
+            
+            #map.mobile-expanded {
+                width: calc(100vw - 20px);
+                height: 60vh;
+                bottom: 10px;
+                right: 10px;
+                left: 10px;
+                z-index: 115;
+            }
+            
+            #map.mobile-expanded:hover {
+                width: calc(100vw - 20px);
+                height: 60vh;
+            }
+        }
+        
         .controls {
             position: absolute;
             bottom: 20px;
@@ -362,78 +391,115 @@
         
         @media (max-width: 768px) {
             h1 {
-                font-size: 2.5rem;
+                font-size: 2rem;
+            }
+            
+            .subtitle {
+                font-size: 1rem;
             }
             
             .game-header {
                 flex-direction: column;
-                gap: 0.5rem;
-                padding: 0.8rem 1rem;
+                gap: 0.3rem;
+                padding: 0.6rem 1rem;
                 top: 10px;
+                font-size: 0.85rem;
+                left: 10px;
+                right: 10px;
+                transform: none;
+            }
+            
+            .score-info {
+                font-size: 0.95rem;
             }
             
             .round-info, .region-info {
                 border-left: none;
                 padding-left: 0;
+                font-size: 0.85rem;
             }
             
             #map {
-                width: 200px;
-                height: 180px;
-                bottom: 100px;
+                width: 180px;
+                height: 150px;
+                bottom: 10px;
                 right: 10px;
             }
             
             #map:hover {
-                width: 280px;
-                height: 250px;
+                width: 180px;
+                height: 150px;
             }
             
             #map.expanded {
-                width: 280px;
-                height: 250px;
+                width: 180px;
+                height: 150px;
             }
             
             #map.expanded:hover {
-                width: 280px;
-                height: 250px;
+                width: 180px;
+                height: 150px;
             }
             
             .controls {
-                bottom: 20px;
+                bottom: 10px;
+                flex-direction: column;
+                gap: 0.5rem;
             }
             
             button {
-                padding: 0.8rem 1.5rem;
-                font-size: 1rem;
+                padding: 0.75rem 1.5rem;
+                font-size: 0.95rem;
             }
             
             .return-start-btn {
-                bottom: 20px;
+                bottom: auto;
+                top: 90px;
                 left: 10px;
                 padding: 0.6rem 1rem;
-                font-size: 0.9rem;
+                font-size: 0.85rem;
+            }
+            
+            .back-button {
+                top: 10px;
+                left: 10px;
+                padding: 0.6rem 1rem;
+                font-size: 0.85rem;
             }
             
             .result-overlay {
-                top: 80px;
-                max-width: 90%;
+                top: 120px;
+                max-width: calc(100% - 20px);
+                left: 10px;
+                right: 10px;
+                transform: none;
             }
             
             .result-content {
-                padding: 1.5rem 2rem;
+                padding: 1.2rem 1.5rem;
             }
             
             .result-content h2 {
-                font-size: 1.5rem;
+                font-size: 1.3rem;
+            }
+            
+            .distance-info {
+                font-size: 1rem;
+            }
+            
+            .points-info {
+                font-size: 1.3rem;
             }
             
             .result-buttons {
                 flex-direction: column;
+                gap: 0.5rem;
             }
             
             .result-buttons button {
                 width: 100%;
+                padding: 0.75rem;
+                font-size: 0.9rem;
             }
         }
     </style>
@@ -748,6 +814,7 @@
             // Reset map size using class
             const mapElement = document.getElementById('map');
             mapElement.classList.remove('expanded');
+            mapElement.classList.remove('mobile-expanded');
             
             // Ensure guess button is visible and remove finish review button
             document.getElementById('guessButton').style.display = 'block';
@@ -776,6 +843,9 @@
                 placeGuessMarker(e.latLng);
             });
             
+            // Setup mobile tap-to-expand functionality
+            setupMobileMapToggle();
+            
             loadNewRound();
         }
         
@@ -785,6 +855,82 @@
             map.addListener('click', (e) => {
                 placeGuessMarker(e.latLng);
             });
+        }
+        
+        function setupMobileMapToggle() {
+            // Add tap to expand/collapse on mobile
+            const mapElement = document.getElementById('map');
+            let tapCount = 0;
+            let tapTimer;
+            
+            mapElement.addEventListener('touchend', (e) => {
+                // Prevent default to avoid interfering with map interactions
+                if (mapElement.classList.contains('mobile-expanded')) {
+                    return; // Let map handle touches when expanded
+                }
+                
+                tapCount++;
+                
+                if (tapCount === 1) {
+                    tapTimer = setTimeout(() => {
+                        // Single tap - expand map
+                        if (!mapElement.classList.contains('mobile-expanded')) {
+                            mapElement.classList.add('mobile-expanded');
+                            // Trigger resize event so Google Maps knows to redraw
+                            google.maps.event.trigger(map, 'resize');
+                        }
+                        tapCount = 0;
+                    }, 300);
+                } else if (tapCount === 2) {
+                    // Double tap - collapse map
+                    clearTimeout(tapTimer);
+                    if (mapElement.classList.contains('mobile-expanded')) {
+                        mapElement.classList.remove('mobile-expanded');
+                        google.maps.event.trigger(map, 'resize');
+                    }
+                    tapCount = 0;
+                }
+            });
+            
+            // Add visual indicator for mobile users
+            if (window.innerWidth <= 768) {
+                const indicator = document.createElement('div');
+                indicator.id = 'map-tap-indicator';
+                indicator.innerHTML = 'Tap to expand';
+                indicator.style.cssText = `
+                    position: absolute;
+                    bottom: 165px;
+                    right: 15px;
+                    background: rgba(0, 215, 126, 0.9);
+                    color: #000;
+                    padding: 0.4rem 0.8rem;
+                    border-radius: 6px;
+                    font-size: 0.75rem;
+                    font-weight: 600;
+                    z-index: 106;
+                    pointer-events: none;
+                    animation: fadeOut 3s ease-out 2s forwards;
+                `;
+                
+                // Add fade out animation
+                const style = document.createElement('style');
+                style.textContent = `
+                    @keyframes fadeOut {
+                        from { opacity: 1; }
+                        to { opacity: 0; display: none; }
+                    }
+                `;
+                document.head.appendChild(style);
+                
+                document.querySelector('.game-area').appendChild(indicator);
+                
+                // Remove indicator after animation
+                setTimeout(() => {
+                    if (indicator.parentNode) {
+                        indicator.remove();
+                    }
+                }, 5000);
+            }
         }
         
         function getRandomLocation(bounds) {
@@ -1083,7 +1229,11 @@
             
             // Expand map for viewing results using class
             const mapElement = document.getElementById('map');
-            mapElement.classList.add('expanded');
+            if (window.innerWidth > 768) {
+                mapElement.classList.add('expanded');
+            } else {
+                mapElement.classList.add('mobile-expanded');
+            }
             
             // Show result banner
             const isLastRound = currentRound === TOTAL_ROUNDS;
@@ -1123,6 +1273,7 @@
             // Reset map view and size using class
             const mapElement = document.getElementById('map');
             mapElement.classList.remove('expanded');
+            mapElement.classList.remove('mobile-expanded');
             map.setCenter({ lat: 20, lng: 0 });
             map.setZoom(2);
             
@@ -1236,7 +1387,12 @@
             map.fitBounds(bounds, { padding: 80 });
             
             // Keep map expanded
-            document.getElementById('map').classList.add('expanded');
+            const mapElement = document.getElementById('map');
+            if (window.innerWidth > 768) {
+                mapElement.classList.add('expanded');
+            } else {
+                mapElement.classList.add('mobile-expanded');
+            }
             
             // Keep guess button hidden and show finish review button
             document.getElementById('guessButton').style.display = 'none';
