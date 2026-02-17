@@ -335,6 +335,14 @@
             font-size: 0.95rem;
         }
         
+        .return-start-btn svg {
+            display: none;
+        }
+        
+        .return-start-btn .return-text {
+            display: inline;
+        }
+        
         button {
             font-family: 'Inter', sans-serif;
             font-size: 1rem;
@@ -702,16 +710,22 @@
                 justify-content: center;
                 z-index: 111;
                 padding: 0;
-                font-size: 0 !important;
                 overflow: hidden;
             }
             
             .return-start-btn::before {
-                content: '↺';
-                font-size: 1.7rem;
-                font-weight: 700;
-                line-height: 0;
+                content: none;
+            }
+            
+            .return-start-btn svg {
                 display: block;
+                width: 20px;
+                height: 20px;
+                flex-shrink: 0;
+            }
+            
+            .return-start-btn .return-text {
+                display: none;
             }
             
             .mobile-home-btn {
@@ -911,7 +925,13 @@
                 <button id="guessButton" onclick="makeGuess()" disabled>Make Guess</button>
             </div>
             
-            <button class="return-start-btn" onclick="returnToStart()">↺ Return to Start</button>
+            <button class="return-start-btn" onclick="returnToStart()">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="1 4 1 10 7 10"/>
+                    <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/>
+                </svg>
+                <span class="return-text">Return to Start</span>
+            </button>
         </div>
     </div><!-- end .container -->
     
@@ -1333,12 +1353,6 @@
             // Ensure guess button is visible
             document.getElementById('guessButton').style.display = 'block';
             
-            // Remove finish review button if it exists
-            const finishReviewBtn = document.getElementById('finishReviewButton');
-            if (finishReviewBtn) {
-                finishReviewBtn.remove();
-            }
-            
             initializeGame();
         }
         
@@ -1381,10 +1395,6 @@
             // Ensure guess button is visible and remove finish review button
             document.getElementById('guessButton').style.display = 'block';
             document.getElementById('reviewPanel').style.display = 'none';
-            const finishReviewBtn = document.getElementById('finishReviewButton');
-            if (finishReviewBtn) {
-                finishReviewBtn.remove();
-            }
             
             // Update history count
             updateHistoryCount();
@@ -2009,7 +2019,11 @@
             
             // Build and show the review panel above the map
             const panel = document.getElementById('reviewPanel');
-            let panelHTML = `<div style="font-weight:700; color:#fff; margin-bottom:0.6rem; font-size:0.9rem; border-bottom:1px solid rgba(255,255,255,0.15); padding-bottom:0.4rem;">Round Summary</div>`;
+            let panelHTML = `
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; padding-bottom: 0.5rem; border-bottom: 2px solid rgba(255,255,255,0.15);">
+                    <div style="font-weight:700; color:#fff; font-size:0.9rem;">Round Summary</div>
+                    <button id="finishReviewButton" style="padding: 0.4rem 0.9rem; font-size: 0.85rem; background: var(--primary-green); color: #000; border: none; border-radius: 6px; font-weight: 600; cursor: pointer;">Finish Review</button>
+                </div>`;
             let grandTotal = 0;
             allRoundData.forEach(rd => {
                 grandTotal += rd.points;
@@ -2129,28 +2143,26 @@
             // Lock map - disable mobile tap-to-collapse during review
             mapElement.dataset.reviewLocked = 'true';
             
-            // Keep guess button hidden and show finish review button
+            // Keep guess button hidden
             document.getElementById('guessButton').style.display = 'none';
             
-            // Add a "Finish Review" button if it doesn't exist
-            if (!document.getElementById('finishReviewButton')) {
-                const finishButton = document.createElement('button');
-                finishButton.id = 'finishReviewButton';
-                finishButton.textContent = 'Finish Review';
-                finishButton.onclick = () => {
-                    finishButton.remove();
-                    document.getElementById('guessButton').style.display = 'block';
-                    document.getElementById('reviewPanel').style.display = 'none';
-                    document.getElementById('customCompass').style.display = '';
-                    const mapEl = document.getElementById('map');
-                    mapEl.style.width = '';
-                    mapEl.style.height = '';
-                    delete mapEl.dataset.reviewLocked;
-                    updateCompassAndControls(false);
-                    showFinalScore();
-                };
-                document.querySelector('.controls').appendChild(finishButton);
-            }
+            // Attach click handler to the finish review button in the panel
+            setTimeout(() => {
+                const finishButton = document.getElementById('finishReviewButton');
+                if (finishButton) {
+                    finishButton.onclick = () => {
+                        document.getElementById('guessButton').style.display = 'block';
+                        document.getElementById('reviewPanel').style.display = 'none';
+                        document.getElementById('customCompass').style.display = '';
+                        const mapEl = document.getElementById('map');
+                        mapEl.style.width = '';
+                        mapEl.style.height = '';
+                        delete mapEl.dataset.reviewLocked;
+                        updateCompassAndControls(false);
+                        showFinalScore();
+                    };
+                }
+            }, 0);
         }
         
         function playAgain() {
