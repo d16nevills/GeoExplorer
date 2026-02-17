@@ -211,6 +211,7 @@
             font-size: 1.1rem;
             font-weight: 600;
             color: var(--primary-green);
+            white-space: nowrap;
         }
         
         .round-info {
@@ -594,7 +595,6 @@
                 left: 50%;
                 right: auto;
                 transform: translateX(-50%);
-                max-width: 80%;
                 align-items: center;
             }
             
@@ -618,12 +618,14 @@
                 text-align: center;
                 border-left: none !important;
                 padding-left: 0 !important;
+                white-space: nowrap;
             }
             
             .score-info {
                 font-size: 0.75rem;
                 border-left: none !important;
                 padding-left: 0 !important;
+                white-space: nowrap;
             }
             
             .round-info {
@@ -1413,7 +1415,16 @@
                 streetViewControl: false,
                 fullscreenControl: false,
                 scaleControl: false,
-                gestureHandling: 'greedy'
+                gestureHandling: 'greedy',
+                restriction: {
+                    latLngBounds: {
+                        north: 85,
+                        south: -85,
+                        west: -180,
+                        east: 180
+                    },
+                    strictBounds: true
+                }
             };
             
             map = new google.maps.Map(document.getElementById('map'), mapOptions);
