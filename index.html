@@ -193,20 +193,37 @@
         }
         
         h1 {
-            font-size: 3.5rem;
-            font-weight: 700;
-            color: #ffffff;
-            letter-spacing: -0.5px;
-            margin-bottom: 0.5rem;
-            text-shadow: 0 2px 12px rgba(0,0,0,0.4);
+            font-size: 4.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #ffffff 0%, #F4662A 50%, #FFD700 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: 1px;
+            margin-bottom: 0.75rem;
+            text-shadow: 0 4px 20px rgba(244, 102, 42, 0.4);
+            filter: drop-shadow(0 2px 8px rgba(0,0,0,0.3));
+            position: relative;
         }
         
         .subtitle {
-            font-size: 1.2rem;
-            color: rgba(255,255,255,0.9);
-            font-weight: 400;
-            letter-spacing: 0.5px;
-            text-shadow: 0 1px 6px rgba(0,0,0,0.4);
+            font-size: 1.3rem;
+            color: rgba(255,255,255,0.95);
+            font-weight: 500;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            text-shadow: 0 2px 8px rgba(0,0,0,0.5);
+            position: relative;
+            display: inline-block;
+        }
+        
+        .subtitle::before,
+        .subtitle::after {
+            content: '✦';
+            color: var(--primary-green);
+            margin: 0 1rem;
+            font-size: 1rem;
+            opacity: 0.8;
         }
         
         .map-selection {
@@ -566,7 +583,7 @@
             position: absolute;
             bottom: calc(20px + 500px + 15px); /* above desktop expanded map (500px hover size) */
             right: 20px;
-            max-width: 360px;
+            max-width: 480px;
             font-size: 0.9rem;
             z-index: 112;
             background: rgba(28,28,30,0.97);
@@ -614,6 +631,22 @@
         
         /* Mobile homepage styles */
         @media (max-width: 768px) {
+            h1 {
+                font-size: 2.8rem;
+                letter-spacing: 0px;
+            }
+            
+            .subtitle {
+                font-size: 1rem;
+                letter-spacing: 1.5px;
+            }
+            
+            .subtitle::before,
+            .subtitle::after {
+                margin: 0 0.5rem;
+                font-size: 0.85rem;
+            }
+            
             .corner-btn {
                 padding: 0.5rem;
                 top: 10px;
@@ -1025,8 +1058,8 @@
             </button>
             
             <header>
-                <h1>GeoExplorer</h1>
-                <p class="subtitle">Test your geography knowledge</p>
+                <h1>🧭 GeoExplorer</h1>
+                <p class="subtitle">Explore the World</p>
             </header>
             
             <!-- Timer selection card -->
@@ -1824,7 +1857,7 @@
             polylines = [];
             
             let attempts = 0;
-            const maxAttempts = 150; // Increased attempts with smaller radius to find urban locations
+            const maxAttempts = 250; // Many more attempts to find urban locations
             
             while (attempts < maxAttempts) {
                 currentLocation = getRandomLocation(currentMapConfig.bounds);
@@ -1832,58 +1865,87 @@
                 // Check if this location is too close to a previously used location in this game
                 if (isLocationTooClose(currentLocation)) {
                     attempts++;
-                    continue; // Skip this location and try another
+                    continue;
                 }
                 
                 // Check if this location was recently used in previous games
                 if (isLocationInHistory(currentLocation)) {
                     attempts++;
-                    continue; // Skip this location and try another
+                    continue;
                 }
                 
                 const streetViewService = new google.maps.StreetViewService();
                 
-                try {
-                    const result = await new Promise((resolve, reject) => {
-                        streetViewService.getPanorama({
-                            location: currentLocation,
-                            radius: 50000, // 50km radius - biases towards areas with denser Street View coverage (urban)
-                            source: google.maps.StreetViewSource.OUTDOOR
-                        }, (data, status) => {
-                            if (status === 'OK') {
-                                resolve(data);
-                            } else {
-                                reject(status);
+                // EXTREMELY aggressive urban bias - try very small radii many times
+                // 3km (city centers), 8km (urban), 20km (suburban), 50km (rare fallback)
+                const searchStrategy = [
+                    { radius: 3000, tries: 5 },   // Try 3km FIVE times - city centers only
+                    { radius: 8000, tries: 4 },   // Try 8km four times - urban areas
+                    { radius: 20000, tries: 2 },  // Try 20km twice - suburban
+                    { radius: 50000, tries: 1 }   // Final fallback - still avoids deep wilderness
+                ];
+                
+                let foundLocation = false;
+                
+                for (let strategy of searchStrategy) {
+                    for (let tryNum = 0; tryNum < strategy.tries; tryNum++) {
+                        try {
+                            const result = await new Promise((resolve, reject) => {
+                                streetViewService.getPanorama({
+                                    location: currentLocation,
+                                    radius: strategy.radius,
+                                    source: google.maps.StreetViewSource.OUTDOOR,
+                                    preference: google.maps.StreetViewPreference.NEAREST
+                                }, (data, status) => {
+                                    if (status === 'OK') {
+                                        resolve(data);
+                                    } else {
+                                        reject(status);
+                                    }
+                                });
+                            });
+                            
+                            currentLocation = {
+                                lat: result.location.latLng.lat(),
+                                lng: result.location.latLng.lng()
+                            };
+                            
+                            // Double-check the found location isn't too close to previous ones
+                            if (isLocationTooClose(currentLocation)) {
+                                break; // Exit tries loop
                             }
-                        });
-                    });
-                    
-                    currentLocation = {
-                        lat: result.location.latLng.lat(),
-                        lng: result.location.latLng.lng()
-                    };
-                    
-                    // Double-check the found location isn't too close to previous ones
-                    if (isLocationTooClose(currentLocation)) {
-                        attempts++;
-                        continue;
+                            
+                            // Double-check against history
+                            if (isLocationInHistory(currentLocation)) {
+                                break; // Exit tries loop
+                            }
+                            
+                            foundLocation = true;
+                            break; // Found good location, exit tries loop
+                            
+                        } catch (error) {
+                            // This attempt failed, try again or move to next strategy
+                            continue;
+                        }
                     }
                     
-                    // Double-check against history
-                    if (isLocationInHistory(currentLocation)) {
-                        attempts++;
-                        continue;
-                    }
-                    
-                    // Add this location to the used locations list for this game
-                    usedLocations.push(currentLocation);
-                    
-                    // Save this location to persistent history
-                    saveLocationToHistory(currentLocation);
-                    
-                    // Store initial position and POV for return to start button
-                    initialPosition = currentLocation;
-                    initialPOV = { heading: 0, pitch: 0 };
+                    if (foundLocation) break; // Exit strategy loop
+                }
+                
+                if (!foundLocation || isLocationTooClose(currentLocation) || isLocationInHistory(currentLocation)) {
+                    attempts++;
+                    continue;
+                }
+                
+                // Add this location to the used locations list for this game
+                usedLocations.push(currentLocation);
+                
+                // Save this location to persistent history
+                saveLocationToHistory(currentLocation);
+                
+                // Store initial position and POV for return to start button
+                initialPosition = currentLocation;
+                initialPOV = { heading: 0, pitch: 0 };
                     
                     if (!streetView) {
                         streetView = new google.maps.StreetViewPanorama(
@@ -2216,9 +2278,9 @@
             const isMobile = window.innerWidth <= 768;
             const buttonText = isMobile ? 'Finish Review' : 'Finish';
             let panelHTML = `
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; padding-bottom: 0.5rem; border-bottom: 2px solid rgba(255,255,255,0.15);">
+                <div style="display: flex; justify-content: space-between; align-items: center; gap: 1.5rem; margin-bottom: 0.75rem; padding-bottom: 0.5rem; border-bottom: 2px solid rgba(255,255,255,0.15);">
                     <div style="font-weight:700; color:#fff; font-size:1rem;">Round Summary</div>
-                    <button id="finishReviewButton" style="padding: 0.5rem 1rem; font-size: 0.9rem; background: var(--primary-green); color: #000; border: none; border-radius: 8px; font-weight: 700; cursor: pointer; box-shadow: 0 2px 8px rgba(0,215,126,0.3); white-space: nowrap;">${buttonText}</button>
+                    <button id="finishReviewButton" style="padding: 0.5rem 0.85rem; font-size: 0.9rem; background: var(--primary-green); color: #000; border: none; border-radius: 8px; font-weight: 700; cursor: pointer; box-shadow: 0 2px 8px rgba(0,215,126,0.3); white-space: nowrap; flex-shrink: 0;">${buttonText}</button>
                 </div>`;
             let grandTotal = 0;
             allRoundData.forEach(rd => {
@@ -2452,4 +2514,4 @@
         };
     </script>
 </body>
-</htm
+</html>
