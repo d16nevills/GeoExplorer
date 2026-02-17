@@ -408,6 +408,17 @@
             }
         }
         
+        @keyframes slideDownMobile {
+            from {
+                transform: translateY(-30px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+        
         .back-button {
             position: absolute;
             top: 20px;
@@ -591,16 +602,17 @@
                 border: none;
                 cursor: pointer;
                 padding: 0;
-                font-size: 0 !important;
                 overflow: hidden;
             }
             
             .mobile-home-btn::before {
-                content: '⌂';
-                font-size: 1.7rem;
-                font-weight: 700;
-                line-height: 0;
-                display: block;
+                content: none;
+            }
+            
+            .mobile-home-btn svg {
+                width: 20px;
+                height: 20px;
+                flex-shrink: 0;
             }
             
             .mobile-home-btn:hover {
@@ -617,6 +629,11 @@
                 left: 10px;
                 right: 10px;
                 transform: none;
+                animation: none !important;
+            }
+            
+            .result-overlay.active {
+                animation: slideDownMobile 0.4s ease-out !important;
             }
             
             .result-content {
@@ -706,7 +723,12 @@
         
         <div class="game-container" id="gameScreen">
             <button class="back-button" onclick="backToMenu()">← Back to Maps</button>
-            <button class="mobile-home-btn" onclick="backToMenu()"></button>
+            <button class="mobile-home-btn" onclick="backToMenu()">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                    <polyline points="9 22 9 12 15 12 15 22"/>
+                </svg>
+            </button>
             
             <div class="game-header">
                 <div style="display: flex; gap: 0.5rem; align-items: center;">
@@ -1559,7 +1581,8 @@
                     strokeColor: '#ffffff',
                     strokeWeight: 2,
                     scale: 1.2,
-                    anchor: new google.maps.Point(0, 0)
+                    anchor: new google.maps.Point(0, 0),
+                    labelOrigin: new google.maps.Point(0, -30)
                 },
                 label: {
                     text: String(currentRound),
@@ -1741,7 +1764,8 @@
                         strokeColor: '#ffffff',
                         strokeWeight: 2,
                         scale: 1.2,
-                        anchor: new google.maps.Point(0, 0)
+                        anchor: new google.maps.Point(0, 0),
+                        labelOrigin: new google.maps.Point(0, -30)
                     },
                     label: {
                         text: String(roundData.round),
@@ -1855,4 +1879,3 @@
     </script>
 </body>
 </html>
-
