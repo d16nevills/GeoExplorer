@@ -286,7 +286,7 @@
         /* Custom compass - positioned above the map, moves with it */
         .custom-compass {
             position: absolute;
-            bottom: calc(20px + 250px + 10px); /* just above condensed map */
+            bottom: 280px; /* just above condensed 250px map (20px gap + 250px map + 10px) */
             right: 20px;
             width: 50px;
             height: 50px;
@@ -302,17 +302,9 @@
             opacity: 0.7;
         }
         
-        .custom-compass:hover {
-            opacity: 1;
-        }
+        .custom-compass:hover { opacity: 1; }
         
-        /* Move compass up when map is hovered or expanded */
-        #map:hover ~ .custom-compass,
-        #map.expanded ~ .custom-compass {
-            bottom: calc(20px + 500px + 10px);
-        }
-        
-        /* Compass needle - red arrow pointing up */
+        /* Compass needle */
         .custom-compass::before {
             content: '';
             width: 0;
@@ -809,7 +801,7 @@
             /* Custom compass positioning for mobile - just above condensed map */
             .custom-compass {
                 position: absolute;
-                bottom: calc(10px + 100px + 10px); /* above condensed map */
+                bottom: 120px; /* 10px gap + 100px map + 10px */
                 right: 10px;
                 top: auto;
                 width: 45px;
@@ -822,11 +814,6 @@
                 border-left: 5px solid transparent;
                 border-right: 5px solid transparent;
                 border-bottom: 18px solid #EA4335;
-            }
-            
-            /* Move compass up when map is expanded on mobile */
-            #map.mobile-expanded ~ .custom-compass {
-                bottom: calc(10px + 30vh + 10px);
             }
             
             /* Hide map controls on mobile */
@@ -1212,6 +1199,32 @@
             }
         }
         
+        function updateCompassAndControls(expanded) {
+            const compass = document.getElementById('customCompass');
+            const controls = document.querySelector('.controls');
+            const isMobile = window.innerWidth <= 768;
+            
+            if (!compass) return;
+            
+            if (isMobile) {
+                if (expanded) {
+                    // Map is 30vh tall, bottom: 10px → top of map = 10px + 30vh from bottom
+                    const mapTopFromBottom = window.innerHeight * 0.30 + 10;
+                    compass.style.bottom = (mapTopFromBottom + 10) + 'px';
+                    if (controls) controls.style.bottom = (mapTopFromBottom + 10) + 'px';
+                } else {
+                    compass.style.bottom = '120px'; // above 100px condensed map
+                    if (controls) controls.style.bottom = '10px';
+                }
+            } else {
+                if (expanded) {
+                    compass.style.bottom = '530px'; // 20px + 500px + 10px
+                } else {
+                    compass.style.bottom = '280px'; // 20px + 250px + 10px
+                }
+            }
+        }
+        
         function updateHistoryCount() {
             const history = getLocationHistory();
             const countElement = document.getElementById('historyCount');
@@ -1358,6 +1371,7 @@
             delete mapElement.dataset.reviewLocked;
             document.getElementById('customCompass').style.display = '';
             document.getElementById('reviewPanel').style.display = 'none';
+            updateCompassAndControls(false);
             
             // Ensure guess button is visible and remove finish review button
             document.getElementById('guessButton').style.display = 'block';
@@ -1392,6 +1406,17 @@
             map.addListener('click', (e) => {
                 placeGuessMarker(e.latLng);
             });
+            
+            // Desktop: move compass when map is hovered
+            if (!isMobile) {
+                const mapEl = document.getElementById('map');
+                mapEl.addEventListener('mouseenter', () => updateCompassAndControls(true));
+                mapEl.addEventListener('mouseleave', () => {
+                    if (!mapEl.classList.contains('expanded')) {
+                        updateCompassAndControls(false);
+                    }
+                });
+            }
             
             // Setup mobile tap-to-expand functionality
             setupMobileMapToggle();
@@ -1502,28 +1527,26 @@
             // When touching the map, expand it
             mapElement.addEventListener('touchstart', (e) => {
                 isMapClick = true;
-                if (mapElement.dataset.reviewLocked) return; // locked during review
+                if (mapElement.dataset.reviewLocked) return;
                 if (!mapElement.classList.contains('mobile-expanded')) {
                     mapElement.classList.add('mobile-expanded');
                     setTimeout(() => {
                         google.maps.event.trigger(map, 'resize');
+                        updateCompassAndControls(true);
                     }, 300);
                 }
             }, { passive: true });
             
             // When touching street view area, collapse the map
             gameArea.addEventListener('touchstart', (e) => {
-                if (mapElement.dataset.reviewLocked) return; // locked during review
-                // Check if click was on map
-                if (mapElement.contains(e.target)) {
-                    return; // Don't collapse if clicking on map itself
-                }
+                if (mapElement.dataset.reviewLocked) return;
+                if (mapElement.contains(e.target)) return;
                 
-                // Collapse map if it's expanded
                 if (mapElement.classList.contains('mobile-expanded')) {
                     mapElement.classList.remove('mobile-expanded');
                     setTimeout(() => {
                         google.maps.event.trigger(map, 'resize');
+                        updateCompassAndControls(false);
                     }, 300);
                 }
             }, { passive: true });
@@ -2096,6 +2119,7 @@
             
             // Hide compass during review
             document.getElementById('customCompass').style.display = 'none';
+            updateCompassAndControls(true);
             
             // Lock map - disable mobile tap-to-collapse during review
             mapElement.dataset.reviewLocked = 'true';
@@ -2113,11 +2137,11 @@
                     document.getElementById('guessButton').style.display = 'block';
                     document.getElementById('reviewPanel').style.display = 'none';
                     document.getElementById('customCompass').style.display = '';
-                    // Reset forced map size and lock
                     const mapEl = document.getElementById('map');
                     mapEl.style.width = '';
                     mapEl.style.height = '';
                     delete mapEl.dataset.reviewLocked;
+                    updateCompassAndControls(false);
                     showFinalScore();
                 };
                 document.querySelector('.controls').appendChild(finishButton);
@@ -2176,4 +2200,4 @@
         };
     </script>
 </body>
-</html
+</html>
