@@ -118,7 +118,7 @@
             left: 50%;
             transform: translateX(-50%);
             display: flex;
-            gap: 2rem;
+            gap: 1rem;
             align-items: center;
             background: rgba(28, 28, 30, 0.95);
             backdrop-filter: blur(10px);
@@ -126,6 +126,12 @@
             border-radius: 12px;
             z-index: 110;
             box-shadow: 0 4px 20px var(--shadow);
+        }
+        
+        .game-header > div {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
         }
         
         .score-info {
@@ -137,8 +143,6 @@
         .round-info {
             font-size: 1rem;
             color: var(--text-gray);
-            border-left: 2px solid var(--bg-light);
-            padding-left: 2rem;
         }
         
         .region-info {
@@ -146,7 +150,7 @@
             color: var(--text-light);
             font-weight: 500;
             border-left: 2px solid var(--bg-light);
-            padding-left: 2rem;
+            padding-left: 0.5rem;
         }
         
         .game-area {
@@ -201,40 +205,28 @@
             bottom: auto !important;
             opacity: 0.7 !important;
             transform: scale(0.9) !important;
-            z-index: 108 !important;
+            z-index: 9999 !important;
         }
         
         .gm-svpc:hover {
             opacity: 1 !important;
         }
         
-        /* Mobile tap to expand */
-        @media (max-width: 768px) {
-            #map {
-                width: 180px;
-                height: 150px;
-                bottom: 10px;
-                right: 10px;
-            }
-            
-            #map:hover {
-                width: 180px;
-                height: 150px;
-            }
-            
-            #map.mobile-expanded {
-                width: calc(100vw - 20px);
-                height: 60vh;
-                bottom: 10px;
-                right: 10px;
-                left: 10px;
-                z-index: 115;
-            }
-            
-            #map.mobile-expanded:hover {
-                width: calc(100vw - 20px);
-                height: 60vh;
-            }
+        /* Override any absolute positioning Google Maps tries to apply */
+        div.gm-svpc {
+            position: fixed !important;
+            top: 80px !important;
+            right: 20px !important;
+            left: auto !important;
+            bottom: auto !important;
+        }
+        
+        #streetview .gm-svpc {
+            position: fixed !important;
+            top: 80px !important;
+            right: 20px !important;
+            left: auto !important;
+            bottom: auto !important;
         }
         
         .controls {
@@ -442,9 +434,19 @@
             
             .game-header > div {
                 display: flex;
-                gap: 0.4rem;
+                flex-direction: column;
+                gap: 0.3rem;
                 align-items: center;
-                flex-wrap: nowrap;
+                width: 100%;
+            }
+            
+            .game-header > div > .score-info {
+                order: 2;
+            }
+            
+            .game-header > div > .round-info,
+            .game-header > div > .region-info {
+                order: 1;
             }
             
             .score-info {
@@ -506,10 +508,11 @@
             
             .controls {
                 bottom: 10px;
-                left: 140px;
-                right: 10px;
+                left: 10px;
+                right: auto;
                 transform: none;
                 gap: 0.5rem;
+                justify-content: flex-start;
             }
             
             button {
@@ -635,7 +638,23 @@
                 bottom: auto !important;
                 opacity: 0.6 !important;
                 transform: scale(0.85) !important;
-                z-index: 108 !important;
+                z-index: 9999 !important;
+            }
+            
+            div.gm-svpc {
+                position: fixed !important;
+                top: 25vh !important;
+                right: 20px !important;
+                left: auto !important;
+                bottom: auto !important;
+            }
+            
+            #streetview .gm-svpc {
+                position: fixed !important;
+                top: 25vh !important;
+                right: 20px !important;
+                left: auto !important;
+                bottom: auto !important;
             }
             
             /* Hide map controls on mobile */
@@ -701,7 +720,7 @@
                 <button id="guessButton" onclick="makeGuess()" disabled>Make Guess</button>
             </div>
             
-            <button class="return-start-btn" onclick="returnToStart()"></button>
+            <button class="return-start-btn" onclick="returnToStart()">↺ Return to Start</button>
         </div>
     </div>
     
@@ -1109,6 +1128,8 @@
         }
         
         let compassInterval = null;
+        let compassElement = null;
+        let compassObserver = null;
         
         function forceCompassPosition() {
             // Clear any existing interval
@@ -1122,27 +1143,52 @@
                 if (compass) {
                     const isMobile = window.innerWidth <= 768;
                     
-                    // Force all styles - compass on RIGHT side for both desktop and mobile
-                    compass.style.cssText = `
+                    // Remove from Street View container and append to body if not already done
+                    if (compass.parentElement && compass.parentElement !== document.body && !compassElement) {
+                        compassElement = compass;
+                        document.body.appendChild(compass);
+                    }
+                    
+                    // Force all styles with maximum specificity
+                    const top = isMobile ? '25vh' : '80px';
+                    
+                    compass.setAttribute('style', `
                         position: fixed !important;
-                        z-index: 108 !important;
+                        z-index: 9999 !important;
                         opacity: ${isMobile ? '0.6' : '0.7'} !important;
                         transform: ${isMobile ? 'scale(0.85)' : 'scale(0.9)'} !important;
-                        top: ${isMobile ? '25vh' : '80px'} !important;
+                        top: ${top} !important;
                         right: 20px !important;
                         left: auto !important;
                         bottom: auto !important;
-                    `;
+                        pointer-events: auto !important;
+                    `);
+                    
+                    // Set up MutationObserver to watch for style changes
+                    if (!compassObserver && compass) {
+                        compassObserver = new MutationObserver(() => {
+                            const currentTop = compass.style.top;
+                            if (currentTop !== top) {
+                                repositionCompass();
+                            }
+                        });
+                        compassObserver.observe(compass, { 
+                            attributes: true, 
+                            attributeFilter: ['style'] 
+                        });
+                    }
                 }
             };
             
-            // Reposition immediately
+            // Reposition immediately and repeatedly
             setTimeout(repositionCompass, 100);
+            setTimeout(repositionCompass, 300);
             setTimeout(repositionCompass, 500);
             setTimeout(repositionCompass, 1000);
+            setTimeout(repositionCompass, 2000);
             
-            // Keep repositioning every 500ms
-            compassInterval = setInterval(repositionCompass, 500);
+            // Keep repositioning every 200ms (more aggressive)
+            compassInterval = setInterval(repositionCompass, 200);
         }
         
         function setupMobileMapToggle() {
