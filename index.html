@@ -192,13 +192,19 @@
             height: 500px;
         }
         
-        /* Position Street View compass above the map */
+        /* Position Street View compass above the map and make it subtle */
         .gm-svpc {
             position: absolute !important;
             bottom: 280px !important;
             right: 30px !important;
             top: auto !important;
             left: auto !important;
+            opacity: 0.7 !important;
+            transform: scale(0.9) !important;
+        }
+        
+        .gm-svpc:hover {
+            opacity: 1 !important;
         }
         
         /* Mobile tap to expand */
@@ -429,13 +435,12 @@
                 left: 50%;
                 right: auto;
                 transform: translateX(-50%);
-                max-width: 60%;
+                max-width: 70%;
                 align-items: center;
             }
             
             .score-info {
                 font-size: 0.75rem;
-                order: 2;
             }
             
             .round-info {
@@ -443,7 +448,6 @@
                 padding-left: 0;
                 font-size: 0.7rem;
                 white-space: nowrap;
-                order: 1;
             }
             
             .region-info {
@@ -451,7 +455,6 @@
                 padding-left: 0.4rem;
                 font-size: 0.7rem;
                 white-space: nowrap;
-                order: 1;
             }
             
             #map {
@@ -518,12 +521,17 @@
                 justify-content: center;
                 z-index: 111;
                 line-height: 1;
+                font-size: 0 !important;
+                overflow: hidden;
+                text-indent: -9999px;
             }
             
             .return-start-btn::before {
                 content: '↺';
                 font-size: 1.3rem;
                 display: block;
+                text-indent: 0;
+                position: absolute;
             }
             
             .mobile-home-btn {
@@ -603,6 +611,8 @@
             .gm-svpc {
                 bottom: 180px !important;
                 right: 20px !important;
+                opacity: 0.6 !important;
+                transform: scale(0.85) !important;
             }
         }
     </style>
@@ -632,13 +642,15 @@
             <button class="mobile-home-btn" onclick="backToMenu()"></button>
             
             <div class="game-header">
+                <div style="display: flex; gap: 0.5rem; align-items: center;">
+                    <div class="round-info">
+                        Round <span id="currentRound">1</span> of <span id="totalRounds">5</span>
+                    </div>
+                    <div class="region-info" id="regionName"></div>
+                </div>
                 <div class="score-info">
                     Score: <span id="totalScore">0</span>
                 </div>
-                <div class="round-info">
-                    Round <span id="currentRound">1</span> of <span id="totalRounds">5</span>
-                </div>
-                <div class="region-info" id="regionName"></div>
             </div>
             
             <div class="game-area">
@@ -672,6 +684,16 @@
                 name: 'World',
                 description: 'Explore locations from around the globe',
                 bounds: { north: 85, south: -85, east: 180, west: -180 }
+            },
+            europe: {
+                name: 'Europe',
+                description: 'Explore the European continent',
+                bounds: { north: 71, south: 36, east: 40, west: -10 }
+            },
+            northAmerica: {
+                name: 'North America',
+                description: 'USA, Canada, and Mexico',
+                bounds: { north: 72, south: 14, east: -52, west: -168 }
             },
             usa: {
                 name: 'United States',
@@ -779,10 +801,39 @@
         let polylines = [];
         let allRoundData = []; // Store all rounds for review
         let usedLocations = []; // Track locations used in current game to prevent duplicates
+        let currentMapKey = '';
         const TOTAL_ROUNDS = 5;
         const MIN_DISTANCE_BETWEEN_LOCATIONS = 50; // Minimum km between locations in same game
         const MIN_DISTANCE_FROM_HISTORY = 25; // Minimum km from recently used locations across games
         const MAX_LOCATION_HISTORY = 100; // Remember last 100 locations across all games
+        
+        // High score functions
+        function getHighScore(mapKey) {
+            try {
+                const highScores = localStorage.getItem('geoexplorer_high_scores');
+                if (!highScores) return 0;
+                const scores = JSON.parse(highScores);
+                return scores[mapKey] || 0;
+            } catch (e) {
+                return 0;
+            }
+        }
+        
+        function saveHighScore(mapKey, score) {
+            try {
+                let highScores = localStorage.getItem('geoexplorer_high_scores');
+                let scores = highScores ? JSON.parse(highScores) : {};
+                
+                if (score > (scores[mapKey] || 0)) {
+                    scores[mapKey] = score;
+                    localStorage.setItem('geoexplorer_high_scores', JSON.stringify(scores));
+                    return true; // New high score!
+                }
+                return false;
+            } catch (e) {
+                return false;
+            }
+        }
         
         // Load location history from localStorage
         function getLocationHistory() {
@@ -868,6 +919,7 @@
         
         function startGame(mapKey) {
             currentMapConfig = MAP_CONFIGS[mapKey];
+            currentMapKey = mapKey;
             currentRound = 1;
             totalScore = 0;
             allRoundData = [];
@@ -879,6 +931,15 @@
             document.getElementById('totalScore').textContent = '0';
             document.getElementById('currentRound').textContent = '1';
             document.getElementById('totalRounds').textContent = TOTAL_ROUNDS;
+            
+            // Show high score
+            const highScore = getHighScore(mapKey);
+            const scoreInfo = document.querySelector('.score-info');
+            if (highScore > 0) {
+                scoreInfo.innerHTML = `Score: <span id="totalScore">0</span> | Best: ${highScore}`;
+            } else {
+                scoreInfo.innerHTML = `Score: <span id="totalScore">0</span>`;
+            }
             
             // Ensure guess button is visible
             document.getElementById('guessButton').style.display = 'block';
@@ -1351,7 +1412,23 @@
                 `You were ${distance.toFixed(1)} km away`;
             document.getElementById('pointsText').textContent = 
                 `+${points} points`;
-            document.getElementById('totalScore').textContent = totalScore;
+            
+            // Update total score display
+            const totalScoreSpan = document.getElementById('totalScore');
+            totalScoreSpan.textContent = totalScore;
+            
+            // Update high score in header if current score exceeds it
+            const highScore = getHighScore(currentMapKey);
+            const scoreInfo = document.querySelector('.score-info');
+            if (highScore > 0) {
+                if (totalScore > highScore) {
+                    scoreInfo.innerHTML = `Score: <span id="totalScore">${totalScore}</span> | Best: ${highScore} 🔥`;
+                } else {
+                    scoreInfo.innerHTML = `Score: <span id="totalScore">${totalScore}</span> | Best: ${highScore}`;
+                }
+            } else {
+                scoreInfo.innerHTML = `Score: <span id="totalScore">${totalScore}</span>`;
+            }
             
             // Update button based on whether this is the last round
             const nextButton = document.getElementById('nextRoundButton');
@@ -1389,12 +1466,20 @@
         }
         
         function showFinalScore() {
+            // Check if this is a new high score
+            const isNewHighScore = saveHighScore(currentMapKey, totalScore);
+            const highScore = getHighScore(currentMapKey);
+            
             // Update the result overlay for final score
-            document.getElementById('resultTitle').textContent = 'Game Complete!';
+            document.getElementById('resultTitle').textContent = isNewHighScore ? '🎉 New High Score!' : 'Game Complete!';
             document.getElementById('distanceText').textContent = 
                 `Final Score: ${totalScore} / ${5000 * TOTAL_ROUNDS}`;
-            document.getElementById('pointsText').textContent = 
-                getScoreRating(totalScore);
+            
+            let ratingText = getScoreRating(totalScore);
+            if (highScore > 0 && !isNewHighScore) {
+                ratingText += ` | Best: ${highScore}`;
+            }
+            document.getElementById('pointsText').textContent = ratingText;
             
             // Clear existing buttons and add final game options
             const buttonContainer = document.querySelector('.result-buttons');
