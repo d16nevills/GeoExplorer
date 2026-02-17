@@ -196,37 +196,48 @@
             height: 500px;
         }
         
-        /* Position Street View compass in top RIGHT on desktop */
+        /* Hide Google's compass completely since we can't reposition it */
         .gm-svpc {
-            position: fixed !important;
-            top: 80px !important;
-            right: 20px !important;
-            left: auto !important;
-            bottom: auto !important;
-            opacity: 0.7 !important;
-            transform: scale(0.9) !important;
-            z-index: 9999 !important;
+            display: none !important;
         }
         
-        .gm-svpc:hover {
-            opacity: 1 !important;
-        }
-        
-        /* Override any absolute positioning Google Maps tries to apply */
         div.gm-svpc {
-            position: fixed !important;
-            top: 80px !important;
-            right: 20px !important;
-            left: auto !important;
-            bottom: auto !important;
+            display: none !important;
         }
         
         #streetview .gm-svpc {
-            position: fixed !important;
-            top: 80px !important;
-            right: 20px !important;
-            left: auto !important;
-            bottom: auto !important;
+            display: none !important;
+        }
+        
+        /* Custom compass that we control */
+        .custom-compass {
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 50%;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: #EA4335;
+            z-index: 9999;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            opacity: 0.7;
+        }
+        
+        .custom-compass:hover {
+            opacity: 1;
+            transform: scale(1.1);
+        }
+        
+        .custom-compass::before {
+            content: 'N';
         }
         
         .controls {
@@ -428,25 +439,30 @@
                 left: 50%;
                 right: auto;
                 transform: translateX(-50%);
-                max-width: 70%;
+                max-width: 80%;
                 align-items: center;
             }
             
             .game-header > div {
                 display: flex;
-                flex-direction: column;
-                gap: 0.3rem;
+                flex-direction: row;
+                gap: 0.4rem;
                 align-items: center;
+                flex-wrap: nowrap;
                 width: 100%;
+                justify-content: center;
             }
             
-            .game-header > div > .score-info {
-                order: 2;
+            .game-header > div .round-info,
+            .game-header > div .region-info {
+                white-space: nowrap;
             }
             
-            .game-header > div > .round-info,
-            .game-header > div > .region-info {
-                order: 1;
+            .game-header > div .score-info {
+                width: 100%;
+                text-align: center;
+                border-left: none !important;
+                padding-left: 0 !important;
             }
             
             .score-info {
@@ -499,6 +515,7 @@
                 right: 10px;
                 left: 10px;
                 z-index: 115;
+                transform-origin: bottom right;
             }
             
             #map.mobile-expanded:hover {
@@ -629,32 +646,14 @@
                 font-size: 0.85rem;
             }
             
-            /* Position compass quarter way up screen on RIGHT side on mobile */
-            .gm-svpc {
-                position: fixed !important;
-                top: 25vh !important;
-                right: 20px !important;
-                left: auto !important;
-                bottom: auto !important;
-                opacity: 0.6 !important;
-                transform: scale(0.85) !important;
-                z-index: 9999 !important;
-            }
-            
-            div.gm-svpc {
-                position: fixed !important;
-                top: 25vh !important;
-                right: 20px !important;
-                left: auto !important;
-                bottom: auto !important;
-            }
-            
-            #streetview .gm-svpc {
-                position: fixed !important;
-                top: 25vh !important;
-                right: 20px !important;
-                left: auto !important;
-                bottom: auto !important;
+            /* Custom compass positioning for mobile */
+            .custom-compass {
+                top: 25vh;
+                right: 20px;
+                width: 45px;
+                height: 45px;
+                font-size: 20px;
+                opacity: 0.6;
             }
             
             /* Hide map controls on mobile */
@@ -674,14 +673,14 @@
                 <p class="subtitle">Test your geography knowledge</p>
             </header>
             
-            <div style="text-align: center; margin-bottom: 2rem;">
-                <button class="secondary" style="padding: 0.75rem 1.5rem; font-size: 0.9rem; margin-right: 1rem;" onclick="clearLocationHistory()">
+            <div style="text-align: center; margin-bottom: 2rem; display: flex; flex-direction: column; align-items: center; gap: 1rem;">
+                <button class="secondary" style="padding: 0.75rem 1.5rem; font-size: 0.9rem; min-width: 220px;" onclick="clearLocationHistory()">
                     Clear Location History
                 </button>
-                <button style="padding: 0.75rem 1.5rem; font-size: 0.9rem;" onclick="showHighScores()">
+                <button style="padding: 0.75rem 1.5rem; font-size: 0.9rem; min-width: 220px;" onclick="showHighScores()">
                     View High Scores
                 </button>
-                <p style="font-size: 0.85rem; color: var(--text-gray); margin-top: 0.75rem;">
+                <p style="font-size: 0.85rem; color: var(--text-gray); margin-top: 0;">
                     <span id="historyCount">0</span> locations remembered
                 </p>
             </div>
@@ -705,15 +704,16 @@
                         Round <span id="currentRound">1</span> of <span id="totalRounds">5</span>
                     </div>
                     <div class="region-info" id="regionName"></div>
-                    <div class="score-info" style="border-left: 2px solid var(--bg-light); padding-left: 0.5rem;">
-                        Score: <span id="totalScore">0</span>
-                    </div>
+                </div>
+                <div class="score-info" style="border-left: 2px solid var(--bg-light); padding-left: 0.5rem;">
+                    Score: <span id="totalScore">0</span>
                 </div>
             </div>
             
             <div class="game-area">
                 <div id="streetview"></div>
                 <div id="map"></div>
+                <div class="custom-compass" id="customCompass"></div>
             </div>
             
             <div class="controls">
@@ -1119,6 +1119,17 @@
             loadNewRound();
         }
         
+        function updateCustomCompass() {
+            if (streetView) {
+                const pov = streetView.getPov();
+                const compass = document.getElementById('customCompass');
+                if (compass && pov) {
+                    // Rotate the compass based on heading (N points up when heading is 0)
+                    compass.style.transform = `rotate(${pov.heading}deg)`;
+                }
+            }
+        }
+        
         function enableMapClicking() {
             // Re-enable map clicking for new round
             google.maps.event.clearListeners(map, 'click');
@@ -1373,10 +1384,9 @@
                             }
                         );
                         
-                        // Force compass positioning after Street View loads
-                        google.maps.event.addListenerOnce(streetView, 'position_changed', () => {
-                            forceCompassPosition();
-                        });
+                        // Update custom compass when POV changes
+                        streetView.addListener('pov_changed', updateCustomCompass);
+                        updateCustomCompass(); // Initial update
                     } else {
                         streetView.setPosition(currentLocation);
                         streetView.setPov(initialPOV);
@@ -1384,9 +1394,7 @@
                             zoomControl: false,
                             fullscreenControl: false
                         });
-                        
-                        // Reposition compass for new round
-                        forceCompassPosition();
+                        updateCustomCompass(); // Update for new round
                     }
                     
                     return;
