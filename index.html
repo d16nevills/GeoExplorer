@@ -576,6 +576,25 @@
             box-shadow: 0 4px 20px rgba(0,0,0,0.5);
         }
         
+        /* Desktop review mode - centered map and top-aligned panel */
+        @media (min-width: 769px) {
+            #map.review-mode {
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                bottom: auto;
+                right: auto;
+            }
+            
+            #reviewPanel.review-mode {
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                bottom: auto;
+            }
+        }
+        
         @media (max-width: 768px) {
             #reviewPanel {
                 bottom: calc(10px + 30vh + 10px); /* above mobile expanded map (30vh) */
@@ -1541,11 +1560,14 @@
             const mapElement = document.getElementById('map');
             mapElement.classList.remove('expanded');
             mapElement.classList.remove('mobile-expanded');
+            mapElement.classList.remove('review-mode');
             mapElement.style.width = '';
             mapElement.style.height = '';
             delete mapElement.dataset.reviewLocked;
             document.getElementById('customCompass').style.display = '';
-            document.getElementById('reviewPanel').style.display = 'none';
+            const reviewPanel = document.getElementById('reviewPanel');
+            reviewPanel.style.display = 'none';
+            reviewPanel.classList.remove('review-mode');
             updateCompassAndControls(false);
             
             // Ensure guess button is visible and remove finish review button
@@ -1570,6 +1592,7 @@
                 fullscreenControl: false,
                 scaleControl: false,
                 gestureHandling: 'greedy',
+                clickableIcons: false,
                 restriction: {
                     latLngBounds: {
                         north: 85,
@@ -2299,8 +2322,10 @@
             const mapElement = document.getElementById('map');
             if (window.innerWidth > 768) {
                 mapElement.classList.add('expanded');
+                mapElement.classList.add('review-mode');
                 mapElement.style.width = '600px';
                 mapElement.style.height = '500px';
+                panel.classList.add('review-mode');
             } else {
                 mapElement.classList.add('mobile-expanded');
                 mapElement.style.width = 'calc(100vw - 20px)';
@@ -2322,11 +2347,14 @@
             if (finishButton) {
                 finishButton.onclick = () => {
                     document.getElementById('guessButton').style.display = 'block';
-                    document.getElementById('reviewPanel').style.display = 'none';
+                    const reviewPanel = document.getElementById('reviewPanel');
+                    reviewPanel.style.display = 'none';
+                    reviewPanel.classList.remove('review-mode');
                     document.getElementById('customCompass').style.display = '';
                     const mapEl = document.getElementById('map');
                     mapEl.style.width = '';
                     mapEl.style.height = '';
+                    mapEl.classList.remove('review-mode');
                     delete mapEl.dataset.reviewLocked;
                     updateCompassAndControls(false);
                     showFinalScore();
@@ -2343,8 +2371,44 @@
             const buttonContainer = document.querySelector('.result-buttons');
             buttonContainer.innerHTML = '<button id="nextRoundButton" onclick="nextRound()">Next Round</button>';
             
-            // Go back to menu to select a new game
-            backToMenu();
+            // Reset game state but keep the same map
+            const savedMapKey = currentMapKey;
+            currentRound = 1;
+            totalScore = 0;
+            allRoundData = [];
+            usedLocations = [];
+            
+            // Clear markers and polylines
+            if (guessMarker) {
+                guessMarker.setMap(null);
+                guessMarker = null;
+            }
+            if (actualMarker) {
+                actualMarker.setMap(null);
+                actualMarker = null;
+            }
+            polylines.forEach(polyline => polyline.setMap(null));
+            polylines = [];
+            
+            // Reset map size
+            const mapElement = document.getElementById('map');
+            mapElement.classList.remove('expanded');
+            mapElement.classList.remove('mobile-expanded');
+            mapElement.classList.remove('review-mode');
+            mapElement.style.width = '';
+            mapElement.style.height = '';
+            delete mapElement.dataset.reviewLocked;
+            
+            // Reset UI elements
+            document.getElementById('customCompass').style.display = '';
+            const reviewPanel = document.getElementById('reviewPanel');
+            reviewPanel.style.display = 'none';
+            reviewPanel.classList.remove('review-mode');
+            updateCompassAndControls(false);
+            document.getElementById('guessButton').style.display = 'block';
+            
+            // Start the same game again
+            startGame(savedMapKey);
         }
         
         function goHome() {
