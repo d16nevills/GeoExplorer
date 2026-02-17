@@ -108,6 +108,10 @@
             display: block;
         }
         
+        .mobile-home-btn {
+            display: none;
+        }
+        
         .game-header {
             position: absolute;
             top: 20px;
@@ -186,6 +190,15 @@
         #map.expanded:hover {
             width: 600px;
             height: 500px;
+        }
+        
+        /* Position Street View compass above the map */
+        .gm-svpc {
+            position: absolute !important;
+            bottom: 280px !important;
+            right: 30px !important;
+            top: auto !important;
+            left: auto !important;
         }
         
         /* Mobile tap to expand */
@@ -408,28 +421,37 @@
             }
             
             .game-header {
-                flex-direction: row;
-                gap: 0.4rem;
-                padding: 0.4rem 0.6rem;
+                flex-direction: column;
+                gap: 0.3rem;
+                padding: 0.5rem 0.8rem;
                 top: 10px;
                 font-size: 0.7rem;
                 left: 50%;
                 right: auto;
                 transform: translateX(-50%);
-                max-width: 50%;
-                flex-wrap: nowrap;
-                justify-content: center;
+                max-width: 60%;
+                align-items: center;
             }
             
             .score-info {
                 font-size: 0.75rem;
+                order: 2;
             }
             
-            .round-info, .region-info {
+            .round-info {
+                border-left: none;
+                padding-left: 0;
+                font-size: 0.7rem;
+                white-space: nowrap;
+                order: 1;
+            }
+            
+            .region-info {
                 border-left: 1px solid var(--bg-light);
                 padding-left: 0.4rem;
                 font-size: 0.7rem;
                 white-space: nowrap;
+                order: 1;
             }
             
             #map {
@@ -487,8 +509,7 @@
                 bottom: auto;
                 top: 10px;
                 left: 10px;
-                padding: 0.6rem;
-                font-size: 0;
+                padding: 0;
                 width: 40px;
                 height: 40px;
                 border-radius: 50%;
@@ -496,23 +517,24 @@
                 align-items: center;
                 justify-content: center;
                 z-index: 111;
+                line-height: 1;
             }
             
             .return-start-btn::before {
                 content: '↺';
                 font-size: 1.3rem;
+                display: block;
             }
             
             .mobile-home-btn {
+                display: flex;
                 position: absolute;
                 top: 10px;
                 right: 10px;
-                padding: 0.6rem;
-                font-size: 0;
+                padding: 0;
                 width: 40px;
                 height: 40px;
                 border-radius: 50%;
-                display: flex;
                 align-items: center;
                 justify-content: center;
                 z-index: 111;
@@ -521,11 +543,17 @@
                 color: var(--text-light);
                 border: none;
                 cursor: pointer;
+                line-height: 1;
             }
             
             .mobile-home-btn::before {
                 content: '⌂';
                 font-size: 1.3rem;
+                display: block;
+            }
+            
+            .mobile-home-btn:hover {
+                background: rgba(44, 44, 46, 0.9);
             }
             
             .back-button {
@@ -569,6 +597,12 @@
                 width: 100%;
                 padding: 0.7rem;
                 font-size: 0.85rem;
+            }
+            
+            /* Position compass above collapsed map on mobile */
+            .gm-svpc {
+                bottom: 180px !important;
+                right: 20px !important;
             }
         }
     </style>
@@ -1101,12 +1135,20 @@
                                 linksControl: true,
                                 panControl: true,
                                 addressControl: false,
-                                showRoadLabels: false
+                                showRoadLabels: false,
+                                zoomControl: false,
+                                fullscreenControl: false,
+                                motionTracking: false,
+                                motionTrackingControl: false
                             }
                         );
                     } else {
                         streetView.setPosition(currentLocation);
                         streetView.setPov(initialPOV);
+                        streetView.setOptions({
+                            zoomControl: false,
+                            fullscreenControl: false
+                        });
                     }
                     
                     return;
