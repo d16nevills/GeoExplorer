@@ -196,17 +196,18 @@
             height: 500px;
         }
         
-        /* Hide Google's compass completely since we can't reposition it */
-        .gm-svpc {
+        /* Hide Google's compass completely - every possible selector */
+        .gm-svpc,
+        div.gm-svpc,
+        #streetview .gm-svpc,
+        .gm-svpc div,
+        [class*="gm-svpc"] {
             display: none !important;
-        }
-        
-        div.gm-svpc {
-            display: none !important;
-        }
-        
-        #streetview .gm-svpc {
-            display: none !important;
+            visibility: hidden !important;
+            opacity: 0 !important;
+            pointer-events: none !important;
+            width: 0 !important;
+            height: 0 !important;
         }
         
         /* Custom compass that we control */
@@ -516,7 +517,7 @@
                 height: 30vh;
                 bottom: 10px;
                 right: 10px;
-                left: 10px;
+                left: auto;
                 z-index: 115;
                 transform-origin: bottom right;
             }
@@ -825,7 +826,7 @@
             eastAsia: {
                 name: 'East Asia',
                 description: 'Japan, Korea, China, and surrounding regions',
-                bounds: { north: 46, south: 18, east: 146, west: 73 }
+                bounds: { north: 46, south: 18, east: 146, west: 98 }
             },
             australia: {
                 name: 'Australia',
@@ -845,7 +846,7 @@
             russia: {
                 name: 'Russia',
                 description: 'Vast Eurasian nation',
-                bounds: { north: 82, south: 41, east: -169, west: 19 }
+                bounds: { north: 77, south: 50, east: 169, west: 32 }
             },
             india: {
                 name: 'India',
@@ -1133,10 +1134,16 @@
                 const pov = streetView.getPov();
                 const compass = document.getElementById('customCompass');
                 if (compass && pov) {
-                    // Rotate the compass based on heading (N points up when heading is 0)
                     compass.style.transform = `rotate(${pov.heading}deg)`;
                 }
             }
+            
+            // Keep hiding Google's compass via JS too
+            document.querySelectorAll('.gm-svpc').forEach(el => {
+                el.style.setProperty('display', 'none', 'important');
+                el.style.setProperty('visibility', 'hidden', 'important');
+                el.style.setProperty('opacity', '0', 'important');
+            });
         }
         
         function enableMapClicking() {
