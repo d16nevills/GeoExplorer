@@ -1,0 +1,11 @@
+{
+  "name": "GeoExplorer",
+  "short_name": "GeoExplorer",
+  "description": "Test your geography knowledge",
+  "display": "fullscreen",
+  "orientation": "portrait",
+  "background_color": "#F4662A",
+  "theme_color": "#F4662A",
+  "start_url": "/GeoExplorer/",
+  "scope": "/GeoExplorer/"
+}
