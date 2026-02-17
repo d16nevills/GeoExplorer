@@ -1610,6 +1610,12 @@
             document.getElementById('guessButton').disabled = true;
             guessLocation = null;
             
+            // Reset map size and compass/button positions
+            const mapElement = document.getElementById('map');
+            mapElement.classList.remove('expanded');
+            mapElement.classList.remove('mobile-expanded');
+            updateCompassAndControls(false);
+            
             // Re-enable map clicking for this round
             if (map) {
                 enableMapClicking();
@@ -2021,8 +2027,8 @@
             const panel = document.getElementById('reviewPanel');
             let panelHTML = `
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; padding-bottom: 0.5rem; border-bottom: 2px solid rgba(255,255,255,0.15);">
-                    <div style="font-weight:700; color:#fff; font-size:0.9rem;">Round Summary</div>
-                    <button id="finishReviewButton" style="padding: 0.4rem 0.9rem; font-size: 0.85rem; background: var(--primary-green); color: #000; border: none; border-radius: 6px; font-weight: 600; cursor: pointer;">Finish Review</button>
+                    <div style="font-weight:700; color:#fff; font-size:1rem;">Round Summary</div>
+                    <button id="finishReviewButton" style="padding: 0.5rem 1rem; font-size: 0.9rem; background: var(--primary-green); color: #000; border: none; border-radius: 8px; font-weight: 700; cursor: pointer; box-shadow: 0 2px 8px rgba(0,215,126,0.3); white-space: nowrap;">Finish Review</button>
                 </div>`;
             let grandTotal = 0;
             allRoundData.forEach(rd => {
@@ -2147,22 +2153,20 @@
             document.getElementById('guessButton').style.display = 'none';
             
             // Attach click handler to the finish review button in the panel
-            setTimeout(() => {
-                const finishButton = document.getElementById('finishReviewButton');
-                if (finishButton) {
-                    finishButton.onclick = () => {
-                        document.getElementById('guessButton').style.display = 'block';
-                        document.getElementById('reviewPanel').style.display = 'none';
-                        document.getElementById('customCompass').style.display = '';
-                        const mapEl = document.getElementById('map');
-                        mapEl.style.width = '';
-                        mapEl.style.height = '';
-                        delete mapEl.dataset.reviewLocked;
-                        updateCompassAndControls(false);
-                        showFinalScore();
-                    };
-                }
-            }, 0);
+            const finishButton = document.getElementById('finishReviewButton');
+            if (finishButton) {
+                finishButton.onclick = () => {
+                    document.getElementById('guessButton').style.display = 'block';
+                    document.getElementById('reviewPanel').style.display = 'none';
+                    document.getElementById('customCompass').style.display = '';
+                    const mapEl = document.getElementById('map');
+                    mapEl.style.width = '';
+                    mapEl.style.height = '';
+                    delete mapEl.dataset.reviewLocked;
+                    updateCompassAndControls(false);
+                    showFinalScore();
+                };
+            }
         }
         
         function playAgain() {
@@ -2217,4 +2221,4 @@
         };
     </script>
 </body>
-</ht
+</html>
