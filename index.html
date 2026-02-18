@@ -2497,9 +2497,34 @@
             }
         }
         
+        // IMMEDIATE TEST - runs as soon as this script executes
+        (function() {
+            setTimeout(function() {
+                const debugDiv = document.getElementById('debugInfo');
+                if (debugDiv) {
+                    debugDiv.innerText = 'IMMEDIATE: Script executed!\nTesting window.onload...';
+                }
+            }, 100);
+        })();
+        
         // Initialize on load
         window.onload = function() {
-            initMapSelection();
+            const debugDiv = document.getElementById('debugInfo');
+            if (debugDiv) {
+                debugDiv.innerText += '\nwindow.onload FIRED!';
+            }
+            
+            try {
+                initMapSelection();
+                if (debugDiv) {
+                    debugDiv.innerText += '\ninitMapSelection completed';
+                }
+            } catch(e) {
+                if (debugDiv) {
+                    debugDiv.innerText += '\nERROR in initMapSelection: ' + e.message;
+                }
+            }
+            
             applyMenuBackground();
         };
     </script>
