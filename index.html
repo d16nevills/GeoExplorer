@@ -1118,6 +1118,9 @@
     
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDZjW2nRDG3W5XLiH39RSDcIOW8p8hjOB8&libraries=geometry&language=en&region=US"></script>
     <script>
+        // CRITICAL TEST - Does JavaScript run at all?
+        alert('JS RUNNING!');
+        
         const MAP_CONFIGS = {
             world: {
                 name: 'World',
@@ -2497,15 +2500,16 @@
             }
         }
         
-        // IMMEDIATE TEST - runs as soon as this script executes
-        (function() {
-            setTimeout(function() {
-                const debugDiv = document.getElementById('debugInfo');
-                if (debugDiv) {
-                    debugDiv.innerText = 'IMMEDIATE: Script executed!\nTesting window.onload...';
-                }
-            }, 100);
-        })();
+        // IMMEDIATE TEST - Multiple approaches
+        document.addEventListener('DOMContentLoaded', function() {
+            alert('DOMContentLoaded fired!');
+            const debugDiv = document.getElementById('debugInfo');
+            if (debugDiv) {
+                debugDiv.innerText = '✓ DOMContentLoaded fired\n✓ Debug div found\n';
+            } else {
+                alert('DEBUG DIV NOT FOUND!');
+            }
+        });
         
         // Initialize on load
         window.onload = function() {
