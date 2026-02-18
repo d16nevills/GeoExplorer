@@ -47,6 +47,11 @@
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             background: var(--bg-dark);
+            background-image: url('desktop.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
             color: var(--text-light);
             min-height: 100vh;
             overflow-x: hidden;
@@ -657,6 +662,10 @@
         
         /* Mobile homepage styles */
         @media (max-width: 768px) {
+            body {
+                background-image: url('phone.png');
+            }
+            
             .corner-btn {
                 padding: 0.5rem;
                 top: 10px;
@@ -1218,7 +1227,7 @@
             canada: {
                 name: 'Canada',
                 description: 'The Great White North',
-                bounds: { north: 83, south: 42, east: -52, west: -141 }
+                bounds: { north: 83, south: 49, east: -52, west: -141 }
             },
             uk: {
                 name: 'United Kingdom',
@@ -1228,7 +1237,7 @@
             france: {
                 name: 'France',
                 description: 'From Paris to the French Riviera',
-                bounds: { north: 51, south: 41, east: 8, west: -5 }
+                bounds: { north: 51, south: 42, east: 8, west: -5 }
             },
             germany: {
                 name: 'Germany',
@@ -1238,27 +1247,27 @@
             italy: {
                 name: 'Italy',
                 description: 'The Italian Peninsula',
-                bounds: { north: 47, south: 36, east: 18, west: 6 }
+                bounds: { north: 47, south: 36, east: 18, west: 6.6 }
             },
             spain: {
                 name: 'Spain',
                 description: 'Iberian adventures',
-                bounds: { north: 44, south: 36, east: 4, west: -10 }
+                bounds: { north: 44, south: 36, east: 4.5, west: -9.5 }
             },
             japan: {
                 name: 'Japan',
                 description: 'Land of the Rising Sun',
-                bounds: { north: 46, south: 30, east: 146, west: 129 }
+                bounds: { north: 46, south: 24, east: 146, west: 129 }
             },
             southKorea: {
                 name: 'South Korea',
                 description: 'Korean Peninsula',
-                bounds: { north: 39, south: 33, east: 130, west: 124 }
+                bounds: { north: 39, south: 33, east: 130, west: 126 }
             },
             china: {
                 name: 'China',
                 description: 'Middle Kingdom',
-                bounds: { north: 54, south: 20, east: 135, west: 73 }
+                bounds: { north: 54, south: 18, east: 135, west: 73 }
             },
             taiwan: {
                 name: 'Taiwan',
@@ -1293,12 +1302,12 @@
             russia: {
                 name: 'Russia',
                 description: 'Vast Eurasian nation',
-                bounds: { north: 77, south: 50, east: 169, west: 32 }
+                bounds: { north: 82, south: 41, east: 169, west: 20 }
             },
             india: {
                 name: 'India',
                 description: 'Subcontinent of diversity',
-                bounds: { north: 36, south: 8, east: 92, west: 68 }
+                bounds: { north: 36, south: 8, east: 97, west: 68 }
             },
             thailand: {
                 name: 'Thailand',
