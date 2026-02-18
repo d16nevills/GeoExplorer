@@ -1,11 +1,25 @@
 // GeoExplorer Service Worker
-const CACHE_NAME = 'geoexplorer-v1';
+const CACHE_NAME = 'geoexplorer-v2-debug';
 
 self.addEventListener('install', (e) => {
+    e.waitUntil(
+        caches.keys().then(names => {
+            return Promise.all(
+                names.map(name => caches.delete(name))
+            );
+        })
+    );
     self.skipWaiting();
 });
 
 self.addEventListener('activate', (e) => {
+    e.waitUntil(
+        caches.keys().then(names => {
+            return Promise.all(
+                names.map(name => caches.delete(name))
+            );
+        })
+    );
     self.clients.claim();
 });
 
