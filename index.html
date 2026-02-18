@@ -200,21 +200,56 @@
         }
         
         h1 {
-            font-size: 3.5rem;
-            font-weight: 700;
-            color: #ffffff;
-            letter-spacing: -0.5px;
-            margin: 0 auto 0.5rem auto;
-            text-shadow: 0 2px 12px rgba(0,0,0,0.4);
+            font-size: 3.8rem;
+            font-weight: 800;
+            color: #FFFFFF;
+            letter-spacing: 0.15em;
+            margin: 0 auto 0.3rem auto;
+            text-shadow: 
+                0 0 20px rgba(0, 215, 126, 0.15),
+                0 2px 0 rgba(0,0,0,0.3),
+                0 4px 8px rgba(0,0,0,0.2);
+            position: relative;
+            display: inline-block;
+            width: 100%;
+            font-family: 'Inter', sans-serif;
+        }
+        
+        h1::before {
+            content: '📍';
+            position: absolute;
+            left: 50%;
+            top: -45px;
+            transform: translateX(-50%);
+            font-size: 2.5rem;
+            filter: drop-shadow(0 2px 8px rgba(0, 215, 126, 0.4));
+        }
+        
+        h1::after {
+            content: 'N 40.7128° W 74.0060°';
+            position: absolute;
+            bottom: -22px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.5rem;
+            color: #00D77E;
+            letter-spacing: 0.2em;
+            font-weight: 500;
+            font-family: 'Courier New', monospace;
+            white-space: nowrap;
+            opacity: 0.8;
         }
         
         .subtitle {
-            font-size: 1.2rem;
-            color: rgba(255,255,255,0.9);
-            font-weight: 400;
-            letter-spacing: 0.5px;
-            text-shadow: 0 1px 6px rgba(0,0,0,0.4);
-            margin: 0 auto;
+            font-size: 0.95rem;
+            color: rgba(255,255,255,0.75);
+            font-weight: 500;
+            letter-spacing: 0.25em;
+            text-transform: uppercase;
+            text-shadow: 0 1px 4px rgba(0,0,0,0.4);
+            margin: 2rem auto 0 auto;
+            font-family: 'Inter', sans-serif;
+            position: relative;
         }
         
         .map-selection {
@@ -668,6 +703,42 @@
                 font-size: 0.8rem;
                 margin-bottom: 1.5rem;
             }
+            
+            /* Mobile title fixes */
+            header {
+                padding-top: 3rem;
+                margin-bottom: 2rem;
+            }
+            
+            h1 {
+                font-size: 2.2rem;
+                letter-spacing: 0.1em;
+                margin: 0 auto 0.3rem auto;
+                padding: 0 1rem;
+                width: 100%;
+                text-align: center;
+            }
+            
+            h1::before {
+                top: -35px;
+                font-size: 1.8rem;
+            }
+            
+            h1::after {
+                font-size: 0.4rem;
+                bottom: -18px;
+                letter-spacing: 0.15em;
+            }
+            
+            .subtitle {
+                font-size: 0.65rem;
+                letter-spacing: 0.2em;
+                padding: 0 1rem;
+                width: 100%;
+                text-align: center;
+                margin-top: 1.5rem;
+                white-space: nowrap;
+            }
         }
         
         @keyframes fadeIn {
@@ -696,15 +767,6 @@
             to {
                 transform: translateY(0);
                 opacity: 1;
-            }
-        }
-        
-        @keyframes spin {
-            from {
-                transform: rotate(0deg);
-            }
-            to {
-                transform: rotate(360deg);
             }
         }
         
@@ -1095,14 +1157,6 @@
             
             <!-- Timer bubble - separate from header -->
             <div id="timerDisplay" style="display: none; position: absolute; top: 80px; left: 50%; transform: translateX(-50%); background: rgba(28,28,30,0.95); backdrop-filter: blur(10px); border-radius: 20px; padding: 0.35rem 1rem; font-size: 1rem; font-weight: 700; color: #00D77E; z-index: 110; font-variant-numeric: tabular-nums; box-shadow: 0 2px 10px rgba(0,0,0,0.3); white-space: nowrap;"></div>
-            
-            <!-- Loading indicator -->
-            <div id="loadingIndicator" style="display: none; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(28,28,30,0.95); backdrop-filter: blur(10px); border-radius: 12px; padding: 1.5rem 2rem; font-size: 1.1rem; font-weight: 600; color: #00D77E; z-index: 115; box-shadow: 0 4px 20px rgba(0,0,0,0.5);">
-                <div style="display: flex; align-items: center; gap: 1rem;">
-                    <div style="width: 20px; height: 20px; border: 3px solid rgba(0,215,126,0.3); border-top-color: #00D77E; border-radius: 50%; animation: spin 1s linear infinite;"></div>
-                    <span>Finding location...</span>
-                </div>
-            </div>
             
             <!-- Review panel - shows above map during game review -->
             <div id="reviewPanel" style="display: none; position: absolute; z-index: 112; background: rgba(28,28,30,0.97); backdrop-filter: blur(12px); border-radius: 10px; padding: 0.75rem 1rem; box-shadow: 0 4px 20px rgba(0,0,0,0.5);"></div>
@@ -1818,10 +1872,6 @@
         }
         
         async function loadNewRound() {
-            // Show loading indicator
-            const loadingIndicator = document.getElementById('loadingIndicator');
-            if (loadingIndicator) loadingIndicator.style.display = 'block';
-            
             document.getElementById('guessButton').disabled = true;
             guessLocation = null;
             
@@ -1851,7 +1901,7 @@
             polylines = [];
             
             let attempts = 0;
-            const maxAttempts = 100; // Reduced from 250 for better performance
+            const maxAttempts = 250; // Many attempts for urban locations
             
             while (attempts < maxAttempts) {
                 currentLocation = getRandomLocation(currentMapConfig.bounds);
@@ -1870,12 +1920,13 @@
                 
                 const streetViewService = new google.maps.StreetViewService();
                 
-                // Balanced urban bias - fewer tries to reduce lag
-                // 5km (urban centers), 15km (urban/suburban), 50km (fallback)
+                // EXTREMELY aggressive urban bias - try very small radii many times
+                // 3km (city centers), 8km (urban), 20km (suburban), 50km (rare fallback)
                 const searchStrategy = [
-                    { radius: 5000, tries: 3 },   // Try 5km three times - urban centers
-                    { radius: 15000, tries: 2 },  // Try 15km twice - urban/suburban areas
-                    { radius: 50000, tries: 1 }   // Final fallback
+                    { radius: 3000, tries: 5 },   // Try 3km FIVE times - city centers only
+                    { radius: 8000, tries: 4 },   // Try 8km four times - urban areas
+                    { radius: 20000, tries: 2 },  // Try 20km twice - suburban
+                    { radius: 50000, tries: 1 }   // Final fallback - still avoids deep wilderness
                 ];
                 
                 let foundLocation = false;
@@ -1975,14 +2026,8 @@
                     // Start timer for this round
                     startTimer();
                     
-                    // Hide loading indicator
-                    if (loadingIndicator) loadingIndicator.style.display = 'none';
-                    
                     return;
             }
-            
-            // Hide loading indicator on failure
-            if (loadingIndicator) loadingIndicator.style.display = 'none';
             
             alert('Could not find enough unique Street View locations in this region. Please try another map or clear your location history.');
             backToMenu();
