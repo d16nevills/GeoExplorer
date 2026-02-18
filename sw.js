@@ -1,5 +1,5 @@
-// GeoExplorer Service Worker
-const CACHE_NAME = 'geoexplorer-v3-backgrounds';
+// GeoExplorer Service Worker - Cleanup/Unregister
+// This service worker unregisters itself and clears all caches
 
 self.addEventListener('install', (e) => {
     e.waitUntil(
@@ -7,9 +7,10 @@ self.addEventListener('install', (e) => {
             return Promise.all(
                 names.map(name => caches.delete(name))
             );
+        }).then(() => {
+            return self.registration.unregister();
         })
     );
-    self.skipWaiting();
 });
 
 self.addEventListener('activate', (e) => {
@@ -18,12 +19,8 @@ self.addEventListener('activate', (e) => {
             return Promise.all(
                 names.map(name => caches.delete(name))
             );
+        }).then(() => {
+            return self.registration.unregister();
         })
     );
-    self.clients.claim();
-});
-
-// Network first - always fetch fresh content
-self.addEventListener('fetch', (e) => {
-    e.respondWith(fetch(e.request).catch(() => caches.match(e.request)));
 });
