@@ -2517,36 +2517,41 @@
         
         // IMMEDIATE TEST - Multiple approaches
         document.addEventListener('DOMContentLoaded', function() {
-            alert('DOMContentLoaded fired!');
+            alert('DOMContentLoaded fired at END of script!');
             const debugDiv = document.getElementById('debugInfo');
             if (debugDiv) {
-                debugDiv.innerText = '✓ DOMContentLoaded fired\n✓ Debug div found\n';
+                debugDiv.innerHTML += 'DOMContentLoaded (end of script) fired<br>';
             } else {
                 alert('DEBUG DIV NOT FOUND!');
+                return;
+            }
+            
+            // NOW call initMapSelection since all functions are defined
+            try {
+                alert('Calling initMapSelection...');
+                initMapSelection();
+                debugDiv.innerHTML += 'initMapSelection completed!<br>';
+                alert('SUCCESS! Map cards should be visible');
+            } catch(e) {
+                alert('ERROR: ' + e.message);
+                debugDiv.innerHTML += 'ERROR: ' + e.message + '<br>';
+            }
+            
+            // Apply menu background
+            try {
+                applyMenuBackground();
+            } catch(e) {
+                debugDiv.innerHTML += 'applyMenuBackground error (ignored): ' + e.message + '<br>';
             }
         });
         
-        // Initialize on load
+        // window.onload - for diagnostic purposes (often doesn't fire if external resources fail)
         window.onload = function() {
-            alert('window.onload FIRED!');
+            alert('window.onload FINALLY FIRED!');
             const debugDiv = document.getElementById('debugInfo');
             if (debugDiv) {
-                debugDiv.innerHTML += 'window.onload FIRED!<br>';
+                debugDiv.innerHTML += 'window.onload fired (late)<br>';
             }
-            
-            try {
-                initMapSelection();
-                if (debugDiv) {
-                    debugDiv.innerHTML += 'initMapSelection completed<br>';
-                }
-            } catch(e) {
-                alert('ERROR: ' + e.message);
-                if (debugDiv) {
-                    debugDiv.innerHTML += 'ERROR in initMapSelection: ' + e.message + '<br>';
-                }
-            }
-            
-            applyMenuBackground();
         };
     </script>
 </body>
