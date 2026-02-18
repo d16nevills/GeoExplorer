@@ -1042,6 +1042,9 @@
                 <span id="historyCount">0</span> locations remembered
             </p>
             
+            <!-- Debug info -->
+            <div id="debugInfo" style="background: rgba(255,0,0,0.8); color: white; padding: 1rem; margin-bottom: 1rem; border-radius: 8px; font-size: 0.9rem; font-family: monospace;"></div>
+            
             <div class="map-selection" id="mapSelection"></div>
         </div>
     </div>
@@ -1318,15 +1321,32 @@
         }
         
         function initMapSelection() {
-            console.log('initMapSelection called');
+            const debugDiv = document.getElementById('debugInfo');
+            let debugMsg = 'DEBUG:\n';
+            
+            debugMsg += '1. initMapSelection called ✓\n';
+            
             const container = document.getElementById('mapSelection');
-            console.log('Container:', container);
-            console.log('MAP_CONFIGS:', MAP_CONFIGS);
-            console.log('Entries:', Object.entries(MAP_CONFIGS));
+            debugMsg += `2. Container found: ${container ? 'YES' : 'NO'}\n`;
+            
+            debugMsg += `3. MAP_CONFIGS defined: ${typeof MAP_CONFIGS !== 'undefined' ? 'YES' : 'NO'}\n`;
+            
+            if (typeof MAP_CONFIGS !== 'undefined') {
+                const entries = Object.entries(MAP_CONFIGS);
+                debugMsg += `4. Number of configs: ${entries.length}\n`;
+            }
+            
+            if (debugDiv) debugDiv.innerText = debugMsg;
+            
+            if (!container) {
+                debugMsg += 'ERROR: Container not found!\n';
+                if (debugDiv) debugDiv.innerText = debugMsg;
+                return;
+            }
+            
             container.innerHTML = '';
             
             Object.entries(MAP_CONFIGS).forEach(([key, config]) => {
-                console.log('Creating card for:', key, config);
                 const card = document.createElement('div');
                 card.className = 'map-card';
                 card.innerHTML = `
@@ -1337,7 +1357,12 @@
                 container.appendChild(card);
             });
             
-            console.log('Final container children:', container.children.length);
+            debugMsg += `5. Cards created: ${container.children.length}\n`;
+            debugMsg += `6. Container display: ${getComputedStyle(container).display}\n`;
+            debugMsg += `7. Container visibility: ${getComputedStyle(container).visibility}\n`;
+            
+            if (debugDiv) debugDiv.innerText = debugMsg;
+            
             // Update history count display
             updateHistoryCount();
         }
