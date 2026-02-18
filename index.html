@@ -1318,10 +1318,15 @@
         }
         
         function initMapSelection() {
+            console.log('initMapSelection called');
             const container = document.getElementById('mapSelection');
+            console.log('Container:', container);
+            console.log('MAP_CONFIGS:', MAP_CONFIGS);
+            console.log('Entries:', Object.entries(MAP_CONFIGS));
             container.innerHTML = '';
             
             Object.entries(MAP_CONFIGS).forEach(([key, config]) => {
+                console.log('Creating card for:', key, config);
                 const card = document.createElement('div');
                 card.className = 'map-card';
                 card.innerHTML = `
@@ -1332,6 +1337,7 @@
                 container.appendChild(card);
             });
             
+            console.log('Final container children:', container.children.length);
             // Update history count display
             updateHistoryCount();
         }
