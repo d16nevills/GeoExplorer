@@ -13,6 +13,21 @@
     <meta name="theme-color" content="#F4662A">
     <link rel="manifest" href="manifest.json">
     <script>
+        // IMMEDIATE TEST - in head section
+        alert('HEAD SCRIPT RUNNING!');
+        
+        // Try writing to debug div when DOM is ready
+        document.addEventListener('DOMContentLoaded', function() {
+            alert('DOM READY!');
+            var div = document.getElementById('debugInfo');
+            if (div) {
+                div.textContent = 'SUCCESS! JavaScript is working!';
+                alert('Wrote to debug div!');
+            } else {
+                alert('Debug div not found');
+            }
+        });
+        
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register('./sw.js');
