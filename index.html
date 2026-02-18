@@ -41,11 +41,6 @@
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             background-color: var(--bg-dark);
-            background-image: url('https://d16nevills.github.io/GeoExplorer/desktop.png');
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            background-attachment: fixed;
             color: var(--text-light);
             min-height: 100vh;
             overflow-x: hidden;
@@ -62,6 +57,7 @@
         #menu-screen {
             position: fixed;
             inset: 0;
+            background-image: url('https://d16nevills.github.io/GeoExplorer/desktop.png');
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
@@ -656,7 +652,7 @@
         
         /* Mobile homepage styles */
         @media (max-width: 768px) {
-            body {
+            #menu-screen {
                 background-image: url('https://d16nevills.github.io/GeoExplorer/phone.png');
             }
             
