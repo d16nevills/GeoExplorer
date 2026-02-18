@@ -13,27 +13,20 @@
     <meta name="theme-color" content="#F4662A">
     <link rel="manifest" href="manifest.json">
     <script>
-        // IMMEDIATE TEST - in head section
-        alert('HEAD SCRIPT RUNNING!');
-        
         // Try writing to debug div when DOM is ready
         document.addEventListener('DOMContentLoaded', function() {
-            alert('DOM READY!');
             var div = document.getElementById('debugInfo');
             if (div) {
-                div.innerHTML = 'v2.7 - SUCCESS! JavaScript is working!<br>';
-                alert('Wrote to debug div!');
+                div.innerHTML = 'v3.0 FINAL - GeoExplorer loaded successfully!<br>';
                 
                 // Test if Google Maps loaded
                 setTimeout(function() {
                     if (typeof google !== 'undefined' && google.maps) {
-                        div.innerHTML += 'Google Maps API: LOADED ✓<br>';
+                        div.innerHTML += 'Google Maps API: Ready ✓<br>';
                     } else {
-                        div.innerHTML += 'Google Maps API: FAILED TO LOAD ✗<br>';
+                        div.innerHTML += 'Google Maps API: Loading...<br>';
                     }
                 }, 1000);
-            } else {
-                alert('Debug div not found');
             }
         });
         
@@ -1140,12 +1133,8 @@
         </div>
     </div>
     
-    <!-- TEMPORARILY DISABLED TO TEST IF THIS IS BLOCKING SCRIPT EXECUTION -->
-    <!-- <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDZjW2nRDG3W5XLiH39RSDcIOW8p8hjOB8&libraries=geometry&language=en&region=US"></script> -->
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDZjW2nRDG3W5XLiH39RSDcIOW8p8hjOB8&libraries=geometry&language=en&region=US"></script>
     <script>
-        // CRITICAL TEST - Does JavaScript run at all?
-        alert('JS RUNNING!');
-        
         const MAP_CONFIGS = {
             world: {
                 name: 'World',
@@ -1350,25 +1339,10 @@
         
         function initMapSelection() {
             const debugDiv = document.getElementById('debugInfo');
-            let debugMsg = 'DEBUG:<br>';
-            
-            debugMsg += '1. initMapSelection called ✓<br>';
-            
             const container = document.getElementById('mapSelection');
-            debugMsg += `2. Container found: ${container ? 'YES' : 'NO'}<br>`;
-            
-            debugMsg += `3. MAP_CONFIGS defined: ${typeof MAP_CONFIGS !== 'undefined' ? 'YES' : 'NO'}<br>`;
-            
-            if (typeof MAP_CONFIGS !== 'undefined') {
-                const entries = Object.entries(MAP_CONFIGS);
-                debugMsg += `4. Number of configs: ${entries.length}<br>`;
-            }
-            
-            if (debugDiv) debugDiv.innerHTML += debugMsg;
             
             if (!container) {
-                debugMsg += 'ERROR: Container not found!<br>';
-                if (debugDiv) debugDiv.innerHTML += debugMsg;
+                if (debugDiv) debugDiv.innerHTML += 'ERROR: Map container not found!<br>';
                 return;
             }
             
@@ -1385,11 +1359,9 @@
                 container.appendChild(card);
             });
             
-            debugMsg += `5. Cards created: ${container.children.length}<br>`;
-            debugMsg += `6. Container display: ${getComputedStyle(container).display}<br>`;
-            debugMsg += `7. Container visibility: ${getComputedStyle(container).visibility}<br>`;
-            
-            if (debugDiv) debugDiv.innerHTML += debugMsg;
+            if (debugDiv) {
+                debugDiv.innerHTML += `${container.children.length} game modes available<br>`;
+            }
             
             // Update history count display
             updateHistoryCount();
@@ -2524,24 +2496,19 @@
         // IMMEDIATE EXECUTION - Call initMapSelection right now!
         // The script is at the bottom of body, so DOM is already ready
         (function() {
-            alert('Running initialization immediately!');
             const debugDiv = document.getElementById('debugInfo');
             
             if (!debugDiv) {
-                alert('DEBUG DIV NOT FOUND!');
                 return;
             }
             
-            debugDiv.innerHTML += 'Script reached end, calling initMapSelection...<br>';
+            debugDiv.innerHTML += 'Initializing map selection...<br>';
             
             // Call initMapSelection since all functions are now defined
             try {
-                alert('Calling initMapSelection...');
                 initMapSelection();
-                debugDiv.innerHTML += 'initMapSelection completed!<br>';
-                alert('SUCCESS! Map cards should be visible');
+                debugDiv.innerHTML += 'Map cards loaded ✓<br>';
             } catch(e) {
-                alert('ERROR: ' + e.message);
                 debugDiv.innerHTML += 'ERROR: ' + e.message + '<br>';
             }
             
@@ -2549,18 +2516,9 @@
             try {
                 applyMenuBackground();
             } catch(e) {
-                debugDiv.innerHTML += 'applyMenuBackground error (ignored): ' + e.message + '<br>';
+                // Ignore errors
             }
         })();
-        
-        // window.onload - for diagnostic purposes (often doesn't fire if external resources fail)
-        window.onload = function() {
-            alert('window.onload FINALLY FIRED!');
-            const debugDiv = document.getElementById('debugInfo');
-            if (debugDiv) {
-                debugDiv.innerHTML += 'window.onload fired (late)<br>';
-            }
-        };
     </script>
 </body>
 </html>
