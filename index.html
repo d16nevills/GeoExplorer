@@ -21,7 +21,7 @@
             alert('DOM READY!');
             var div = document.getElementById('debugInfo');
             if (div) {
-                div.textContent = 'SUCCESS! JavaScript is working!';
+                div.innerHTML = 'SUCCESS! JavaScript is working!<br>';
                 alert('Wrote to debug div!');
             } else {
                 alert('Debug div not found');
@@ -1340,25 +1340,25 @@
         
         function initMapSelection() {
             const debugDiv = document.getElementById('debugInfo');
-            let debugMsg = 'DEBUG:\n';
+            let debugMsg = 'DEBUG:<br>';
             
-            debugMsg += '1. initMapSelection called ✓\n';
+            debugMsg += '1. initMapSelection called ✓<br>';
             
             const container = document.getElementById('mapSelection');
-            debugMsg += `2. Container found: ${container ? 'YES' : 'NO'}\n`;
+            debugMsg += `2. Container found: ${container ? 'YES' : 'NO'}<br>`;
             
-            debugMsg += `3. MAP_CONFIGS defined: ${typeof MAP_CONFIGS !== 'undefined' ? 'YES' : 'NO'}\n`;
+            debugMsg += `3. MAP_CONFIGS defined: ${typeof MAP_CONFIGS !== 'undefined' ? 'YES' : 'NO'}<br>`;
             
             if (typeof MAP_CONFIGS !== 'undefined') {
                 const entries = Object.entries(MAP_CONFIGS);
-                debugMsg += `4. Number of configs: ${entries.length}\n`;
+                debugMsg += `4. Number of configs: ${entries.length}<br>`;
             }
             
-            if (debugDiv) debugDiv.innerText = debugMsg;
+            if (debugDiv) debugDiv.innerHTML += debugMsg;
             
             if (!container) {
-                debugMsg += 'ERROR: Container not found!\n';
-                if (debugDiv) debugDiv.innerText = debugMsg;
+                debugMsg += 'ERROR: Container not found!<br>';
+                if (debugDiv) debugDiv.innerHTML += debugMsg;
                 return;
             }
             
@@ -1375,11 +1375,11 @@
                 container.appendChild(card);
             });
             
-            debugMsg += `5. Cards created: ${container.children.length}\n`;
-            debugMsg += `6. Container display: ${getComputedStyle(container).display}\n`;
-            debugMsg += `7. Container visibility: ${getComputedStyle(container).visibility}\n`;
+            debugMsg += `5. Cards created: ${container.children.length}<br>`;
+            debugMsg += `6. Container display: ${getComputedStyle(container).display}<br>`;
+            debugMsg += `7. Container visibility: ${getComputedStyle(container).visibility}<br>`;
             
-            if (debugDiv) debugDiv.innerText = debugMsg;
+            if (debugDiv) debugDiv.innerHTML += debugMsg;
             
             // Update history count display
             updateHistoryCount();
@@ -2528,19 +2528,21 @@
         
         // Initialize on load
         window.onload = function() {
+            alert('window.onload FIRED!');
             const debugDiv = document.getElementById('debugInfo');
             if (debugDiv) {
-                debugDiv.innerText += '\nwindow.onload FIRED!';
+                debugDiv.innerHTML += 'window.onload FIRED!<br>';
             }
             
             try {
                 initMapSelection();
                 if (debugDiv) {
-                    debugDiv.innerText += '\ninitMapSelection completed';
+                    debugDiv.innerHTML += 'initMapSelection completed<br>';
                 }
             } catch(e) {
+                alert('ERROR: ' + e.message);
                 if (debugDiv) {
-                    debugDiv.innerText += '\nERROR in initMapSelection: ' + e.message;
+                    debugDiv.innerHTML += 'ERROR in initMapSelection: ' + e.message + '<br>';
                 }
             }
             
