@@ -21,8 +21,17 @@
             alert('DOM READY!');
             var div = document.getElementById('debugInfo');
             if (div) {
-                div.innerHTML = 'SUCCESS! JavaScript is working!<br>';
+                div.innerHTML = 'v2.7 - SUCCESS! JavaScript is working!<br>';
                 alert('Wrote to debug div!');
+                
+                // Test if Google Maps loaded
+                setTimeout(function() {
+                    if (typeof google !== 'undefined' && google.maps) {
+                        div.innerHTML += 'Google Maps API: LOADED ✓<br>';
+                    } else {
+                        div.innerHTML += 'Google Maps API: FAILED TO LOAD ✗<br>';
+                    }
+                }, 1000);
             } else {
                 alert('Debug div not found');
             }
@@ -1131,7 +1140,8 @@
         </div>
     </div>
     
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDZjW2nRDG3W5XLiH39RSDcIOW8p8hjOB8&libraries=geometry&language=en&region=US"></script>
+    <!-- TEMPORARILY DISABLED TO TEST IF THIS IS BLOCKING SCRIPT EXECUTION -->
+    <!-- <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDZjW2nRDG3W5XLiH39RSDcIOW8p8hjOB8&libraries=geometry&language=en&region=US"></script> -->
     <script>
         // CRITICAL TEST - Does JavaScript run at all?
         alert('JS RUNNING!');
