@@ -1,5 +1,5 @@
 // GeoExplorer Service Worker
-const CACHE_NAME = 'geoexplorer-v2-debug';
+const CACHE_NAME = 'geoexplorer-v3-backgrounds';
 
 self.addEventListener('install', (e) => {
     e.waitUntil(
