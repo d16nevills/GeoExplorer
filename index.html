@@ -10,7 +10,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="GeoExplorer">
     <meta name="mobile-web-app-capable" content="yes">
-    <meta name="theme-color" content="#F4662A">
+    <meta name="theme-color" content="#1C1C1E">
     <link rel="manifest" href="manifest.json">
     <script>
         // Try writing to debug div when DOM is ready
@@ -41,6 +41,11 @@
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             background-color: var(--bg-dark);
+            background-image: url('desktop-optimized.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
             color: var(--text-light);
             min-height: 100vh;
             overflow-x: hidden;
@@ -57,7 +62,6 @@
         #menu-screen {
             position: fixed;
             inset: 0;
-            background-image: url('desktop-optimized.jpg');
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
@@ -652,7 +656,7 @@
         
         /* Mobile homepage styles */
         @media (max-width: 768px) {
-            #menu-screen {
+            body {
                 background-image: url('phone-optimized.jpg');
             }
             
