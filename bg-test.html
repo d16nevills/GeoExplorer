@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Background Test</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            background-color: #FF0000;
+            background-image: url('https://d16nevills.github.io/GeoExplorer/desktop.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+        
+        .test-box {
+            background: white;
+            padding: 2rem;
+            margin: 2rem;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-box">
+        <h1>Background Image Test</h1>
+        <p>If you see a red background, the background-color works but background-image failed.</p>
+        <p>If you see the teal/gold gradient background, it's working.</p>
+        <p>Current URL: <span id="url"></span></p>
+        <script>
+            document.getElementById('url').textContent = window.location.href;
+        </script>
+    </div>
+</body>
+</html>
