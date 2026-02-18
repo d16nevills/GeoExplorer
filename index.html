@@ -15,19 +15,8 @@
     <script>
         // Try writing to debug div when DOM is ready
         document.addEventListener('DOMContentLoaded', function() {
-            var div = document.getElementById('debugInfo');
-            if (div) {
-                div.innerHTML = 'v3.0 FINAL - GeoExplorer loaded successfully!<br>';
-                
-                // Test if Google Maps loaded
-                setTimeout(function() {
-                    if (typeof google !== 'undefined' && google.maps) {
-                        div.innerHTML += 'Google Maps API: Ready ✓<br>';
-                    } else {
-                        div.innerHTML += 'Google Maps API: Loading...<br>';
-                    }
-                }, 1000);
-            }
+            // Optional: Check if Google Maps loads successfully
+            // Removed debug div output - app is production ready
         });
         
         if ('serviceWorker' in navigator) {
@@ -204,8 +193,9 @@
         
         header {
             text-align: center;
-            margin-bottom: 3rem;
+            margin: 0 auto 3rem auto;
             padding-top: 2rem;
+            max-width: 100%;
             animation: fadeIn 0.8s ease-out;
         }
         
@@ -214,7 +204,7 @@
             font-weight: 700;
             color: #ffffff;
             letter-spacing: -0.5px;
-            margin-bottom: 0.5rem;
+            margin: 0 auto 0.5rem auto;
             text-shadow: 0 2px 12px rgba(0,0,0,0.4);
         }
         
@@ -224,6 +214,7 @@
             font-weight: 400;
             letter-spacing: 0.5px;
             text-shadow: 0 1px 6px rgba(0,0,0,0.4);
+            margin: 0 auto;
         }
         
         .map-selection {
@@ -708,6 +699,15 @@
             }
         }
         
+        @keyframes spin {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(360deg);
+            }
+        }
+        
         @keyframes slideDown {
             from {
                 transform: translateX(-50%) translateY(-30px);
@@ -1059,9 +1059,6 @@
                 <span id="historyCount">0</span> locations remembered
             </p>
             
-            <!-- Debug info -->
-            <div id="debugInfo" style="background: rgba(255,0,0,0.8); color: white; padding: 1rem; margin-bottom: 1rem; border-radius: 8px; font-size: 0.9rem; font-family: monospace;"></div>
-            
             <div class="map-selection" id="mapSelection"></div>
         </div>
     </div>
@@ -1098,6 +1095,14 @@
             
             <!-- Timer bubble - separate from header -->
             <div id="timerDisplay" style="display: none; position: absolute; top: 80px; left: 50%; transform: translateX(-50%); background: rgba(28,28,30,0.95); backdrop-filter: blur(10px); border-radius: 20px; padding: 0.35rem 1rem; font-size: 1rem; font-weight: 700; color: #00D77E; z-index: 110; font-variant-numeric: tabular-nums; box-shadow: 0 2px 10px rgba(0,0,0,0.3); white-space: nowrap;"></div>
+            
+            <!-- Loading indicator -->
+            <div id="loadingIndicator" style="display: none; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(28,28,30,0.95); backdrop-filter: blur(10px); border-radius: 12px; padding: 1.5rem 2rem; font-size: 1.1rem; font-weight: 600; color: #00D77E; z-index: 115; box-shadow: 0 4px 20px rgba(0,0,0,0.5);">
+                <div style="display: flex; align-items: center; gap: 1rem;">
+                    <div style="width: 20px; height: 20px; border: 3px solid rgba(0,215,126,0.3); border-top-color: #00D77E; border-radius: 50%; animation: spin 1s linear infinite;"></div>
+                    <span>Finding location...</span>
+                </div>
+            </div>
             
             <!-- Review panel - shows above map during game review -->
             <div id="reviewPanel" style="display: none; position: absolute; z-index: 112; background: rgba(28,28,30,0.97); backdrop-filter: blur(12px); border-radius: 10px; padding: 0.75rem 1rem; box-shadow: 0 4px 20px rgba(0,0,0,0.5);"></div>
@@ -1338,11 +1343,10 @@
         }
         
         function initMapSelection() {
-            const debugDiv = document.getElementById('debugInfo');
             const container = document.getElementById('mapSelection');
             
             if (!container) {
-                if (debugDiv) debugDiv.innerHTML += 'ERROR: Map container not found!<br>';
+                console.error('Map selection container not found');
                 return;
             }
             
@@ -1358,10 +1362,6 @@
                 card.onclick = () => startGame(key);
                 container.appendChild(card);
             });
-            
-            if (debugDiv) {
-                debugDiv.innerHTML += `${container.children.length} game modes available<br>`;
-            }
             
             // Update history count display
             updateHistoryCount();
@@ -1818,6 +1818,10 @@
         }
         
         async function loadNewRound() {
+            // Show loading indicator
+            const loadingIndicator = document.getElementById('loadingIndicator');
+            if (loadingIndicator) loadingIndicator.style.display = 'block';
+            
             document.getElementById('guessButton').disabled = true;
             guessLocation = null;
             
@@ -1847,7 +1851,7 @@
             polylines = [];
             
             let attempts = 0;
-            const maxAttempts = 250; // Many more attempts to find urban locations
+            const maxAttempts = 100; // Reduced from 250 for better performance
             
             while (attempts < maxAttempts) {
                 currentLocation = getRandomLocation(currentMapConfig.bounds);
@@ -1866,13 +1870,12 @@
                 
                 const streetViewService = new google.maps.StreetViewService();
                 
-                // EXTREMELY aggressive urban bias - try very small radii many times
-                // 3km (city centers), 8km (urban), 20km (suburban), 50km (rare fallback)
+                // Balanced urban bias - fewer tries to reduce lag
+                // 5km (urban centers), 15km (urban/suburban), 50km (fallback)
                 const searchStrategy = [
-                    { radius: 3000, tries: 5 },   // Try 3km FIVE times - city centers only
-                    { radius: 8000, tries: 4 },   // Try 8km four times - urban areas
-                    { radius: 20000, tries: 2 },  // Try 20km twice - suburban
-                    { radius: 50000, tries: 1 }   // Final fallback - still avoids deep wilderness
+                    { radius: 5000, tries: 3 },   // Try 5km three times - urban centers
+                    { radius: 15000, tries: 2 },  // Try 15km twice - urban/suburban areas
+                    { radius: 50000, tries: 1 }   // Final fallback
                 ];
                 
                 let foundLocation = false;
@@ -1972,8 +1975,14 @@
                     // Start timer for this round
                     startTimer();
                     
+                    // Hide loading indicator
+                    if (loadingIndicator) loadingIndicator.style.display = 'none';
+                    
                     return;
             }
+            
+            // Hide loading indicator on failure
+            if (loadingIndicator) loadingIndicator.style.display = 'none';
             
             alert('Could not find enough unique Street View locations in this region. Please try another map or clear your location history.');
             backToMenu();
@@ -2493,30 +2502,13 @@
             }
         }
         
-        // IMMEDIATE EXECUTION - Call initMapSelection right now!
-        // The script is at the bottom of body, so DOM is already ready
+        // Initialize map selection when script loads
         (function() {
-            const debugDiv = document.getElementById('debugInfo');
-            
-            if (!debugDiv) {
-                return;
-            }
-            
-            debugDiv.innerHTML += 'Initializing map selection...<br>';
-            
-            // Call initMapSelection since all functions are now defined
             try {
                 initMapSelection();
-                debugDiv.innerHTML += 'Map cards loaded ✓<br>';
-            } catch(e) {
-                debugDiv.innerHTML += 'ERROR: ' + e.message + '<br>';
-            }
-            
-            // Apply menu background
-            try {
                 applyMenuBackground();
             } catch(e) {
-                // Ignore errors
+                console.error('Initialization error:', e);
             }
         })();
     </script>
