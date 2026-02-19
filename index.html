@@ -67,7 +67,7 @@
             content: '';
             position: fixed;
             inset: 0;
-            background: transparent;
+            background: rgba(0, 0, 0, 0.35);
             z-index: 0;
             pointer-events: none;
         }
@@ -80,12 +80,16 @@
             padding: 2rem;
         }
         
+        @keyframes cornerBtnBlurIn {
+            from { opacity: 0; }
+            to   { opacity: 1; }
+        }
+
         /* Corner buttons for homepage */
         .corner-btn {
             position: absolute;
             top: 20px;
-            background: rgba(255, 255, 255, 0.15);
-            backdrop-filter: blur(10px);
+            background: transparent;
             border: 1px solid rgba(255, 255, 255, 0.3);
             color: #fff;
             padding: 0.6rem 1.2rem;
@@ -93,17 +97,37 @@
             font-size: 0.9rem;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: border-color 0.2s ease, transform 0.2s ease;
             display: flex;
             align-items: center;
             gap: 0.5rem;
             z-index: 10;
+            overflow: hidden;
+            isolation: isolate;
         }
-        
+
+        /* Pseudo-element holds the blur at full strength; we fade it in via
+           opacity so the browser can composite on the GPU — no blur jank */
+        .corner-btn::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            z-index: -1;
+            opacity: 0;
+            animation: cornerBtnBlurIn 0.8s ease forwards;
+            transition: background 0.2s ease;
+        }
+
         .corner-btn:hover {
-            background: rgba(255, 255, 255, 0.25);
             border-color: rgba(255, 255, 255, 0.5);
             transform: translateY(-2px);
+        }
+
+        .corner-btn:hover::before {
+            background: rgba(255, 255, 255, 0.25);
         }
         
         .corner-btn-left {
@@ -1295,15 +1319,15 @@
                 description: 'Vast Eurasian nation',
                 bounds: { north: 82, south: 41, east: 169, west: 20 }
             },
-            india: {
-                name: 'India',
-                description: 'Subcontinent of diversity',
-                bounds: { north: 36, south: 8, east: 97, west: 68 }
-            },
             thailand: {
                 name: 'Thailand',
                 description: 'Land of Smiles',
                 bounds: { north: 21, south: 5, east: 106, west: 97 }
+            },
+            india: {
+                name: 'India',
+                description: 'Subcontinent of diversity',
+                bounds: { north: 36, south: 8, east: 97, west: 68 }
             }
         };
         
