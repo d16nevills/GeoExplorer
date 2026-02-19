@@ -248,8 +248,8 @@
             bottom: -22px;
             left: 50%;
             transform: translateX(-50%);
-            font-size: 0.5rem;
-            color: #00D77E;
+            font-size: 0.7rem;
+            color: #ff3333;
             letter-spacing: 0.2em;
             font-weight: 500;
             font-family: 'Courier New', monospace;
@@ -1707,18 +1707,17 @@
             const compass = document.getElementById('customCompass');
             const controls = document.querySelector('.controls');
             const isMobile = window.innerWidth <= 768;
-            
+
             if (!compass) return;
-            
+
             if (isMobile) {
                 if (expanded) {
-                    // Map expanded: 30vh height, bottom: 10px
-                    // Top of map from bottom = 30vh + 10px
-                    const mapTopFromBottom = window.innerHeight * 0.30 + 10;
-                    // Compass sits just above the map
-                    compass.style.bottom = (mapTopFromBottom + 10) + 'px';
-                    // Button also sits just above the map
-                    if (controls) controls.style.bottom = (mapTopFromBottom + 10) + 'px';
+                    // Use calc() with vh units so it matches the CSS map height (30vh)
+                    // exactly, even on iOS Safari where window.innerHeight !== 100vh.
+                    // Map: height 30vh, bottom 10px → top of map = calc(30vh + 10px)
+                    // Place controls 10px above that.
+                    compass.style.bottom = 'calc(30vh + 20px)';
+                    if (controls) controls.style.bottom = 'calc(30vh + 20px)';
                 } else {
                     compass.style.bottom = '120px';
                     if (controls) controls.style.bottom = '10px';
