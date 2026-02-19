@@ -1250,112 +1250,290 @@
             world: {
                 name: 'World',
                 description: 'Explore locations from around the globe',
-                bounds: { north: 85, south: -85, east: 180, west: -180 }
+                bounds: { north: 85, south: -85, east: 180, west: -180 },
+                seedCities: [
+                    {lat:40.7128,lng:-74.0060},{lat:51.5074,lng:-0.1278},{lat:48.8566,lng:2.3522},
+                    {lat:35.6762,lng:139.6503},{lat:-33.8688,lng:151.2093},{lat:55.7558,lng:37.6173},
+                    {lat:19.0760,lng:72.8777},{lat:-23.5505,lng:-46.6333},{lat:31.2304,lng:121.4737},
+                    {lat:39.9042,lng:116.4074},{lat:1.3521,lng:103.8198},{lat:25.2048,lng:55.2708},
+                    {lat:37.5665,lng:126.9780},{lat:41.0082,lng:28.9784},{lat:30.0444,lng:31.2357},
+                    {lat:52.5200,lng:13.4050},{lat:40.4168,lng:-3.7038},{lat:34.0522,lng:-118.2437},
+                    {lat:41.8781,lng:-87.6298},{lat:43.6532,lng:-79.3832},{lat:19.4326,lng:-99.1332},
+                    {lat:45.5017,lng:-73.5673},{lat:49.2827,lng:-123.1207},{lat:-37.8136,lng:144.9631}
+                ]
             },
             europe: {
                 name: 'Europe',
                 description: 'Explore the European continent',
-                bounds: { north: 71, south: 36, east: 40, west: -10 }
+                bounds: { north: 71, south: 36, east: 40, west: -10 },
+                seedCities: [
+                    {lat:48.8566,lng:2.3522},{lat:51.5074,lng:-0.1278},{lat:52.5200,lng:13.4050},
+                    {lat:41.9028,lng:12.4964},{lat:40.4168,lng:-3.7038},{lat:52.3676,lng:4.9041},
+                    {lat:50.8503,lng:4.3517},{lat:48.2082,lng:16.3738},{lat:52.2297,lng:21.0122},
+                    {lat:50.0755,lng:14.4378},{lat:47.4979,lng:19.0402},{lat:59.3293,lng:18.0686},
+                    {lat:55.6761,lng:12.5683},{lat:60.1699,lng:24.9384},{lat:37.9838,lng:23.7275},
+                    {lat:41.3851,lng:2.1734},{lat:45.4642,lng:9.1900},{lat:48.1351,lng:11.5820},
+                    {lat:53.5753,lng:10.0153},{lat:38.7169,lng:-9.1399},{lat:43.2965,lng:5.3698},
+                    {lat:45.7640,lng:4.8357},{lat:50.9333,lng:6.9500},{lat:50.1109,lng:8.6821},
+                    {lat:53.4808,lng:-2.2426},{lat:55.8642,lng:-4.2518},{lat:53.3811,lng:-1.4701}
+                ]
             },
             northAmerica: {
                 name: 'North America',
                 description: 'USA, Canada, and Mexico',
-                bounds: { north: 72, south: 14, east: -52, west: -168 }
+                bounds: { north: 72, south: 14, east: -52, west: -168 },
+                seedCities: [
+                    {lat:40.7128,lng:-74.0060},{lat:34.0522,lng:-118.2437},{lat:41.8781,lng:-87.6298},
+                    {lat:29.7604,lng:-95.3698},{lat:33.4484,lng:-112.0740},{lat:39.9526,lng:-75.1652},
+                    {lat:37.7749,lng:-122.4194},{lat:47.6062,lng:-122.3321},{lat:38.9072,lng:-77.0369},
+                    {lat:43.6532,lng:-79.3832},{lat:45.5017,lng:-73.5673},{lat:49.2827,lng:-123.1207},
+                    {lat:19.4326,lng:-99.1332},{lat:20.6597,lng:-103.3496},{lat:25.6866,lng:-100.3161},
+                    {lat:51.0447,lng:-114.0719},{lat:45.4215,lng:-75.6972},{lat:53.5461,lng:-113.4938},
+                    {lat:33.7490,lng:-84.3880},{lat:25.7617,lng:-80.1918},{lat:42.3601,lng:-71.0589}
+                ]
             },
             usa: {
                 name: 'United States',
                 description: 'From coast to coast across America',
-                bounds: { north: 49, south: 25, east: -66, west: -125 }
+                bounds: { north: 49, south: 25, east: -66, west: -125 },
+                seedCities: [
+                    {lat:40.7128,lng:-74.0060},{lat:34.0522,lng:-118.2437},{lat:41.8781,lng:-87.6298},
+                    {lat:29.7604,lng:-95.3698},{lat:33.4484,lng:-112.0740},{lat:39.9526,lng:-75.1652},
+                    {lat:32.7157,lng:-117.1611},{lat:32.7767,lng:-96.7970},{lat:37.7749,lng:-122.4194},
+                    {lat:47.6062,lng:-122.3321},{lat:39.7392,lng:-104.9903},{lat:38.9072,lng:-77.0369},
+                    {lat:42.3601,lng:-71.0589},{lat:33.7490,lng:-84.3880},{lat:25.7617,lng:-80.1918},
+                    {lat:44.9778,lng:-93.2650},{lat:36.1627,lng:-86.7816},{lat:45.5231,lng:-122.6765},
+                    {lat:36.1699,lng:-115.1398},{lat:29.4241,lng:-98.4936},{lat:39.9612,lng:-82.9988},
+                    {lat:35.2271,lng:-80.8431},{lat:30.2672,lng:-97.7431},{lat:35.4676,lng:-97.5164}
+                ]
             },
             canada: {
                 name: 'Canada',
                 description: 'The Great White North',
-                bounds: { north: 83, south: 49, east: -52, west: -141 }
+                bounds: { north: 83, south: 43, east: -52, west: -141 },
+                seedCities: [
+                    {lat:43.6532,lng:-79.3832},{lat:45.5017,lng:-73.5673},{lat:49.2827,lng:-123.1207},
+                    {lat:51.0447,lng:-114.0719},{lat:53.5461,lng:-113.4938},{lat:45.4215,lng:-75.6972},
+                    {lat:49.8951,lng:-97.1384},{lat:46.8139,lng:-71.2080},{lat:43.2557,lng:-79.8711},
+                    {lat:44.6488,lng:-63.5752},{lat:46.1351,lng:-60.1831},{lat:53.9333,lng:-122.7833}
+                ]
             },
             uk: {
                 name: 'United Kingdom',
                 description: 'England, Scotland, Wales, and Northern Ireland',
-                bounds: { north: 60, south: 50, east: 2, west: -8 }
+                // bounds kept for map display; regions used for seed generation to exclude Republic of Ireland
+                bounds: { north: 60.9, south: 49.8, east: 2.0, west: -8.2 },
+                regions: [
+                    { north: 60.9, south: 49.8, east: 2.0, west: -5.9 },  // Great Britain
+                    { north: 55.4, south: 53.9, east: -5.4, west: -8.2 }  // Northern Ireland
+                ],
+                seedCities: [
+                    {lat:51.5074,lng:-0.1278},{lat:52.4862,lng:-1.8904},{lat:53.4808,lng:-2.2426},
+                    {lat:55.8642,lng:-4.2518},{lat:53.8008,lng:-1.5491},{lat:53.3811,lng:-1.4701},
+                    {lat:55.9533,lng:-3.1883},{lat:53.4084,lng:-2.9916},{lat:51.4545,lng:-2.5879},
+                    {lat:51.4816,lng:-3.1791},{lat:54.5973,lng:-5.9301},{lat:54.9783,lng:-1.6174},
+                    {lat:52.9548,lng:-1.1581},{lat:52.6369,lng:-1.1398},{lat:50.9097,lng:-1.4044},
+                    {lat:51.8787,lng:-0.4200},{lat:52.2053,lng:0.1218},{lat:51.7520,lng:-1.2577},
+                    {lat:50.8225,lng:-0.1372},{lat:53.2307,lng:-0.5406},{lat:57.1497,lng:-2.0943},
+                    {lat:56.4620,lng:-2.9707},{lat:51.3758,lng:-2.3599},{lat:50.7184,lng:-1.8795}
+                ]
             },
             france: {
                 name: 'France',
                 description: 'From Paris to the French Riviera',
-                bounds: { north: 51, south: 42, east: 8, west: -5 }
+                bounds: { north: 51.1, south: 41.3, east: 9.6, west: -5.1 },
+                seedCities: [
+                    {lat:48.8566,lng:2.3522},{lat:43.2965,lng:5.3698},{lat:45.7640,lng:4.8357},
+                    {lat:43.6047,lng:1.4442},{lat:43.7102,lng:7.2620},{lat:47.2184,lng:-1.5536},
+                    {lat:48.5734,lng:7.7521},{lat:43.6108,lng:3.8767},{lat:44.8378,lng:-0.5792},
+                    {lat:50.6292,lng:3.0573},{lat:49.4431,lng:1.0993},{lat:47.3220,lng:5.0415},
+                    {lat:45.1885,lng:5.7245},{lat:48.1147,lng:-1.6794},{lat:47.9029,lng:1.9093},
+                    {lat:49.2583,lng:4.0317},{lat:50.2871,lng:2.7814},{lat:44.1416,lng:4.8091}
+                ]
             },
             germany: {
                 name: 'Germany',
                 description: 'Heart of Europe',
-                bounds: { north: 55, south: 47, east: 15, west: 6 }
+                bounds: { north: 55.1, south: 47.3, east: 15.0, west: 6.0 },
+                seedCities: [
+                    {lat:52.5200,lng:13.4050},{lat:53.5753,lng:10.0153},{lat:48.1351,lng:11.5820},
+                    {lat:50.9333,lng:6.9500},{lat:50.1109,lng:8.6821},{lat:48.7758,lng:9.1829},
+                    {lat:51.2217,lng:6.7762},{lat:51.5136,lng:7.4653},{lat:51.4556,lng:7.0116},
+                    {lat:51.3397,lng:12.3731},{lat:53.0793,lng:8.8017},{lat:51.0504,lng:13.7373},
+                    {lat:49.4521,lng:11.0767},{lat:51.9607,lng:7.6261},{lat:50.7374,lng:7.0982},
+                    {lat:49.0069,lng:8.4037},{lat:52.2689,lng:10.5268},{lat:53.8655,lng:10.6866},
+                    {lat:51.4818,lng:11.9689},{lat:53.0758,lng:13.9638}
+                ]
             },
             italy: {
                 name: 'Italy',
                 description: 'The Italian Peninsula',
-                bounds: { north: 47, south: 36, east: 18, west: 6.6 }
+                bounds: { north: 47.1, south: 36.6, east: 18.5, west: 6.6 },
+                seedCities: [
+                    {lat:41.9028,lng:12.4964},{lat:45.4642,lng:9.1900},{lat:40.8518,lng:14.2681},
+                    {lat:45.0703,lng:7.6869},{lat:38.1157,lng:13.3615},{lat:44.4056,lng:8.9463},
+                    {lat:44.4949,lng:11.3426},{lat:43.7696,lng:11.2558},{lat:45.4408,lng:12.3155},
+                    {lat:37.5022,lng:15.0873},{lat:41.1171,lng:16.8719},{lat:45.5469,lng:11.5354},
+                    {lat:43.3148,lng:11.3308},{lat:40.3516,lng:18.1750},{lat:38.9359,lng:16.5994},
+                    {lat:45.6495,lng:13.7768},{lat:44.0647,lng:12.5736},{lat:43.8277,lng:10.9182}
+                ]
             },
             spain: {
                 name: 'Spain',
                 description: 'Iberian adventures',
-                bounds: { north: 44, south: 36, east: 4.5, west: -9.5 }
+                bounds: { north: 43.8, south: 35.9, east: 4.5, west: -9.3 },
+                seedCities: [
+                    {lat:40.4168,lng:-3.7038},{lat:41.3851,lng:2.1734},{lat:39.4699,lng:-0.3763},
+                    {lat:37.3891,lng:-5.9845},{lat:41.6561,lng:-0.8773},{lat:36.7213,lng:-4.4214},
+                    {lat:37.9922,lng:-1.1307},{lat:43.2630,lng:-2.9350},{lat:43.3623,lng:-8.4115},
+                    {lat:36.5297,lng:-6.2926},{lat:39.8628,lng:-4.0273},{lat:43.5322,lng:-5.6611},
+                    {lat:38.3452,lng:-0.4810},{lat:40.6400,lng:-4.0018},{lat:37.1773,lng:-3.5986},
+                    {lat:39.5601,lng:2.6502},{lat:36.8381,lng:-2.4597},{lat:43.3134,lng:-1.9787}
+                ]
             },
             japan: {
                 name: 'Japan',
                 description: 'Land of the Rising Sun',
-                bounds: { north: 46, south: 24, east: 146, west: 129 }
+                bounds: { north: 45.5, south: 24.0, east: 146.0, west: 122.9 },
+                seedCities: [
+                    {lat:35.6762,lng:139.6503},{lat:34.6937,lng:135.5023},{lat:35.1815,lng:136.9066},
+                    {lat:43.0618,lng:141.3545},{lat:33.5904,lng:130.4017},{lat:34.6901,lng:135.1955},
+                    {lat:35.0116,lng:135.7681},{lat:38.2682,lng:140.8694},{lat:34.3963,lng:132.4596},
+                    {lat:31.5966,lng:130.5571},{lat:35.4437,lng:139.6380},{lat:36.5748,lng:136.6214},
+                    {lat:33.2382,lng:131.6126},{lat:35.6895,lng:139.6917},{lat:35.7756,lng:140.3929},
+                    {lat:34.7303,lng:137.3832},{lat:35.3606,lng:138.7274},{lat:32.7503,lng:129.8779}
+                ]
             },
             southKorea: {
                 name: 'South Korea',
                 description: 'Korean Peninsula',
-                bounds: { north: 39, south: 33, east: 130, west: 126 }
+                bounds: { north: 38.6, south: 33.0, east: 129.6, west: 126.1 },
+                seedCities: [
+                    {lat:37.5665,lng:126.9780},{lat:35.1796,lng:129.0756},{lat:37.4563,lng:126.7052},
+                    {lat:35.8714,lng:128.6014},{lat:36.3504,lng:127.3845},{lat:35.1595,lng:126.8526},
+                    {lat:37.2750,lng:127.0094},{lat:37.6411,lng:127.0557},{lat:35.5383,lng:129.3114},
+                    {lat:36.0190,lng:129.3435},{lat:37.7398,lng:127.0473},{lat:36.8028,lng:127.1461}
+                ]
             },
             china: {
                 name: 'China',
                 description: 'Middle Kingdom',
-                bounds: { north: 54, south: 18, east: 135, west: 73 }
+                bounds: { north: 53.6, south: 18.0, east: 135.0, west: 73.5 },
+                seedCities: [
+                    {lat:39.9042,lng:116.4074},{lat:31.2304,lng:121.4737},{lat:23.1291,lng:113.2644},
+                    {lat:22.5431,lng:114.0579},{lat:30.5728,lng:104.0668},{lat:30.5928,lng:114.3055},
+                    {lat:39.3434,lng:117.3616},{lat:29.4316,lng:106.9123},{lat:30.2741,lng:120.1551},
+                    {lat:32.0603,lng:118.7969},{lat:34.3416,lng:108.9398},{lat:26.0745,lng:119.2965},
+                    {lat:28.1941,lng:112.9836},{lat:36.0671,lng:120.3826},{lat:45.8038,lng:126.5350},
+                    {lat:36.6512,lng:117.1201},{lat:43.8256,lng:125.3235},{lat:24.8796,lng:102.8332}
+                ]
             },
             taiwan: {
                 name: 'Taiwan',
                 description: 'Formosa',
-                bounds: { north: 25.3, south: 21.9, east: 122, west: 120 }
+                bounds: { north: 25.3, south: 21.9, east: 122.0, west: 120.0 },
+                seedCities: [
+                    {lat:25.0330,lng:121.5654},{lat:22.9999,lng:120.2269},{lat:24.1477,lng:120.6736},
+                    {lat:22.6273,lng:120.3014},{lat:24.9936,lng:121.3010},{lat:25.1276,lng:121.7392},
+                    {lat:23.9754,lng:121.6013},{lat:23.4801,lng:120.4517},{lat:24.8066,lng:120.9686}
+                ]
             },
             hongKong: {
                 name: 'Hong Kong',
                 description: 'Pearl of the Orient',
-                bounds: { north: 22.6, south: 22.1, east: 114.5, west: 113.8 }
+                bounds: { north: 22.6, south: 22.1, east: 114.5, west: 113.8 },
+                seedCities: [
+                    {lat:22.3193,lng:114.1694},{lat:22.3964,lng:114.1095},{lat:22.3282,lng:114.2285},
+                    {lat:22.4170,lng:114.2107},{lat:22.2986,lng:114.1722},{lat:22.3569,lng:114.1315},
+                    {lat:22.3360,lng:114.1740},{lat:22.3707,lng:114.1123}
+                ]
             },
             eastAsia: {
                 name: 'East Asia',
                 description: 'Japan, Korea, China, and surrounding regions',
-                bounds: { north: 42, south: 20, east: 146, west: 105 }
+                bounds: { north: 42, south: 20, east: 146, west: 105 },
+                seedCities: [
+                    {lat:35.6762,lng:139.6503},{lat:34.6937,lng:135.5023},{lat:37.5665,lng:126.9780},
+                    {lat:35.1796,lng:129.0756},{lat:31.2304,lng:121.4737},{lat:39.9042,lng:116.4074},
+                    {lat:23.1291,lng:113.2644},{lat:22.5431,lng:114.0579},{lat:25.0330,lng:121.5654},
+                    {lat:22.3193,lng:114.1694},{lat:43.0618,lng:141.3545},{lat:33.5904,lng:130.4017},
+                    {lat:30.5728,lng:104.0668},{lat:35.0116,lng:135.7681},{lat:36.3504,lng:127.3845}
+                ]
             },
             australia: {
                 name: 'Australia',
                 description: 'Down Under',
-                bounds: { north: -10, south: -44, east: 154, west: 113 }
+                bounds: { north: -10, south: -44, east: 154, west: 113 },
+                seedCities: [
+                    {lat:-33.8688,lng:151.2093},{lat:-37.8136,lng:144.9631},{lat:-27.4698,lng:153.0251},
+                    {lat:-31.9505,lng:115.8605},{lat:-34.9285,lng:138.6007},{lat:-28.0167,lng:153.4000},
+                    {lat:-35.2809,lng:149.1300},{lat:-32.9283,lng:151.7817},{lat:-19.2590,lng:146.8169},
+                    {lat:-27.4679,lng:151.9456},{lat:-37.7483,lng:145.1005},{lat:-33.0138,lng:151.6437},
+                    {lat:-33.7308,lng:150.6789},{lat:-36.3786,lng:145.4051},{lat:-33.4489,lng:149.5801}
+                ]
             },
             brazil: {
                 name: 'Brazil',
                 description: 'Largest country in South America',
-                bounds: { north: 5, south: -34, east: -34, west: -74 }
+                bounds: { north: 5, south: -34, east: -34, west: -74 },
+                seedCities: [
+                    {lat:-23.5505,lng:-46.6333},{lat:-22.9068,lng:-43.1729},{lat:-15.8267,lng:-47.9218},
+                    {lat:-12.9714,lng:-38.5014},{lat:-3.7172,lng:-38.5433},{lat:-19.9167,lng:-43.9345},
+                    {lat:-25.4284,lng:-49.2733},{lat:-3.1190,lng:-60.0217},{lat:-8.0476,lng:-34.8770},
+                    {lat:-30.0346,lng:-51.2177},{lat:-9.6658,lng:-35.7350},{lat:-16.6869,lng:-49.2648},
+                    {lat:-5.0892,lng:-42.8019},{lat:-20.4697,lng:-54.6201},{lat:-1.4558,lng:-48.5044}
+                ]
             },
             mexico: {
                 name: 'Mexico',
                 description: 'Ancient civilizations and modern culture',
-                bounds: { north: 32, south: 14, east: -86, west: -118 }
+                bounds: { north: 32.7, south: 14.5, east: -86.7, west: -117.1 },
+                seedCities: [
+                    {lat:19.4326,lng:-99.1332},{lat:20.6597,lng:-103.3496},{lat:25.6866,lng:-100.3161},
+                    {lat:19.0414,lng:-98.2063},{lat:32.5149,lng:-117.0382},{lat:21.1619,lng:-101.6829},
+                    {lat:20.9674,lng:-89.6237},{lat:17.0655,lng:-96.7254},{lat:22.1565,lng:-100.9855},
+                    {lat:28.6353,lng:-106.0889},{lat:20.5888,lng:-100.3899},{lat:23.2494,lng:-106.4111},
+                    {lat:21.8853,lng:-102.2916},{lat:18.9242,lng:-99.2216},{lat:25.4288,lng:-101.0006}
+                ]
             },
             russia: {
                 name: 'Russia',
                 description: 'Vast Eurasian nation',
-                bounds: { north: 82, south: 41, east: 169, west: 20 }
+                bounds: { north: 77.7, south: 41.2, east: 169.0, west: 19.6 },
+                seedCities: [
+                    {lat:55.7558,lng:37.6173},{lat:59.9311,lng:30.3609},{lat:54.9833,lng:82.8964},
+                    {lat:56.8356,lng:60.6128},{lat:55.8304,lng:49.0661},{lat:56.3269,lng:44.0059},
+                    {lat:53.2001,lng:50.1500},{lat:54.9885,lng:73.3242},{lat:56.4977,lng:84.9744},
+                    {lat:57.1522,lng:65.5272},{lat:54.7388,lng:55.9721},{lat:47.2357,lng:39.7015},
+                    {lat:51.5406,lng:46.0086},{lat:45.0355,lng:38.9753},{lat:56.8526,lng:53.2048},
+                    {lat:55.0415,lng:82.9346},{lat:56.0153,lng:92.8932},{lat:43.1155,lng:131.8855}
+                ]
             },
             thailand: {
                 name: 'Thailand',
                 description: 'Land of Smiles',
-                bounds: { north: 21, south: 5, east: 106, west: 97 }
+                bounds: { north: 20.5, south: 5.5, east: 105.7, west: 97.3 },
+                seedCities: [
+                    {lat:13.7563,lng:100.5018},{lat:18.7883,lng:98.9853},{lat:12.9236,lng:100.8825},
+                    {lat:7.8804,lng:98.3923},{lat:7.0086,lng:100.4747},{lat:14.9799,lng:102.0978},
+                    {lat:16.4419,lng:102.8360},{lat:15.2287,lng:104.8560},{lat:13.0957,lng:101.0223},
+                    {lat:16.8211,lng:100.2659},{lat:14.3566,lng:100.5730},{lat:8.1121,lng:99.3097},
+                    {lat:13.6512,lng:100.5285},{lat:12.6810,lng:101.2782},{lat:7.3305,lng:99.7631}
+                ]
             },
             india: {
                 name: 'India',
                 description: 'Subcontinent of diversity',
-                bounds: { north: 36, south: 8, east: 97, west: 68 }
+                bounds: { north: 35.5, south: 8.0, east: 97.4, west: 68.1 },
+                seedCities: [
+                    {lat:19.0760,lng:72.8777},{lat:28.7041,lng:77.1025},{lat:12.9716,lng:77.5946},
+                    {lat:17.3850,lng:78.4867},{lat:13.0827,lng:80.2707},{lat:22.5726,lng:88.3639},
+                    {lat:18.5204,lng:73.8567},{lat:23.0225,lng:72.5714},{lat:26.9124,lng:75.7873},
+                    {lat:21.1702,lng:72.8311},{lat:26.8467,lng:80.9462},{lat:21.2514,lng:81.6296},
+                    {lat:11.0168,lng:76.9558},{lat:22.7196,lng:75.8577},{lat:25.5941,lng:85.1376},
+                    {lat:24.5854,lng:73.7125},{lat:30.7333,lng:76.7794},{lat:23.2599,lng:77.4126},
+                    {lat:15.8281,lng:74.4977},{lat:9.9312,lng:76.2673}
+                ]
             }
         };
         
@@ -1920,10 +2098,31 @@
             }, 2500);
         }
         
-        function getRandomLocation(bounds) {
-            const lat = bounds.south + Math.random() * (bounds.north - bounds.south);
-            const lng = bounds.west + Math.random() * (bounds.east - bounds.west);
-            return { lat, lng };
+        function getRandomLocation(config) {
+            // 65% chance: start near a known city (with jitter) to bias towards populated areas
+            if (config.seedCities && config.seedCities.length > 0 && Math.random() < 0.65) {
+                const city = config.seedCities[Math.floor(Math.random() * config.seedCities.length)];
+                const jitterLat = (Math.random() - 0.5) * 0.7;  // ±0.35° ≈ ±39 km
+                const jitterLng = (Math.random() - 0.5) * 0.9;
+                return { lat: city.lat + jitterLat, lng: city.lng + jitterLng };
+            }
+            // 35% chance: uniform random within defined region(s) — preserves exploration variety
+            const bounds = (config.regions && config.regions.length > 0)
+                ? (() => {
+                    const areas = config.regions.map(r => (r.north - r.south) * (r.east - r.west));
+                    const total = areas.reduce((a, b) => a + b, 0);
+                    let r = Math.random() * total;
+                    for (let i = 0; i < config.regions.length; i++) {
+                        r -= areas[i];
+                        if (r <= 0) return config.regions[i];
+                    }
+                    return config.regions[config.regions.length - 1];
+                })()
+                : config.bounds;
+            return {
+                lat: bounds.south + Math.random() * (bounds.north - bounds.south),
+                lng: bounds.west  + Math.random() * (bounds.east  - bounds.west)
+            };
         }
         
         async function loadNewRound() {
@@ -1959,7 +2158,7 @@
             const maxAttempts = 250; // Many attempts for urban locations
             
             while (attempts < maxAttempts) {
-                currentLocation = getRandomLocation(currentMapConfig.bounds);
+                currentLocation = getRandomLocation(currentMapConfig);
                 
                 // Check if this location is too close to a previously used location in this game
                 if (isLocationTooClose(currentLocation)) {
