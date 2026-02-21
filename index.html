@@ -2867,8 +2867,10 @@
                 logo.style.transform = 'scale(' + scale.toFixed(4) + ')';
 
                 /* ─ Top-to-bottom mask fade on content approaching the ribbon ─ */
-                /* Use the live visual bottom of the scaled logo, not the layout height */
-                var ribbonBottom = logo.getBoundingClientRect().bottom;
+                /* Subtract transparent bottom fraction (149/682 rows) so the ribbon
+                   boundary tracks the visible logo content, not the full image box. */
+                var logoBCR     = logo.getBoundingClientRect();
+                var ribbonBottom = logoBCR.bottom - logoBCR.height * (149 / 682);
                 var targets = scroller.querySelectorAll(
                     '.subtitle, .timer-card, .location-count, .map-card'
                 );
@@ -2891,6 +2893,7 @@
             }
 
             scroller.addEventListener('scroll', tick, { passive: true });
+            tick(); // evaluate initial mask state
         }
 
         if (document.readyState === 'loading') {
