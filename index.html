@@ -1739,6 +1739,8 @@
                     alert('Could not clear history.');
                 }
             }
+            /* Remove focus so the button doesn't stay highlighted on mobile after cancel */
+            if (document.activeElement) document.activeElement.blur();
         }
         
         function showHighScores() {
