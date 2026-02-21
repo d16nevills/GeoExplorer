@@ -667,7 +667,7 @@
         
         @media (max-width: 768px) {
             #reviewPanel {
-                bottom: calc(10px + 30vh + 10px); /* above mobile expanded map (30vh) */
+                bottom: calc(10px + 45vh + 10px); /* above mobile expanded map (45vh) */
                 right: 10px;
                 left: 10px;
                 max-width: none;
@@ -903,7 +903,7 @@
             
             #map.mobile-expanded {
                 width: calc(100vw - 20px);
-                height: 30vh;
+                height: 45vh;
                 bottom: 10px;
                 right: 10px;
                 left: auto;
@@ -913,7 +913,7 @@
             
             #map.mobile-expanded:hover {
                 width: calc(100vw - 20px);
-                height: 30vh;
+                height: 45vh;
             }
             
             .controls {
@@ -1691,12 +1691,12 @@
 
             if (isMobile) {
                 if (expanded) {
-                    // Use calc() with vh units so it matches the CSS map height (30vh)
+                    // Use calc() with vh units so it matches the CSS map height (45vh)
                     // exactly, even on iOS Safari where window.innerHeight !== 100vh.
-                    // Map: height 30vh, bottom 10px → top of map = calc(30vh + 10px)
+                    // Map: height 45vh, bottom 10px → top of map = calc(45vh + 10px)
                     // Place controls 10px above that.
-                    compass.style.bottom = 'calc(30vh + 20px)';
-                    if (controls) controls.style.bottom = 'calc(30vh + 20px)';
+                    compass.style.bottom = 'calc(45vh + 20px)';
+                    if (controls) controls.style.bottom = 'calc(45vh + 20px)';
                 } else {
                     compass.style.bottom = '120px';
                     if (controls) controls.style.bottom = '10px';
@@ -2667,7 +2667,7 @@
             } else {
                 mapElement.classList.add('mobile-expanded');
                 mapElement.style.width = 'calc(100vw - 20px)';
-                mapElement.style.height = '30vh';
+                mapElement.style.height = '45vh';
             }
             
             // Hide compass during review
