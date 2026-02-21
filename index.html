@@ -2792,9 +2792,9 @@
 
 <!-- ═══ SCROLL-SHRINK-HEADER — delete this entire block to revert ═══
      Fixes the logo + corner buttons at the top of the screen.
-     Logo scales 100%→50% over the first 150 px of scroll (top edge
-     stays fixed via transform-origin:top center). Header is always
-     transparent. Subtitle is hidden from the ribbon.
+     Logo scales 100→ 50% over the first 150 px of scroll (top edge stays
+     fixed via transform-origin:top center). Header always transparent.
+     Scrollable content fades out as it approaches the ribbon.
      ═══════════════════════════════════════════════════════════════ -->
 <style>
     /* ── Fixed, transparent ribbon header ── */
@@ -2823,10 +2823,17 @@
         position: fixed !important;
         z-index: 10000 !important;
     }
+    /* Smooth opacity transitions on scrollable content */
+    #menu-screen .timer-card,
+    #menu-screen .location-count,
+    #menu-screen .map-card {
+        transition: opacity 0.1s linear;
+    }
 </style>
 <script>
     (function () {
-        var SHRINK_PX = 150; // scroll px to go from scale(1) → scale(0.5)
+        var SHRINK_PX  = 150; // scroll px to go from scale(1) → scale(0.5)
+        var FADE_OVER  = 80;  // px above ribbon bottom over which items fade out
 
         function setup() {
             var scroller  = document.getElementById('menu-screen');
@@ -2839,7 +2846,6 @@
             var spacer = document.createElement('div');
             spacer.id  = 'ribbon-spacer';
             menuInner.insertBefore(spacer, menuInner.firstChild);
-            /* Double-rAF: wait for fixed header to be laid out & painted */
             requestAnimationFrame(function () {
                 requestAnimationFrame(function () {
                     spacer.style.height = header.offsetHeight + 'px';
@@ -2847,9 +2853,21 @@
             });
 
             function tick() {
+                /* ─ Logo shrink ─ */
                 var t     = Math.min(1, scroller.scrollTop / SHRINK_PX);
                 var scale = 1 - 0.5 * t;
                 logo.style.transform = 'scale(' + scale.toFixed(4) + ')';
+
+                /* ─ Fade content approaching the ribbon ─ */
+                var ribbonBottom = header.offsetHeight;
+                var fadeTargets  = scroller.querySelectorAll(
+                    '.timer-card, .location-count, .map-card'
+                );
+                for (var i = 0; i < fadeTargets.length; i++) {
+                    var top     = fadeTargets[i].getBoundingClientRect().top;
+                    var opacity = (top - ribbonBottom) / FADE_OVER;
+                    fadeTargets[i].style.opacity = Math.max(0, Math.min(1, opacity));
+                }
             }
 
             scroller.addEventListener('scroll', tick, { passive: true });
