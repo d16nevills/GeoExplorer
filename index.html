@@ -2861,6 +2861,20 @@
             });
 
             function tick() {
+                /* At the very top: reset everything and bail — avoids relying on
+                   getBoundingClientRect() before layout is fully painted. */
+                if (scroller.scrollTop === 0) {
+                    logo.style.transform = '';
+                    var all = scroller.querySelectorAll(
+                        '.subtitle, .timer-card, .location-count, .map-card'
+                    );
+                    for (var j = 0; j < all.length; j++) {
+                        all[j].style.webkitMaskImage = '';
+                        all[j].style.maskImage = '';
+                    }
+                    return;
+                }
+
                 /* ─ Logo shrink ─ */
                 var t     = Math.min(1, scroller.scrollTop / SHRINK_PX);
                 var scale = 1 - 0.5 * t;
