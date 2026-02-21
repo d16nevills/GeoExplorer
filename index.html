@@ -2806,7 +2806,7 @@
         z-index: 9999 !important;
         background: transparent !important;
         margin: 0 !important;
-        padding: 0.5rem 0 0 !important;
+        padding: 0.1rem 0 0 !important;
         pointer-events: none;
         animation: none !important;
     }
@@ -2827,13 +2827,13 @@
     #menu-screen .timer-card,
     #menu-screen .location-count,
     #menu-screen .map-card {
-        transition: opacity 0.1s linear;
+        transition: opacity 0.06s linear;
     }
 </style>
 <script>
     (function () {
         var SHRINK_PX  = 150; // scroll px to go from scale(1) → scale(0.5)
-        var FADE_OVER  = 80;  // px above ribbon bottom over which items fade out
+        var FADE_OVER  = 30;  // px above ribbon bottom over which items fade out
 
         function setup() {
             var scroller  = document.getElementById('menu-screen');
