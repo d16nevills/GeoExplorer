@@ -2856,7 +2856,7 @@
             function tick() {
                 /* ─ Logo shrink ─ */
                 var t     = Math.min(1, scroller.scrollTop / SHRINK_PX);
-                var scale = 1 - 0.75 * t;
+                var scale = 1 - 0.5 * t;
                 logo.style.transform = 'scale(' + scale.toFixed(4) + ')';
 
                 /* ─ Fade content approaching the ribbon ─ */
