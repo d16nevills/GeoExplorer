@@ -2790,68 +2790,69 @@
         })();
     </script>
 
-<!-- ═══════════════════════════════════════════════════════════════
-     SCROLL-SHRINK-HEADER — delete this entire block to revert
+<!-- ═══ SCROLL-SHRINK-HEADER — delete this entire block to revert ═══
+     Fixes the logo + corner buttons at the top of the screen.
+     Logo scales 100%→50% over the first 150 px of scroll (top edge
+     stays fixed via transform-origin:top center). Header is always
+     transparent. Subtitle is hidden from the ribbon.
      ═══════════════════════════════════════════════════════════════ -->
 <style>
-    header.ribbon-active {
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        z-index: 9999;
-        background: rgba(6, 8, 16, 0.88);
-        backdrop-filter: blur(14px);
-        -webkit-backdrop-filter: blur(14px);
-        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-        padding: 0.25rem 0;
-        margin: 0;
-        animation: none;
+    /* ── Fixed, transparent ribbon header ── */
+    #menu-screen header {
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
+        z-index: 9999 !important;
+        background: transparent !important;
+        margin: 0 !important;
+        padding: 0.5rem 0 0 !important;
+        pointer-events: none;
+        animation: none !important;
+    }
+    #menu-screen header .site-logo {
+        transform-origin: top center !important;
+        pointer-events: auto;
+    }
+    /* Subtitle stays out of the ribbon */
+    #menu-screen header .subtitle {
+        display: none !important;
+    }
+    /* Corner buttons: fixed at the top corners, never move */
+    #menu-screen .corner-btn {
+        position: fixed !important;
+        z-index: 10000 !important;
     }
 </style>
 <script>
     (function () {
-        var SHRINK_PX = 150; // scroll px over which logo scales 100%→50%
-        var ribbonOn = false;
-        var spacer = null;
-
-        function applyState(scrollTop) {
-            var header = document.querySelector('header');
-            var logo   = document.querySelector('.site-logo');
-            if (!header || !logo) return;
-
-            var t     = Math.min(1, scrollTop / SHRINK_PX);
-            var scale = 1 - 0.5 * t;
-
-            if (t < 1) {
-                if (ribbonOn) {
-                    ribbonOn = false;
-                    header.classList.remove('ribbon-active');
-                    if (spacer) spacer.style.display = 'none';
-                }
-                logo.style.transform       = 'scale(' + scale.toFixed(4) + ')';
-                logo.style.transformOrigin = 'top center';
-            } else {
-                if (!ribbonOn) {
-                    ribbonOn = true;
-                    if (!spacer) {
-                        spacer = document.createElement('div');
-                        header.parentNode.insertBefore(spacer, header);
-                    }
-                    spacer.style.height  = header.offsetHeight + 'px';
-                    spacer.style.display = 'block';
-                    header.classList.add('ribbon-active');
-                }
-                logo.style.transform = 'scale(0.5)';
-            }
-        }
+        var SHRINK_PX = 150; // scroll px to go from scale(1) → scale(0.5)
 
         function setup() {
-            var scroller = document.getElementById('menu-screen');
-            if (!scroller) return;
-            scroller.addEventListener('scroll', function () {
-                applyState(scroller.scrollTop);
-            }, { passive: true });
+            var scroller  = document.getElementById('menu-screen');
+            var header    = document.querySelector('#menu-screen header');
+            var logo      = document.querySelector('#menu-screen .site-logo');
+            var menuInner = document.querySelector('#menu-screen .menu-inner');
+            if (!scroller || !header || !logo || !menuInner) return;
+
+            /* Spacer: pushes scrollable content below the full-size header */
+            var spacer = document.createElement('div');
+            spacer.id  = 'ribbon-spacer';
+            menuInner.insertBefore(spacer, menuInner.firstChild);
+            /* Double-rAF: wait for fixed header to be laid out & painted */
+            requestAnimationFrame(function () {
+                requestAnimationFrame(function () {
+                    spacer.style.height = header.offsetHeight + 'px';
+                });
+            });
+
+            function tick() {
+                var t     = Math.min(1, scroller.scrollTop / SHRINK_PX);
+                var scale = 1 - 0.5 * t;
+                logo.style.transform = 'scale(' + scale.toFixed(4) + ')';
+            }
+
+            scroller.addEventListener('scroll', tick, { passive: true });
         }
 
         if (document.readyState === 'loading') {
@@ -2861,8 +2862,6 @@
         }
     })();
 </script>
-<!-- ═══════════════════════════════════════════════════════════════
-     END SCROLL-SHRINK-HEADER
-     ═══════════════════════════════════════════════════════════════ -->
+<!-- ═══ END SCROLL-SHRINK-HEADER ═══ -->
 </body>
 </html>
