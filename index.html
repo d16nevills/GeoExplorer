@@ -2789,5 +2789,80 @@
             }
         })();
     </script>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     SCROLL-SHRINK-HEADER — delete this entire block to revert
+     ═══════════════════════════════════════════════════════════════ -->
+<style>
+    header.ribbon-active {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 9999;
+        background: rgba(6, 8, 16, 0.88);
+        backdrop-filter: blur(14px);
+        -webkit-backdrop-filter: blur(14px);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        padding: 0.25rem 0;
+        margin: 0;
+        animation: none;
+    }
+</style>
+<script>
+    (function () {
+        var SHRINK_PX = 150; // scroll px over which logo scales 100%→50%
+        var ribbonOn = false;
+        var spacer = null;
+
+        function applyState(scrollTop) {
+            var header = document.querySelector('header');
+            var logo   = document.querySelector('.site-logo');
+            if (!header || !logo) return;
+
+            var t     = Math.min(1, scrollTop / SHRINK_PX);
+            var scale = 1 - 0.5 * t;
+
+            if (t < 1) {
+                if (ribbonOn) {
+                    ribbonOn = false;
+                    header.classList.remove('ribbon-active');
+                    if (spacer) spacer.style.display = 'none';
+                }
+                logo.style.transform       = 'scale(' + scale.toFixed(4) + ')';
+                logo.style.transformOrigin = 'top center';
+            } else {
+                if (!ribbonOn) {
+                    ribbonOn = true;
+                    if (!spacer) {
+                        spacer = document.createElement('div');
+                        header.parentNode.insertBefore(spacer, header);
+                    }
+                    spacer.style.height  = header.offsetHeight + 'px';
+                    spacer.style.display = 'block';
+                    header.classList.add('ribbon-active');
+                }
+                logo.style.transform = 'scale(0.5)';
+            }
+        }
+
+        function setup() {
+            var scroller = document.getElementById('menu-screen');
+            if (!scroller) return;
+            scroller.addEventListener('scroll', function () {
+                applyState(scroller.scrollTop);
+            }, { passive: true });
+        }
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', setup);
+        } else {
+            setup();
+        }
+    })();
+</script>
+<!-- ═══════════════════════════════════════════════════════════════
+     END SCROLL-SHRINK-HEADER
+     ═══════════════════════════════════════════════════════════════ -->
 </body>
 </html>
