@@ -1160,7 +1160,13 @@
     <div id="high-scores-screen" style="display: none;">
         <div class="menu-inner">
             <button onclick="closeHighScores()" style="margin-bottom: 2rem;">← Back to Menu</button>
-            <h2 style="font-size: 2.5rem; margin-bottom: 2rem; text-align: center; text-shadow: 0 2px 8px rgba(0,0,0,0.4);">High Scores</h2>
+            <h2 style="font-size: 2.5rem; margin-bottom: 1.5rem; text-align: center; text-shadow: 0 2px 8px rgba(0,0,0,0.4);">High Scores</h2>
+            <div style="display: flex; justify-content: center; gap: 0.5rem; margin-bottom: 1.5rem; flex-wrap: wrap;">
+                <button onclick="showHighScores(0)"   id="hsTimerBtn-0"   class="timer-btn">Off</button>
+                <button onclick="showHighScores(60)"  id="hsTimerBtn-60"  class="timer-btn">1 min</button>
+                <button onclick="showHighScores(300)" id="hsTimerBtn-300" class="timer-btn">5 min</button>
+                <button onclick="showHighScores(600)" id="hsTimerBtn-600" class="timer-btn">10 min</button>
+            </div>
             <div id="highScoresList" style="max-width: 600px; margin: 0 auto;"></div>
         </div>
     </div>
@@ -1574,24 +1580,33 @@
         const MAX_LOCATION_HISTORY = 100; // Remember last 100 locations across all games
         
         // High score functions
-        function getHighScore(mapKey) {
+        function getHighScore(mapKey, timerMode) {
             try {
                 const highScores = localStorage.getItem('geoexplorer_high_scores');
                 if (!highScores) return 0;
                 const scores = JSON.parse(highScores);
-                return scores[mapKey] || 0;
+                const entry = scores[mapKey];
+                if (!entry) return 0;
+                // Migration: old format stored a bare number (treat as Off/0 mode)
+                if (typeof entry === 'number') return timerMode === 0 ? entry : 0;
+                return entry[String(timerMode)] || 0;
             } catch (e) {
                 return 0;
             }
         }
-        
-        function saveHighScore(mapKey, score) {
+
+        function saveHighScore(mapKey, score, timerMode) {
             try {
                 let highScores = localStorage.getItem('geoexplorer_high_scores');
                 let scores = highScores ? JSON.parse(highScores) : {};
-                
-                if (score > (scores[mapKey] || 0)) {
-                    scores[mapKey] = score;
+                // Migration: convert old flat-number format to nested object
+                if (typeof scores[mapKey] === 'number') {
+                    scores[mapKey] = { '0': scores[mapKey] };
+                }
+                if (!scores[mapKey]) scores[mapKey] = {};
+                const key = String(timerMode);
+                if (score > (scores[mapKey][key] || 0)) {
+                    scores[mapKey][key] = score;
                     localStorage.setItem('geoexplorer_high_scores', JSON.stringify(scores));
                     return true; // New high score!
                 }
@@ -1782,32 +1797,47 @@
             if (document.activeElement) document.activeElement.blur();
         }
         
-        function showHighScores() {
+        function showHighScores(timerMode) {
             document.getElementById('menu-screen').style.display = 'none';
             const hs = document.getElementById('high-scores-screen');
             hs.style.display = 'block';
-            // DISABLED: Let CSS gradient from body tag show through instead
-            // const isMobile = window.innerWidth <= 768;
-            // hs.style.backgroundImage = `url('${isMobile ? BG_PORTRAIT : BG_LANDSCAPE}')`;
-            // hs.style.backgroundSize = 'cover';
-            // hs.style.backgroundPosition = 'center';
-            
+
+            // Default to the timer mode currently selected on the menu
+            if (timerMode === undefined) timerMode = timerDuration;
+
+            // Highlight the active tab
+            [0, 60, 300, 600].forEach(t => {
+                document.getElementById(`hsTimerBtn-${t}`).classList.toggle('timer-active', t === timerMode);
+            });
+
             const container = document.getElementById('highScoresList');
             const highScores = localStorage.getItem('geoexplorer_high_scores');
             const scores = highScores ? JSON.parse(highScores) : {};
-            
-            if (Object.keys(scores).length === 0) {
-                container.innerHTML = '<p style="text-align: center; color: var(--text-gray); margin-top: 2rem;">No high scores yet. Play some games to set records!</p>';
+            const timerKey = String(timerMode);
+
+            // Collect scores for this timer mode across all maps
+            const modeScores = Object.entries(scores)
+                .map(([mapKey, entry]) => {
+                    let score;
+                    if (typeof entry === 'number') {
+                        // Migration: old flat format — count it under Off (0)
+                        score = timerMode === 0 ? entry : 0;
+                    } else {
+                        score = (entry && entry[timerKey]) || 0;
+                    }
+                    return { mapKey, score, name: MAP_CONFIGS[mapKey]?.name || mapKey };
+                })
+                .filter(({ score }) => score > 0)
+                .sort((a, b) => b.score - a.score);
+
+            if (modeScores.length === 0) {
+                const label = timerMode === 0 ? 'No Timer' : `${timerMode / 60} min`;
+                container.innerHTML = `<p style="text-align: center; color: var(--text-gray); margin-top: 2rem;">No high scores yet for ${label} mode. Play some games to set records!</p>`;
                 return;
             }
-            
-            // Sort scores by value (highest first)
-            const sortedScores = Object.entries(scores)
-                .map(([key, score]) => ({ key, score, name: MAP_CONFIGS[key]?.name || key }))
-                .sort((a, b) => b.score - a.score);
-            
+
             let html = '<div style="display: flex; flex-direction: column; gap: 1rem;">';
-            sortedScores.forEach(({ name, score }) => {
+            modeScores.forEach(({ name, score }) => {
                 const maxScore = 5000 * TOTAL_ROUNDS;
                 const percentage = ((score / maxScore) * 100).toFixed(1);
                 html += `
@@ -1821,7 +1851,7 @@
                 `;
             });
             html += '</div>';
-            
+
             container.innerHTML = html;
         }
         
@@ -1845,8 +1875,8 @@
             document.getElementById('currentRound').textContent = '1';
             document.getElementById('totalRounds').textContent = TOTAL_ROUNDS;
             
-            // Show high score
-            const highScore = getHighScore(mapKey);
+            // Show high score for this map + timer mode combination
+            const highScore = getHighScore(mapKey, timerDuration);
             const scoreInfo = document.querySelector('.score-info');
             if (highScore > 0) {
                 scoreInfo.innerHTML = `Score: <span id="totalScore">0</span> | Best: ${highScore}`;
@@ -2516,7 +2546,7 @@
             totalScoreSpan.textContent = totalScore;
             
             // Update high score in header if current score exceeds it
-            const highScore = getHighScore(currentMapKey);
+            const highScore = getHighScore(currentMapKey, timerDuration);
             const scoreInfo = document.querySelector('.score-info');
             if (highScore > 0) {
                 if (totalScore > highScore) {
@@ -2564,9 +2594,9 @@
         }
         
         function showFinalScore() {
-            // Check if this is a new high score
-            const isNewHighScore = saveHighScore(currentMapKey, totalScore);
-            const highScore = getHighScore(currentMapKey);
+            // Check if this is a new high score (scoped to the current timer mode)
+            const isNewHighScore = saveHighScore(currentMapKey, totalScore, timerDuration);
+            const highScore = getHighScore(currentMapKey, timerDuration);
             
             // Update the result overlay for final score
             document.getElementById('resultTitle').textContent = isNewHighScore ? '🎉 New High Score!' : 'Game Complete!';
