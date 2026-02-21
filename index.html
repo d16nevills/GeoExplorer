@@ -2792,9 +2792,10 @@
 
 <!-- ═══ SCROLL-SHRINK-HEADER — delete this entire block to revert ═══
      Fixes the logo + corner buttons at the top of the screen.
-     Logo scales 100→ 50% over the first 150 px of scroll (top edge stays
+     Logo scales 100→50% over the first 150px of scroll (top edge stays
      fixed via transform-origin:top center). Header always transparent.
-     Scrollable content fades out as it approaches the ribbon.
+     Content fades top-to-bottom as it slides behind the ribbon, using
+     a mask-image gradient rather than uniform opacity.
      ═══════════════════════════════════════════════════════════════ -->
 <style>
     /* ── Fixed, transparent ribbon header ── */
@@ -2823,18 +2824,11 @@
         position: fixed !important;
         z-index: 10000 !important;
     }
-    /* Smooth opacity transitions on scrollable content */
-    #menu-screen .subtitle,
-    #menu-screen .timer-card,
-    #menu-screen .location-count,
-    #menu-screen .map-card {
-        transition: opacity 0.06s linear;
-    }
 </style>
 <script>
     (function () {
-        var SHRINK_PX  = 150; // scroll px to go from scale(1) → scale(0.5)
-        var FADE_OVER  = 30;  // px above ribbon bottom over which items fade out
+        var SHRINK_PX = 150; // scroll px to go from scale(1) → scale(0.5)
+        var FEATHER   = 24;  // px of soft fade below the ribbon edge
 
         function setup() {
             var scroller  = document.getElementById('menu-screen');
@@ -2859,15 +2853,26 @@
                 var scale = 1 - 0.5 * t;
                 logo.style.transform = 'scale(' + scale.toFixed(4) + ')';
 
-                /* ─ Fade content approaching the ribbon ─ */
+                /* ─ Top-to-bottom mask fade on content approaching the ribbon ─ */
                 var ribbonBottom = header.offsetHeight;
-                var fadeTargets  = scroller.querySelectorAll(
+                var targets = scroller.querySelectorAll(
                     '.subtitle, .timer-card, .location-count, .map-card'
                 );
-                for (var i = 0; i < fadeTargets.length; i++) {
-                    var top     = fadeTargets[i].getBoundingClientRect().top;
-                    var opacity = (top - ribbonBottom) / FADE_OVER;
-                    fadeTargets[i].style.opacity = Math.max(0, Math.min(1, opacity));
+                for (var i = 0; i < targets.length; i++) {
+                    var top = targets[i].getBoundingClientRect().top;
+                    var crossPx = ribbonBottom - top; // px of element hidden behind ribbon
+
+                    if (crossPx <= 0) {
+                        /* Fully below ribbon — clear any mask */
+                        targets[i].style.webkitMaskImage = '';
+                        targets[i].style.maskImage = '';
+                    } else {
+                        /* Transparent from 0 → crossPx, then fade to opaque over FEATHER px */
+                        var grad = 'linear-gradient(to bottom, transparent 0, transparent '
+                            + crossPx + 'px, black ' + (crossPx + FEATHER) + 'px)';
+                        targets[i].style.webkitMaskImage = grad;
+                        targets[i].style.maskImage = grad;
+                    }
                 }
             }
 
