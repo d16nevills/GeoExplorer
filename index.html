@@ -1159,10 +1159,10 @@
     
     <div id="high-scores-screen" style="display: none;">
         <div class="menu-inner">
-            <button onclick="closeHighScores()" style="margin-bottom: 2rem;">← Back to Menu</button>
+            <button onclick="closeHighScores()" style="margin-top: 1.5rem; margin-bottom: 2rem;">← Back to Menu</button>
             <h2 style="font-size: 2.5rem; margin-bottom: 1.5rem; text-align: center; text-shadow: 0 2px 8px rgba(0,0,0,0.4);">High Scores</h2>
             <div style="display: flex; justify-content: center; gap: 0.5rem; margin-bottom: 1.5rem; flex-wrap: wrap;">
-                <button onclick="showHighScores(0)"   id="hsTimerBtn-0"   class="timer-btn">Off</button>
+                <button onclick="showHighScores(0)"   id="hsTimerBtn-0"   class="timer-btn" style="min-width: 5rem;">Off</button>
                 <button onclick="showHighScores(60)"  id="hsTimerBtn-60"  class="timer-btn">1 min</button>
                 <button onclick="showHighScores(300)" id="hsTimerBtn-300" class="timer-btn">5 min</button>
                 <button onclick="showHighScores(600)" id="hsTimerBtn-600" class="timer-btn">10 min</button>
@@ -1832,7 +1832,11 @@
 
             if (modeScores.length === 0) {
                 const label = timerMode === 0 ? 'No Timer' : `${timerMode / 60} min`;
-                container.innerHTML = `<p style="text-align: center; color: var(--text-gray); margin-top: 2rem;">No high scores yet for ${label} mode. Play some games to set records!</p>`;
+                container.innerHTML = `
+                    <div style="background: rgba(255,255,255,0.15); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.3); border-radius: 12px; padding: 2rem 1.5rem; text-align: center; margin-top: 2rem;">
+                        <p style="color: #fff; font-size: 1rem; font-weight: 500; margin: 0; text-shadow: 0 1px 4px rgba(0,0,0,0.4);">No high scores yet for <strong>${label}</strong> mode.<br>Play some games to set records!</p>
+                    </div>
+                `;
                 return;
             }
 
