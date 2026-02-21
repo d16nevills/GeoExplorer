@@ -2841,7 +2841,8 @@
 <script>
     (function () {
         var SHRINK_PX = 150; // scroll px to go from scale(1) → scale(0.5)
-        var FEATHER   = 24;  // px of soft fade below the ribbon edge
+        var FEATHER   = 24;  // px of soft fade at the reveal edge
+        var BUFFER    = 48;  // extra gap below the logo before content starts fading in
 
         function setup() {
             var scroller  = document.getElementById('menu-screen');
@@ -2884,16 +2885,17 @@
                 /* Subtract transparent bottom fraction (149/682 rows) so the ribbon
                    boundary tracks the visible logo content, not the full image box. */
                 var logoBCR     = logo.getBoundingClientRect();
-                var ribbonBottom = logoBCR.bottom - logoBCR.height * (149 / 682);
+                /* revealLine: content fades in BUFFER px below the visible logo edge */
+                var revealLine  = logoBCR.bottom - logoBCR.height * (149 / 682) + BUFFER;
                 var targets = scroller.querySelectorAll(
                     '.subtitle, .timer-card, .location-count, .map-card'
                 );
                 for (var i = 0; i < targets.length; i++) {
                     var top = targets[i].getBoundingClientRect().top;
-                    var crossPx = ribbonBottom - top; // px of element hidden behind ribbon
+                    var crossPx = revealLine - top; // px of element hidden above reveal line
 
                     if (crossPx <= 0) {
-                        /* Fully below ribbon — clear any mask */
+                        /* Below reveal line — clear any mask */
                         targets[i].style.webkitMaskImage = '';
                         targets[i].style.maskImage = '';
                     } else {
