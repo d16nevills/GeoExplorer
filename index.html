@@ -239,7 +239,7 @@
             letter-spacing: 0.25em;
             text-transform: uppercase;
             text-shadow: 0 1px 4px rgba(0,0,0,0.4);
-            margin: 0.2rem auto 0 auto;
+            margin: 1.5rem auto 0 auto;
             font-family: 'Inter', sans-serif;
             position: relative;
         }
@@ -667,7 +667,7 @@
         
         @media (max-width: 768px) {
             #reviewPanel {
-                bottom: calc(10px + 30vh + 10px); /* above mobile expanded map (30vh) */
+                bottom: calc(10px + 45vh + 10px); /* above mobile expanded map (45vh) */
                 right: 10px;
                 left: 10px;
                 max-width: none;
@@ -748,7 +748,7 @@
                 padding: 0 1rem;
                 width: 100%;
                 text-align: center;
-                margin-top: 0.4rem;
+                margin-top: 1rem;
                 white-space: nowrap;
             }
         }
@@ -903,7 +903,7 @@
             
             #map.mobile-expanded {
                 width: calc(100vw - 20px);
-                height: 30vh;
+                height: 45vh;
                 bottom: 10px;
                 right: 10px;
                 left: auto;
@@ -913,7 +913,7 @@
             
             #map.mobile-expanded:hover {
                 width: calc(100vw - 20px);
-                height: 30vh;
+                height: 45vh;
             }
             
             .controls {
@@ -1691,12 +1691,12 @@
 
             if (isMobile) {
                 if (expanded) {
-                    // Use calc() with vh units so it matches the CSS map height (30vh)
+                    // Use calc() with vh units so it matches the CSS map height (45vh)
                     // exactly, even on iOS Safari where window.innerHeight !== 100vh.
-                    // Map: height 30vh, bottom 10px → top of map = calc(30vh + 10px)
+                    // Map: height 45vh, bottom 10px → top of map = calc(45vh + 10px)
                     // Place controls 10px above that.
-                    compass.style.bottom = 'calc(30vh + 20px)';
-                    if (controls) controls.style.bottom = 'calc(30vh + 20px)';
+                    compass.style.bottom = 'calc(45vh + 20px)';
+                    if (controls) controls.style.bottom = 'calc(45vh + 20px)';
                 } else {
                     compass.style.bottom = '120px';
                     if (controls) controls.style.bottom = '10px';
@@ -1739,6 +1739,8 @@
                     alert('Could not clear history.');
                 }
             }
+            /* Remove focus so the button doesn't stay highlighted on mobile after cancel */
+            if (document.activeElement) document.activeElement.blur();
         }
         
         function showHighScores() {
@@ -1820,6 +1822,16 @@
         }
         
         function backToMenu() {
+            // Always clear the round-complete overlay, regardless of how we got here
+            const resultOverlay = document.getElementById('resultOverlay');
+            resultOverlay.classList.remove('active');
+            resultOverlay.style.display = 'none';
+            // Reset button to default state in case user backed out on the last round
+            const buttonContainer = document.querySelector('.result-buttons');
+            if (buttonContainer) {
+                buttonContainer.innerHTML = '<button id="nextRoundButton" onclick="nextRound()">Next Round</button>';
+            }
+
             stopTimer();
             document.getElementById('timerDisplay').style.display = 'none';
             // Hide game screen
@@ -2665,7 +2677,7 @@
             } else {
                 mapElement.classList.add('mobile-expanded');
                 mapElement.style.width = 'calc(100vw - 20px)';
-                mapElement.style.height = '30vh';
+                mapElement.style.height = '45vh';
             }
             
             // Hide compass during review
