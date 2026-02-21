@@ -1822,6 +1822,16 @@
         }
         
         function backToMenu() {
+            // Always clear the round-complete overlay, regardless of how we got here
+            const resultOverlay = document.getElementById('resultOverlay');
+            resultOverlay.classList.remove('active');
+            resultOverlay.style.display = 'none';
+            // Reset button to default state in case user backed out on the last round
+            const buttonContainer = document.querySelector('.result-buttons');
+            if (buttonContainer) {
+                buttonContainer.innerHTML = '<button id="nextRoundButton" onclick="nextRound()">Next Round</button>';
+            }
+
             stopTimer();
             document.getElementById('timerDisplay').style.display = 'none';
             // Hide game screen
