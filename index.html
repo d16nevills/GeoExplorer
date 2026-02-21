@@ -2854,7 +2854,8 @@
                 logo.style.transform = 'scale(' + scale.toFixed(4) + ')';
 
                 /* ─ Top-to-bottom mask fade on content approaching the ribbon ─ */
-                var ribbonBottom = header.offsetHeight;
+                /* Use the live visual bottom of the scaled logo, not the layout height */
+                var ribbonBottom = logo.getBoundingClientRect().bottom;
                 var targets = scroller.querySelectorAll(
                     '.subtitle, .timer-card, .location-count, .map-card'
                 );
