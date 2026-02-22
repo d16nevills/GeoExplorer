@@ -104,13 +104,15 @@
             font-size: 0.9rem;
             font-weight: 600;
             cursor: pointer;
-            transition: border-color 0.2s ease, transform 0.2s ease;
+            transition: border-color 0.2s ease, transform 0.2s ease, background 0.15s ease;
             display: flex;
             align-items: center;
             gap: 0.5rem;
             z-index: 10;
             overflow: hidden;
             isolation: isolate;
+            -webkit-tap-highlight-color: transparent;
+            outline: none;
         }
 
         /* Pseudo-element holds the blur at full strength; we fade it in via
@@ -129,12 +131,20 @@
         }
 
         .corner-btn:hover {
+            background: transparent;
             border-color: rgba(255, 255, 255, 0.5);
             transform: translateY(-2px);
         }
 
         .corner-btn:hover::before {
             background: rgba(255, 255, 255, 0.25);
+        }
+
+        /* Clear history button — red when pressed, returns to normal after */
+        .corner-btn-left:active,
+        .corner-btn-left.pressing {
+            background: rgba(220, 38, 38, 0.35) !important;
+            border-color: rgba(255, 100, 100, 0.8) !important;
         }
         
         .corner-btn-left {
@@ -1546,10 +1556,11 @@
             font-weight: 800;
             letter-spacing: 0.01em;
             box-shadow: 0 4px 0 rgba(0, 0, 0, 0.38), 0 6px 14px rgba(0, 0, 0, 0.20);
-            transition: border-color 0.12s ease, transform 0.08s ease, box-shadow 0.08s ease;
+            transition: border-color 0.12s ease, transform 0.08s ease, box-shadow 0.08s ease, background 0.12s ease;
         }
 
         [data-theme="cartoon"] .corner-btn:hover {
+            background: transparent;
             border-color: rgba(255, 255, 255, 0.55);
             transform: translateY(-3px);
             box-shadow: 0 7px 0 rgba(0, 0, 0, 0.38), 0 10px 20px rgba(0, 0, 0, 0.25);
@@ -1560,6 +1571,14 @@
             box-shadow: 0 1px 0 rgba(0, 0, 0, 0.38), 0 2px 6px rgba(0, 0, 0, 0.15);
         }
 
+        /* Clear history button — red when pressed in cartoon theme */
+        [data-theme="cartoon"] .corner-btn-left:active,
+        [data-theme="cartoon"] .corner-btn-left.pressing {
+            background: rgba(220, 38, 38, 0.40) !important;
+            border-color: rgba(255, 100, 100, 0.8) !important;
+            box-shadow: 0 1px 0 rgba(100, 0, 0, 0.5), 0 2px 6px rgba(0, 0, 0, 0.15) !important;
+        }
+
         /* Keep corner buttons circular on mobile */
         @media (max-width: 768px) {
             [data-theme="cartoon"] .corner-btn {
@@ -1568,6 +1587,7 @@
             }
 
             [data-theme="cartoon"] .corner-btn:hover {
+                background: transparent;
                 box-shadow: 0 5px 0 rgba(0, 0, 0, 0.38), 0 8px 16px rgba(0, 0, 0, 0.25);
             }
 
@@ -2311,7 +2331,11 @@
         // window.addEventListener('resize', applyMenuBackground);
         
         function clearLocationHistory() {
-            if (confirm('Clear all remembered locations? This will give you fresh locations in future games.')) {
+            const btn = document.querySelector('.corner-btn-left');
+            /* Show red pressed state while dialog is open */
+            if (btn) btn.classList.add('pressing');
+            const confirmed = confirm('Clear all remembered locations? This will give you fresh locations in future games.');
+            if (confirmed) {
                 try {
                     localStorage.removeItem('geoexplorer_location_history');
                     updateHistoryCount();
@@ -2320,7 +2344,8 @@
                     alert('Could not clear history.');
                 }
             }
-            /* Remove focus so the button doesn't stay highlighted on mobile after cancel */
+            /* Remove pressed state and focus so button returns to normal on mobile */
+            if (btn) btn.classList.remove('pressing');
             if (document.activeElement) document.activeElement.blur();
         }
         
