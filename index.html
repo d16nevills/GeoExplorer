@@ -1212,7 +1212,7 @@
             </div>
             
             <div class="controls">
-                <button id="guessButton" onclick="makeGuess()" disabled>Make Guess</button>
+                <button id="guessButton" onclick="makeGuess()" disabled>GUESS</button>
             </div>
             
             <button class="return-start-btn" onclick="returnToStart()">
@@ -2133,38 +2133,43 @@
                 }
             }, { passive: true });
             
-            // Add visual indicator for mobile users
-            const indicator = document.createElement('div');
-            indicator.id = 'map-tap-indicator';
-            indicator.innerHTML = 'Tap map to expand';
-            indicator.style.cssText = `
-                position: absolute;
-                bottom: 115px;
-                right: 15px;
-                background: rgba(0, 215, 126, 0.95);
-                color: #000;
-                padding: 0.35rem 0.7rem;
-                border-radius: 6px;
-                font-size: 0.7rem;
-                font-weight: 600;
-                z-index: 106;
-                pointer-events: none;
-                opacity: 1;
-                transition: opacity 0.5s ease-out;
-            `;
-            
-            gameArea.appendChild(indicator);
-            
-            // Fade out and remove indicator
-            setTimeout(() => {
-                indicator.style.opacity = '0';
-            }, 2000);
-            
-            setTimeout(() => {
-                if (indicator.parentNode) {
-                    indicator.remove();
-                }
-            }, 2500);
+            // Only show the "tap to expand" hint to first-time players (no high scores recorded yet)
+            const storedScores = localStorage.getItem('geoexplorer_high_scores');
+            const hasAnyScore = storedScores && Object.keys(JSON.parse(storedScores)).length > 0;
+
+            if (!hasAnyScore) {
+                const indicator = document.createElement('div');
+                indicator.id = 'map-tap-indicator';
+                indicator.innerHTML = 'Tap map to expand';
+                indicator.style.cssText = `
+                    position: absolute;
+                    bottom: 115px;
+                    right: 15px;
+                    background: rgba(0, 215, 126, 0.95);
+                    color: #000;
+                    padding: 0.35rem 0.7rem;
+                    border-radius: 6px;
+                    font-size: 0.7rem;
+                    font-weight: 600;
+                    z-index: 106;
+                    pointer-events: none;
+                    opacity: 1;
+                    transition: opacity 0.5s ease-out;
+                `;
+
+                gameArea.appendChild(indicator);
+
+                // Fade out and remove indicator
+                setTimeout(() => {
+                    indicator.style.opacity = '0';
+                }, 2000);
+
+                setTimeout(() => {
+                    if (indicator.parentNode) {
+                        indicator.remove();
+                    }
+                }, 2500);
+            }
         }
         
         function getRandomLocation(config) {
