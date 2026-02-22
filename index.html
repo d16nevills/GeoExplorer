@@ -752,11 +752,18 @@
         
         @media (max-width: 768px) {
             #reviewPanel {
-                bottom: calc(10px + 45vh + 10px); /* above mobile expanded map (45vh) */
+                top: 10px;
+                bottom: auto;
                 right: 10px;
                 left: 10px;
                 max-width: none;
                 font-size: 0.8rem;
+                max-height: calc(55vh - 20px);
+                overflow-y: auto;
+            }
+
+            #timerDisplay {
+                top: 72px !important;
             }
         }
 
