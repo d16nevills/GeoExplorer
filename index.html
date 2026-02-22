@@ -1206,11 +1206,11 @@
         <div class="menu-inner">
             <button onclick="closeHighScores()" style="margin-top: 1.5rem; margin-bottom: 2rem;">← Back to Menu</button>
             <h2 style="font-size: 2.5rem; margin-bottom: 1.5rem; text-align: center; text-shadow: 0 2px 8px rgba(0,0,0,0.4);">High Scores</h2>
-            <div style="display: flex; justify-content: center; gap: 0.5rem; margin-bottom: 1.5rem; flex-wrap: wrap;">
-                <button onclick="showHighScores(0)"   id="hsTimerBtn-0"   class="timer-btn" style="width: 5.5rem;">Off</button>
-                <button onclick="showHighScores(60)"  id="hsTimerBtn-60"  class="timer-btn" style="width: 5.5rem;">1 min</button>
-                <button onclick="showHighScores(300)" id="hsTimerBtn-300" class="timer-btn" style="width: 5.5rem;">5 min</button>
-                <button onclick="showHighScores(600)" id="hsTimerBtn-600" class="timer-btn" style="width: 5.5rem;">10 min</button>
+            <div style="display: flex; justify-content: center; gap: 0.5rem; margin-bottom: 1.5rem; max-width: 600px; margin-left: auto; margin-right: auto;">
+                <button onclick="showHighScores(0)"   id="hsTimerBtn-0"   class="timer-btn" style="flex: 1;">Off</button>
+                <button onclick="showHighScores(60)"  id="hsTimerBtn-60"  class="timer-btn" style="flex: 1;">1 min</button>
+                <button onclick="showHighScores(300)" id="hsTimerBtn-300" class="timer-btn" style="flex: 1;">5 min</button>
+                <button onclick="showHighScores(600)" id="hsTimerBtn-600" class="timer-btn" style="flex: 1;">10 min</button>
             </div>
             <div id="highScoresList" style="max-width: 600px; margin: 0 auto;"></div>
         </div>
