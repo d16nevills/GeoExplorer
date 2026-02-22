@@ -302,7 +302,32 @@
             font-size: 0.9rem;
             font-weight: 400;
         }
-        
+
+        .map-card-top {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            margin-bottom: 0.75rem;
+        }
+
+        .map-icon {
+            font-size: 2rem;
+            line-height: 1;
+        }
+
+        .map-badge {
+            font-size: 0.62rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            padding: 0.2rem 0.55rem;
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            color: rgba(255, 255, 255, 0.85);
+            white-space: nowrap;
+            align-self: flex-start;
+        }
+
         .game-container {
             display: none;
             position: fixed;
@@ -1334,12 +1359,82 @@
 
         [data-theme="cartoon"] .map-card:hover {
             transform: translateY(-4px);
-            border-color: rgba(255, 255, 255, 0.55);
             box-shadow: 0 9px 0 rgba(0, 0, 0, 0.30), 0 14px 28px rgba(0, 0, 0, 0.28);
         }
 
         [data-theme="cartoon"] .map-card h3 {
             font-weight: 800;
+        }
+
+        [data-theme="cartoon"] .map-card p {
+            font-style: italic;
+            color: rgba(255, 255, 255, 0.72);
+        }
+
+        [data-theme="cartoon"] .map-icon {
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.4));
+        }
+
+        [data-theme="cartoon"] .map-badge {
+            font-weight: 800;
+            letter-spacing: 0.10em;
+        }
+
+        /* Difficulty-tinted card borders + badge colours */
+        [data-theme="cartoon"] .map-card[data-difficulty="easy"] {
+            border-color: rgba(87, 200, 66, 0.45);
+            box-shadow: 0 5px 0 rgba(0, 0, 0, 0.30), 0 8px 22px rgba(87, 200, 66, 0.10);
+        }
+        [data-theme="cartoon"] .map-card[data-difficulty="easy"]:hover {
+            border-color: rgba(87, 200, 66, 0.80);
+            box-shadow: 0 9px 0 rgba(0, 0, 0, 0.30), 0 14px 28px rgba(87, 200, 66, 0.18);
+        }
+        [data-theme="cartoon"] .map-badge.difficulty-easy {
+            background: rgba(87, 200, 66, 0.20);
+            border-color: rgba(87, 200, 66, 0.55);
+            color: #8FED74;
+        }
+
+        [data-theme="cartoon"] .map-card[data-difficulty="medium"] {
+            border-color: rgba(74, 144, 217, 0.45);
+            box-shadow: 0 5px 0 rgba(0, 0, 0, 0.30), 0 8px 22px rgba(74, 144, 217, 0.10);
+        }
+        [data-theme="cartoon"] .map-card[data-difficulty="medium"]:hover {
+            border-color: rgba(74, 144, 217, 0.80);
+            box-shadow: 0 9px 0 rgba(0, 0, 0, 0.30), 0 14px 28px rgba(74, 144, 217, 0.18);
+        }
+        [data-theme="cartoon"] .map-badge.difficulty-medium {
+            background: rgba(74, 144, 217, 0.20);
+            border-color: rgba(74, 144, 217, 0.55);
+            color: #6DB4F5;
+        }
+
+        [data-theme="cartoon"] .map-card[data-difficulty="hard"] {
+            border-color: rgba(155, 89, 182, 0.45);
+            box-shadow: 0 5px 0 rgba(0, 0, 0, 0.30), 0 8px 22px rgba(155, 89, 182, 0.10);
+        }
+        [data-theme="cartoon"] .map-card[data-difficulty="hard"]:hover {
+            border-color: rgba(155, 89, 182, 0.80);
+            box-shadow: 0 9px 0 rgba(0, 0, 0, 0.30), 0 14px 28px rgba(155, 89, 182, 0.18);
+        }
+        [data-theme="cartoon"] .map-badge.difficulty-hard {
+            background: rgba(155, 89, 182, 0.20);
+            border-color: rgba(155, 89, 182, 0.55);
+            color: #C07AF5;
+        }
+
+        [data-theme="cartoon"] .map-card[data-difficulty="legendary"] {
+            border-color: rgba(244, 163, 30, 0.50);
+            box-shadow: 0 5px 0 rgba(0, 0, 0, 0.30), 0 8px 22px rgba(244, 163, 30, 0.12);
+        }
+        [data-theme="cartoon"] .map-card[data-difficulty="legendary"]:hover {
+            border-color: rgba(244, 163, 30, 0.85);
+            box-shadow: 0 9px 0 rgba(0, 0, 0, 0.30), 0 14px 28px rgba(244, 163, 30, 0.22);
+        }
+        [data-theme="cartoon"] .map-badge.difficulty-legendary {
+            background: rgba(244, 163, 30, 0.22);
+            border-color: rgba(244, 163, 30, 0.60);
+            color: #F4C84A;
         }
 
         /* Round-result / final-score card */
@@ -1986,27 +2081,58 @@
             return false;
         }
         
+        const MAP_CARD_META = {
+            world:        { emoji: '🌍', difficulty: 'legendary', tagline: 'Every corner of the globe. No mercy.' },
+            europe:       { emoji: '🏛️', difficulty: 'hard',      tagline: 'Ancient capitals, hidden villages, endless surprises.' },
+            northAmerica: { emoji: '🦅', difficulty: 'medium',    tagline: 'From tundra to tropics — coast to coast.' },
+            usa:          { emoji: '🗽', difficulty: 'easy',       tagline: 'Fifty states. One epic road trip.' },
+            canada:       { emoji: '🍁', difficulty: 'easy',       tagline: 'Wilderness, wonder & hockey vibes.' },
+            uk:           { emoji: '👑', difficulty: 'easy',       tagline: 'Pubs, cobblestones & countryside charm.' },
+            france:       { emoji: '🥐', difficulty: 'easy',       tagline: 'Croissants, châteaux & café terraces.' },
+            germany:      { emoji: '🍺', difficulty: 'easy',       tagline: 'Castles, autobahns & dark forests.' },
+            italy:        { emoji: '🍕', difficulty: 'easy',       tagline: 'Ancient ruins. Incredible pizza. Impossible beauty.' },
+            spain:        { emoji: '☀️', difficulty: 'easy',       tagline: 'Flamenco, fiestas & sun-drenched coasts.' },
+            japan:        { emoji: '⛩️', difficulty: 'medium',    tagline: 'Neon megacities meet thousand-year-old temples.' },
+            southKorea:   { emoji: '🎵', difficulty: 'medium',    tagline: 'K-dramas, skylines & mountain trails.' },
+            china:        { emoji: '🐉', difficulty: 'hard',      tagline: 'The Middle Kingdom — vast, diverse & relentless.' },
+            taiwan:       { emoji: '🌺', difficulty: 'medium',    tagline: 'The Beautiful Island, caught between East & West.' },
+            hongKong:     { emoji: '🌃', difficulty: 'easy',       tagline: 'Eight million stories in 1,100 km².' },
+            eastAsia:     { emoji: '🌏', difficulty: 'hard',      tagline: 'Four dragon lands. One ultimate challenge.' },
+            australia:    { emoji: '🦘', difficulty: 'hard',      tagline: 'Outback, reef, rainforest. Survive the lot.' },
+            brazil:       { emoji: '🌴', difficulty: 'medium',    tagline: 'Carnival spirit, Amazon depths & samba cities.' },
+            mexico:       { emoji: '🌮', difficulty: 'medium',    tagline: 'Aztec pyramids, Pacific beaches & spice markets.' },
+            russia:       { emoji: '🐻', difficulty: 'hard',      tagline: 'Eleven time zones. One brutal challenge.' },
+            thailand:     { emoji: '🐘', difficulty: 'medium',    tagline: 'Golden temples, street food & jungle magic.' },
+            india:        { emoji: '🪔', difficulty: 'hard',      tagline: 'A billion stories. Find your place in them.' },
+        };
+
         function initMapSelection() {
             const container = document.getElementById('mapSelection');
-            
+
             if (!container) {
                 console.error('Map selection container not found');
                 return;
             }
-            
+
             container.innerHTML = '';
-            
+
             Object.entries(MAP_CONFIGS).forEach(([key, config]) => {
+                const meta = MAP_CARD_META[key] || {};
                 const card = document.createElement('div');
                 card.className = 'map-card';
+                if (meta.difficulty) card.dataset.difficulty = meta.difficulty;
                 card.innerHTML = `
+                    <div class="map-card-top">
+                        <span class="map-icon">${meta.emoji || ''}</span>
+                        ${meta.difficulty ? `<span class="map-badge difficulty-${meta.difficulty}">${meta.difficulty.toUpperCase()}</span>` : ''}
+                    </div>
                     <h3>${config.name}</h3>
-                    <p>${config.description}</p>
+                    <p>${meta.tagline || config.description}</p>
                 `;
                 card.onclick = () => startGame(key);
                 container.appendChild(card);
             });
-            
+
             // Update history count display
             updateHistoryCount();
         }
