@@ -1290,6 +1290,7 @@
             <h2 id="resultTitle">Round Complete!</h2>
             <p class="distance-info" id="distanceText"></p>
             <p class="points-info" id="pointsText"></p>
+            <p id="bestScoreText" style="font-size: 0.9rem; color: rgba(255,255,255,0.6); margin: 0.25rem 0 0; text-align: center;"></p>
             <div class="result-buttons">
                 <button id="nextRoundButton" onclick="nextRound()">Next Round</button>
             </div>
@@ -2699,11 +2700,9 @@
             document.getElementById('distanceText').textContent = 
                 `Final Score: ${totalScore} / ${5000 * TOTAL_ROUNDS}`;
             
-            let ratingText = getScoreRating(totalScore);
-            if (highScore > 0 && !isNewHighScore) {
-                ratingText += ` | Best: ${highScore}`;
-            }
-            document.getElementById('pointsText').textContent = ratingText;
+            document.getElementById('pointsText').textContent = getScoreRating(totalScore);
+            document.getElementById('bestScoreText').textContent =
+                (highScore > 0 && !isNewHighScore) ? `Best: ${highScore}` : '';
             
             // Clear existing buttons and add final game options
             const buttonContainer = document.querySelector('.result-buttons');
