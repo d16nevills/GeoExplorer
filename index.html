@@ -628,7 +628,11 @@
             font-size: 1.5rem;
             font-weight: 700;
             color: var(--primary-green);
-            margin: 0.5rem 0 1.5rem 0;
+            margin: 0.5rem 0 1rem 0;
+        }
+
+        #bestScoreText:not(:empty) {
+            margin: 0 0 1rem !important;
         }
         
         .result-buttons {
@@ -1297,7 +1301,7 @@
             <h2 id="resultTitle">Round Complete!</h2>
             <p class="distance-info" id="distanceText"></p>
             <p class="points-info" id="pointsText"></p>
-            <p id="bestScoreText" style="font-size: 0.9rem; color: rgba(255,255,255,0.6); margin: 0.25rem 0 0; text-align: center;"></p>
+            <p id="bestScoreText" style="font-size: 0.9rem; color: rgba(255,255,255,0.6); margin: 0; text-align: center;"></p>
             <div class="result-buttons">
                 <button id="nextRoundButton" onclick="nextRound()">Next Round</button>
             </div>
