@@ -556,7 +556,24 @@
             display: block;
             animation: slideDown 0.4s ease-out;
         }
-        
+
+        #confirmExitModal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 300;
+            background: rgba(0, 0, 0, 0.55);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            align-items: center;
+            justify-content: center;
+        }
+
+        #confirmExitModal.active {
+            display: flex;
+            animation: fadeIn 0.15s ease-out;
+        }
+
         .result-content {
             background: rgba(28, 28, 30, 0.98);
             backdrop-filter: blur(20px);
@@ -1180,8 +1197,8 @@
     
     <div class="container">
         <div class="game-container" id="gameScreen">
-            <button class="back-button" onclick="backToMenu()">← Back to Maps</button>
-            <button class="mobile-home-btn" onclick="backToMenu()">
+            <button class="back-button" onclick="confirmBackToMenu()">← Back to Maps</button>
+            <button class="mobile-home-btn" onclick="confirmBackToMenu()">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
                     <polyline points="9 22 9 12 15 12 15 22"/>
@@ -1233,6 +1250,17 @@
             <p class="points-info" id="pointsText"></p>
             <div class="result-buttons">
                 <button id="nextRoundButton" onclick="nextRound()">Next Round</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="confirmExitModal">
+        <div style="background: rgba(28,28,30,0.98); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.12); border-radius: 16px; padding: 2rem 2.5rem; max-width: 320px; width: 90%; text-align: center; box-shadow: 0 8px 40px rgba(0,0,0,0.6);">
+            <h3 style="color: #fff; margin: 0 0 0.5rem; font-size: 1.3rem; font-weight: 700;">Leave game?</h3>
+            <p style="color: rgba(255,255,255,0.6); margin: 0 0 1.75rem; font-size: 0.9rem; line-height: 1.4;">Your current progress will be lost.</p>
+            <div style="display: flex; gap: 0.75rem; justify-content: center;">
+                <button class="secondary" onclick="cancelBackToMenu()" style="flex: 1;">Keep Playing</button>
+                <button onclick="backToMenu()" style="flex: 1;">Leave Game</button>
             </div>
         </div>
     </div>
@@ -1901,7 +1929,16 @@
             initializeGame();
         }
         
+        function confirmBackToMenu() {
+            document.getElementById('confirmExitModal').classList.add('active');
+        }
+
+        function cancelBackToMenu() {
+            document.getElementById('confirmExitModal').classList.remove('active');
+        }
+
         function backToMenu() {
+            document.getElementById('confirmExitModal').classList.remove('active');
             // Always clear the round-complete overlay, regardless of how we got here
             const resultOverlay = document.getElementById('resultOverlay');
             resultOverlay.classList.remove('active');
