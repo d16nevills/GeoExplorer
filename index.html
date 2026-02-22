@@ -1290,6 +1290,7 @@
             <h2 id="resultTitle">Round Complete!</h2>
             <p class="distance-info" id="distanceText"></p>
             <p class="points-info" id="pointsText"></p>
+            <p id="bestScoreText" style="font-size: 0.9rem; color: rgba(255,255,255,0.6); margin: 0.25rem 0 0; text-align: center;"></p>
             <div class="result-buttons">
                 <button id="nextRoundButton" onclick="nextRound()">Next Round</button>
             </div>
@@ -1910,9 +1911,9 @@
             if (modeScores.length === 0) {
                 const label = timerMode === 0 ? 'No Timer' : `${timerMode / 60} min`;
                 container.innerHTML = `
-                    <div style="background: rgba(255,255,255,0.15); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.3); border-radius: 12px; padding: 2rem 1.5rem; text-align: center; margin-top: 2rem;">
-                        <p style="color: #fff; font-size: 1rem; font-weight: 500; margin: 0 0 0.25rem; white-space: nowrap; text-shadow: 0 1px 4px rgba(0,0,0,0.4);">No high scores yet for <strong>${label}</strong> mode.</p>
-                        <p style="color: #fff; font-size: 1rem; font-weight: 500; margin: 0; white-space: nowrap; text-shadow: 0 1px 4px rgba(0,0,0,0.4);">Play some games to set records!</p>
+                    <div style="background: rgba(255,255,255,0.15); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.3); border-radius: 12px; padding: 2rem 1.5rem; text-align: center; margin-top: 2rem; overflow: hidden;">
+                        <p style="color: #fff; font-size: clamp(0.65rem, 3.5vw, 1rem); font-weight: 500; margin: 0 0 0.25rem; white-space: nowrap; text-shadow: 0 1px 4px rgba(0,0,0,0.4);">No high scores yet for <strong>${label}</strong> mode.</p>
+                        <p style="color: #fff; font-size: clamp(0.65rem, 3.5vw, 1rem); font-weight: 500; margin: 0; white-space: nowrap; text-shadow: 0 1px 4px rgba(0,0,0,0.4);">Play some games to set records!</p>
                     </div>
                 `;
                 return;
@@ -2699,11 +2700,9 @@
             document.getElementById('distanceText').textContent = 
                 `Final Score: ${totalScore} / ${5000 * TOTAL_ROUNDS}`;
             
-            let ratingText = getScoreRating(totalScore);
-            if (highScore > 0 && !isNewHighScore) {
-                ratingText += ` | Best: ${highScore}`;
-            }
-            document.getElementById('pointsText').textContent = ratingText;
+            document.getElementById('pointsText').textContent = getScoreRating(totalScore);
+            document.getElementById('bestScoreText').textContent =
+                (highScore > 0 && !isNewHighScore) ? `Best: ${highScore}` : '';
             
             // Clear existing buttons and add final game options
             const buttonContainer = document.querySelector('.result-buttons');
