@@ -1156,7 +1156,11 @@
             .result-overlay.active {
                 animation: slideDownMobile 0.4s ease-out !important;
             }
-            
+
+            .result-overlay.game-over {
+                top: 20px;
+            }
+
             .result-content {
                 padding: 1rem 1.2rem;
                 border-radius: 12px;
@@ -2423,6 +2427,8 @@
             const resultOverlay = document.getElementById('resultOverlay');
             resultOverlay.classList.remove('active');
             resultOverlay.style.display = 'none';
+            // Restore game chrome in case we exited during game-over state
+            restoreGameChrome();
             // Reset button to default state in case user backed out on the last round
             const buttonContainer = document.querySelector('.result-buttons');
             if (buttonContainer) {
@@ -3148,10 +3154,26 @@
                 <button class="secondary" onclick="goHome()">Go Home</button>
             `;
             
-            document.getElementById('resultOverlay').style.display = 'block';
-            document.getElementById('resultOverlay').classList.add('active');
+            // Hide game chrome (header, nav buttons) for a cleaner game-over view
+            document.querySelector('.game-header').style.display = 'none';
+            document.querySelector('.back-button').style.display = 'none';
+            document.querySelector('.mobile-home-btn').style.display = 'none';
+            document.querySelector('.return-start-btn').style.display = 'none';
+
+            const resultOverlay = document.getElementById('resultOverlay');
+            resultOverlay.classList.add('game-over');
+            resultOverlay.style.display = 'block';
+            resultOverlay.classList.add('active');
         }
-        
+
+        function restoreGameChrome() {
+            document.querySelector('.game-header').style.display = '';
+            document.querySelector('.back-button').style.display = '';
+            document.querySelector('.mobile-home-btn').style.display = '';
+            document.querySelector('.return-start-btn').style.display = '';
+            document.getElementById('resultOverlay').classList.remove('game-over');
+        }
+
         function reviewGame() {
             // Close the result overlay so user can see and interact with the map
             document.getElementById('resultOverlay').classList.remove('active');
@@ -3314,7 +3336,10 @@
             // Hide result overlay completely
             document.getElementById('resultOverlay').classList.remove('active');
             document.getElementById('resultOverlay').style.display = 'none';
-            
+
+            // Restore game chrome hidden during game-over state
+            restoreGameChrome();
+
             // Reset button to default state
             const buttonContainer = document.querySelector('.result-buttons');
             buttonContainer.innerHTML = '<button id="nextRoundButton" onclick="nextRound()">Next Round</button>';
@@ -3363,7 +3388,10 @@
             // Hide result overlay completely
             document.getElementById('resultOverlay').classList.remove('active');
             document.getElementById('resultOverlay').style.display = 'none';
-            
+
+            // Restore game chrome hidden during game-over state
+            restoreGameChrome();
+
             // Reset button to default state
             const buttonContainer = document.querySelector('.result-buttons');
             buttonContainer.innerHTML = '<button id="nextRoundButton" onclick="nextRound()">Next Round</button>';
