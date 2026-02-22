@@ -2201,7 +2201,7 @@
                         ${meta.difficulty ? `<span class="map-badge difficulty-${meta.difficulty}">${meta.difficulty.toUpperCase()}</span>` : ''}
                     </div>
                     <h3>${config.name}</h3>
-                    <p>${meta.tagline || config.description}</p>
+                    <p>${config.description || meta.tagline}</p>
                 `;
                 card.onclick = () => startGame(key);
                 container.appendChild(card);
