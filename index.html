@@ -503,7 +503,13 @@
             transition: opacity 0.2s ease;
         }
 
-        .return-start-btn:hover { opacity: 1; }
+        .return-start-btn:hover,
+        .return-start-btn:active {
+            opacity: 1;
+            background: rgba(28, 28, 30, 0.9);
+            box-shadow: none;
+            transform: none;
+        }
         
         .return-start-btn svg {
             display: none;
@@ -863,7 +869,13 @@
             transition: opacity 0.2s ease;
         }
 
-        .back-button:hover { opacity: 1; }
+        .back-button:hover,
+        .back-button:active {
+            opacity: 1;
+            background: rgba(28, 28, 30, 0.9);
+            box-shadow: none;
+            transform: none;
+        }
         
         @media (max-width: 768px) {
             .game-header {
@@ -1051,8 +1063,12 @@
                 transition: opacity 0.2s ease;
             }
 
-            .mobile-home-btn:hover {
+            .mobile-home-btn:hover,
+            .mobile-home-btn:active {
                 opacity: 1;
+                background: rgba(28, 28, 30, 0.9);
+                box-shadow: none;
+                transform: none;
             }
             
             .back-button {
