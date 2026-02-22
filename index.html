@@ -335,7 +335,11 @@
             border-radius: 12px;
             z-index: 110;
             box-shadow: 0 4px 20px var(--shadow);
+            opacity: 0.7;
+            transition: opacity 0.2s ease;
         }
+
+        .game-header:hover { opacity: 1; }
         
         .game-header > div {
             display: flex;
@@ -490,7 +494,16 @@
             z-index: 110;
             padding: 0.8rem 1.5rem;
             font-size: 0.95rem;
+            background: rgba(28, 28, 30, 0.9);
+            backdrop-filter: blur(10px);
+            color: var(--text-light);
+            border: none;
+            border-radius: 8px;
+            opacity: 0.7;
+            transition: opacity 0.2s ease;
         }
+
+        .return-start-btn:hover { opacity: 1; }
         
         .return-start-btn svg {
             display: none;
@@ -838,11 +851,11 @@
             border: none;
             padding: 0.8rem 1.5rem;
             border-radius: 8px;
+            opacity: 0.7;
+            transition: opacity 0.2s ease;
         }
-        
-        .back-button:hover {
-            background: rgba(44, 44, 46, 0.9);
-        }
+
+        .back-button:hover { opacity: 1; }
         
         @media (max-width: 768px) {
             .game-header {
