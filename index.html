@@ -541,6 +541,14 @@
             transform: none;
             box-shadow: none;
         }
+
+        #guessButton {
+            transition: opacity 0.2s ease;
+        }
+
+        #guessButton:disabled {
+            opacity: 0.7;
+        }
         
         button.secondary {
             background: var(--bg-light);
