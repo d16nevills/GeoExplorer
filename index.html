@@ -2227,18 +2227,18 @@
             timerRemaining = timerDuration;
             const display = document.getElementById('timerDisplay');
             display.style.display = 'block';
-            display.className = '';
-            
+            display.classList.remove('timer-warning', 'timer-critical');
+
             const updateDisplay = () => {
                 const mins = Math.floor(timerRemaining / 60);
                 const secs = timerRemaining % 60;
-                display.textContent = mins > 0 
+                display.textContent = mins > 0
                     ? `${mins}:${String(secs).padStart(2, '0')}`
                     : `${secs}s`;
-                
-                if (timerRemaining <= 10) display.className = 'timer-critical';
-                else if (timerRemaining <= 30) display.className = 'timer-warning';
-                else display.className = '';
+
+                display.classList.remove('timer-warning', 'timer-critical');
+                if (timerRemaining <= 10) display.classList.add('timer-critical');
+                else if (timerRemaining <= 30) display.classList.add('timer-warning');
             };
             
             updateDisplay();
@@ -3558,22 +3558,51 @@
 <!-- ═══ END SCROLL-SHRINK-HEADER ═══ -->
 <script>
     (function() {
-        function addOpacityToggle(el) {
+        var HEADER_KEY = 'geoexplorer_header_pinned';
+        var TIMER_KEY  = 'geoexplorer_timer_pinned';
+
+        function isPinned(storageKey) {
+            return localStorage.getItem(storageKey) === 'true';
+        }
+
+        function addOpacityToggle(el, storageKey) {
             if (!el) return;
             el.style.cursor = 'pointer';
-            el.addEventListener('click', function(e) {
+
+            // Restore persisted state
+            if (isPinned(storageKey)) el.classList.add('opacity-pinned');
+
+            var touched = false;
+
+            // Handle touch devices: touchend fires before the synthetic click,
+            // so we handle it here and suppress the subsequent click.
+            el.addEventListener('touchend', function(e) {
+                touched = true;
+                e.preventDefault();       // prevent synthetic click
                 e.stopPropagation();
                 el.classList.toggle('opacity-pinned');
+                localStorage.setItem(storageKey, el.classList.contains('opacity-pinned'));
+                setTimeout(function() { touched = false; }, 400);
+            }, { passive: false });
+
+            // Desktop click handler (skipped on mobile because touched flag is set)
+            el.addEventListener('click', function(e) {
+                if (touched) return;
+                e.stopPropagation();
+                el.classList.toggle('opacity-pinned');
+                localStorage.setItem(storageKey, el.classList.contains('opacity-pinned'));
             });
         }
+
+        function init() {
+            addOpacityToggle(document.querySelector('.game-header'), HEADER_KEY);
+            addOpacityToggle(document.getElementById('timerDisplay'),  TIMER_KEY);
+        }
+
         if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', function() {
-                addOpacityToggle(document.querySelector('.game-header'));
-                addOpacityToggle(document.getElementById('timerDisplay'));
-            });
+            document.addEventListener('DOMContentLoaded', init);
         } else {
-            addOpacityToggle(document.querySelector('.game-header'));
-            addOpacityToggle(document.getElementById('timerDisplay'));
+            init();
         }
     })();
 </script>
