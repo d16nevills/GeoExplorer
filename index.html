@@ -1911,7 +1911,8 @@
                 const label = timerMode === 0 ? 'No Timer' : `${timerMode / 60} min`;
                 container.innerHTML = `
                     <div style="background: rgba(255,255,255,0.15); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.3); border-radius: 12px; padding: 2rem 1.5rem; text-align: center; margin-top: 2rem;">
-                        <p style="color: #fff; font-size: 1rem; font-weight: 500; margin: 0; text-shadow: 0 1px 4px rgba(0,0,0,0.4);">No high scores yet for <strong>${label}</strong> mode.<br>Play some games to set records!</p>
+                        <p style="color: #fff; font-size: 1rem; font-weight: 500; margin: 0 0 0.25rem; white-space: nowrap; text-shadow: 0 1px 4px rgba(0,0,0,0.4);">No high scores yet for <strong>${label}</strong> mode.</p>
+                        <p style="color: #fff; font-size: 1rem; font-weight: 500; margin: 0; white-space: nowrap; text-shadow: 0 1px 4px rgba(0,0,0,0.4);">Play some games to set records!</p>
                     </div>
                 `;
                 return;
