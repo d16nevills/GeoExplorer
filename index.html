@@ -365,6 +365,7 @@
         }
 
         .game-header:hover { opacity: 1; }
+        .game-header.opacity-pinned { opacity: 1; cursor: pointer; }
         
         .game-header > div {
             display: flex;
@@ -704,6 +705,7 @@
         }
 
         #timerDisplay:hover { opacity: 1; }
+        #timerDisplay.opacity-pinned { opacity: 1; cursor: pointer; }
 
         #timerDisplay.timer-warning { color: #FF9500 !important; }
         #timerDisplay.timer-critical {
@@ -3554,5 +3556,26 @@
     })();
 </script>
 <!-- ═══ END SCROLL-SHRINK-HEADER ═══ -->
+<script>
+    (function() {
+        function addOpacityToggle(el) {
+            if (!el) return;
+            el.style.cursor = 'pointer';
+            el.addEventListener('click', function(e) {
+                e.stopPropagation();
+                el.classList.toggle('opacity-pinned');
+            });
+        }
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', function() {
+                addOpacityToggle(document.querySelector('.game-header'));
+                addOpacityToggle(document.getElementById('timerDisplay'));
+            });
+        } else {
+            addOpacityToggle(document.querySelector('.game-header'));
+            addOpacityToggle(document.getElementById('timerDisplay'));
+        }
+    })();
+</script>
 </body>
 </html> 
