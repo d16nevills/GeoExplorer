@@ -1356,6 +1356,58 @@
             box-shadow: 0 5px 0 rgba(0, 0, 0, 0.50), 0 8px 24px rgba(0, 0, 0, 0.40);
         }
 
+        /* In-game header card */
+        [data-theme="cartoon"] .game-header {
+            border-radius: 16px;
+            border: 2px solid rgba(255, 255, 255, 0.10);
+            box-shadow: 0 5px 0 rgba(0, 0, 0, 0.40), 0 8px 20px rgba(0, 0, 0, 0.35);
+        }
+
+        /* Countdown timer pill — inline styles need !important */
+        [data-theme="cartoon"] #timerDisplay {
+            border: 2px solid rgba(255, 255, 255, 0.10) !important;
+            box-shadow: 0 4px 0 rgba(0, 0, 0, 0.45), 0 6px 14px rgba(0, 0, 0, 0.25) !important;
+        }
+
+        /* Homepage corner buttons (Clear History + High Scores) */
+        [data-theme="cartoon"] .corner-btn {
+            border-radius: 14px;
+            border-width: 2px;
+            border-color: rgba(255, 255, 255, 0.30);
+            font-weight: 800;
+            letter-spacing: 0.01em;
+            box-shadow: 0 4px 0 rgba(0, 0, 0, 0.38), 0 6px 14px rgba(0, 0, 0, 0.20);
+            transition: border-color 0.12s ease, transform 0.08s ease, box-shadow 0.08s ease;
+        }
+
+        [data-theme="cartoon"] .corner-btn:hover {
+            border-color: rgba(255, 255, 255, 0.55);
+            transform: translateY(-3px);
+            box-shadow: 0 7px 0 rgba(0, 0, 0, 0.38), 0 10px 20px rgba(0, 0, 0, 0.25);
+        }
+
+        [data-theme="cartoon"] .corner-btn:active {
+            transform: translateY(3px);
+            box-shadow: 0 1px 0 rgba(0, 0, 0, 0.38), 0 2px 6px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Keep corner buttons circular on mobile */
+        @media (max-width: 768px) {
+            [data-theme="cartoon"] .corner-btn {
+                border-radius: 50%;
+                box-shadow: 0 3px 0 rgba(0, 0, 0, 0.38), 0 5px 12px rgba(0, 0, 0, 0.20);
+            }
+
+            [data-theme="cartoon"] .corner-btn:hover {
+                box-shadow: 0 5px 0 rgba(0, 0, 0, 0.38), 0 8px 16px rgba(0, 0, 0, 0.25);
+            }
+
+            [data-theme="cartoon"] .corner-btn:active {
+                transform: translateY(2px);
+                box-shadow: 0 1px 0 rgba(0, 0, 0, 0.38), 0 2px 6px rgba(0, 0, 0, 0.15);
+            }
+        }
+
         /* ============================================================
            END CARTOON THEME
            ============================================================ */
