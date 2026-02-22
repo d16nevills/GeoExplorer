@@ -1181,6 +1181,8 @@
            To remove entirely: also delete this CSS block
            ============================================================ */
 
+        /* ── Buttons ─────────────────────────────────────────────── */
+
         /* Base: all buttons except the two homepage corner buttons */
         [data-theme="cartoon"] button:not(.corner-btn) {
             border-radius: 14px;
@@ -1230,22 +1232,26 @@
             box-shadow: 0 4px 0 rgba(0, 0, 0, 0.30), 0 6px 12px rgba(0, 0, 0, 0.15);
         }
 
-        [data-theme="cartoon"] .timer-btn:hover {
+        [data-theme="cartoon"] .timer-btn:hover:not(.timer-active) {
             transform: translateY(-2px);
             box-shadow: 0 6px 0 rgba(0, 0, 0, 0.30), 0 8px 16px rgba(0, 0, 0, 0.20);
         }
 
-        [data-theme="cartoon"] .timer-btn:active {
+        [data-theme="cartoon"] .timer-btn:active:not(.timer-active) {
             transform: translateY(3px);
             box-shadow: 0 1px 0 rgba(0, 0, 0, 0.30), 0 2px 6px rgba(0, 0, 0, 0.12);
         }
 
+        /* Selected timer — pressed-in look, muted dark-green border */
         [data-theme="cartoon"] .timer-btn.timer-active {
-            box-shadow: 0 4px 0 #009A55, 0 6px 12px rgba(0, 215, 126, 0.28) !important;
+            transform: translateY(2px);
+            border-color: #006B3C !important;
+            box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.35), 0 1px 0 #006B3C !important;
         }
 
         [data-theme="cartoon"] .timer-btn.timer-active:hover {
-            box-shadow: 0 6px 0 #009A55, 0 8px 16px rgba(0, 215, 126, 0.35) !important;
+            transform: translateY(2px);
+            box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.35), 0 1px 0 #006B3C !important;
         }
 
         /* HUD-style dark overlay buttons */
@@ -1270,6 +1276,26 @@
             box-shadow: 0 1px 0 rgba(0, 0, 0, 0.50), 0 2px 6px rgba(0, 0, 0, 0.18);
         }
 
+        /* Mobile circular buttons must stay circular */
+        @media (max-width: 768px) {
+            [data-theme="cartoon"] .mobile-home-btn,
+            [data-theme="cartoon"] .return-start-btn {
+                border-radius: 50%;
+                box-shadow: 0 3px 0 rgba(0, 0, 0, 0.50), 0 5px 12px rgba(0, 0, 0, 0.25);
+            }
+
+            [data-theme="cartoon"] .mobile-home-btn:hover,
+            [data-theme="cartoon"] .return-start-btn:hover {
+                box-shadow: 0 5px 0 rgba(0, 0, 0, 0.50), 0 8px 16px rgba(0, 0, 0, 0.30);
+            }
+
+            [data-theme="cartoon"] .mobile-home-btn:active,
+            [data-theme="cartoon"] .return-start-btn:active {
+                transform: translateY(2px);
+                box-shadow: 0 1px 0 rgba(0, 0, 0, 0.50), 0 2px 6px rgba(0, 0, 0, 0.20);
+            }
+        }
+
         /* finishReviewButton has inline styles; !important needed to override */
         [data-theme="cartoon"] #finishReviewButton {
             border-radius: 14px !important;
@@ -1287,6 +1313,47 @@
         [data-theme="cartoon"] #finishReviewButton:active {
             transform: translateY(4px) !important;
             box-shadow: 0 1px 0 #009A55, 0 2px 6px rgba(0, 215, 126, 0.15) !important;
+        }
+
+        /* ── Cards & panels ──────────────────────────────────────── */
+
+        /* Timer selection card */
+        [data-theme="cartoon"] .timer-card {
+            border-radius: 16px;
+            border: 2px solid rgba(255, 255, 255, 0.25);
+            box-shadow: 0 4px 0 rgba(0, 0, 0, 0.28), 0 6px 20px rgba(0, 0, 0, 0.20);
+        }
+
+        /* Game-mode / map selection cards */
+        [data-theme="cartoon"] .map-card {
+            border-radius: 16px;
+            border: 2px solid rgba(255, 255, 255, 0.30);
+            box-shadow: 0 5px 0 rgba(0, 0, 0, 0.30), 0 8px 22px rgba(0, 0, 0, 0.22);
+            transition: border-color 0.12s ease, transform 0.12s ease, box-shadow 0.12s ease;
+        }
+
+        [data-theme="cartoon"] .map-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(255, 255, 255, 0.55);
+            box-shadow: 0 9px 0 rgba(0, 0, 0, 0.30), 0 14px 28px rgba(0, 0, 0, 0.28);
+        }
+
+        [data-theme="cartoon"] .map-card h3 {
+            font-weight: 800;
+        }
+
+        /* Round-result / final-score card */
+        [data-theme="cartoon"] .result-content {
+            border-radius: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.10);
+            box-shadow: 0 8px 0 rgba(0, 0, 0, 0.42), 0 12px 40px rgba(0, 0, 0, 0.50);
+        }
+
+        /* Review panel */
+        [data-theme="cartoon"] #reviewPanel {
+            border-radius: 14px;
+            border: 2px solid rgba(255, 255, 255, 0.10);
+            box-shadow: 0 5px 0 rgba(0, 0, 0, 0.50), 0 8px 24px rgba(0, 0, 0, 0.40);
         }
 
         /* ============================================================
