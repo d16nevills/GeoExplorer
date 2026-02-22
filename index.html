@@ -1181,7 +1181,8 @@
            To remove entirely: also delete this CSS block
            ============================================================ */
 
-        [data-theme="cartoon"] button:not(.timer-btn):not(.corner-btn):not(.return-start-btn):not(.back-button):not(.mobile-home-btn) {
+        /* Base: all buttons except the two homepage corner buttons */
+        [data-theme="cartoon"] button:not(.corner-btn) {
             border-radius: 14px;
             border: 2px solid rgba(0, 0, 0, 0.20);
             font-weight: 800;
@@ -1189,38 +1190,84 @@
             transition: transform 0.08s ease, box-shadow 0.08s ease, background 0.15s ease;
         }
 
-        /* Primary green button — 3-D depth shadow */
-        [data-theme="cartoon"] button:not(.timer-btn):not(.corner-btn):not(.return-start-btn):not(.back-button):not(.mobile-home-btn):not(.secondary):not(:disabled) {
+        /* Primary green action buttons */
+        [data-theme="cartoon"] button:not(.corner-btn):not(.secondary):not(:disabled):not(.timer-btn):not(.back-button):not(.mobile-home-btn):not(.return-start-btn) {
             box-shadow: 0 5px 0 #009A55, 0 8px 16px rgba(0, 215, 126, 0.22);
             text-shadow: 0 1px 0 rgba(0, 0, 0, 0.12);
         }
 
-        [data-theme="cartoon"] button:not(.timer-btn):not(.corner-btn):not(.return-start-btn):not(.back-button):not(.mobile-home-btn):not(.secondary):not(:disabled):hover {
+        [data-theme="cartoon"] button:not(.corner-btn):not(.secondary):not(:disabled):not(.timer-btn):not(.back-button):not(.mobile-home-btn):not(.return-start-btn):hover {
             background: #05E589;
             transform: translateY(-3px);
             box-shadow: 0 8px 0 #009A55, 0 12px 22px rgba(0, 215, 126, 0.30);
         }
 
-        [data-theme="cartoon"] button:not(.timer-btn):not(.corner-btn):not(.return-start-btn):not(.back-button):not(.mobile-home-btn):not(.secondary):not(:disabled):active {
+        [data-theme="cartoon"] button:not(.corner-btn):not(.secondary):not(:disabled):not(.timer-btn):not(.back-button):not(.mobile-home-btn):not(.return-start-btn):active {
             transform: translateY(4px);
             box-shadow: 0 1px 0 #009A55, 0 2px 6px rgba(0, 215, 126, 0.15);
         }
 
-        /* Secondary (dark) button — 3-D depth shadow */
-        [data-theme="cartoon"] button.secondary:not(.back-button):not(.mobile-home-btn) {
+        /* Secondary (dark) buttons */
+        [data-theme="cartoon"] button.secondary:not(.corner-btn) {
             box-shadow: 0 5px 0 rgba(0, 0, 0, 0.45), 0 8px 16px rgba(0, 0, 0, 0.18);
             border: 2px solid rgba(255, 255, 255, 0.10);
         }
 
-        [data-theme="cartoon"] button.secondary:not(.back-button):not(.mobile-home-btn):hover {
+        [data-theme="cartoon"] button.secondary:not(.corner-btn):hover {
             transform: translateY(-3px);
             background: #3A3A3C;
             box-shadow: 0 8px 0 rgba(0, 0, 0, 0.45), 0 12px 22px rgba(0, 0, 0, 0.25);
         }
 
-        [data-theme="cartoon"] button.secondary:not(.back-button):not(.mobile-home-btn):active {
+        [data-theme="cartoon"] button.secondary:not(.corner-btn):active {
             transform: translateY(4px);
             box-shadow: 0 1px 0 rgba(0, 0, 0, 0.45), 0 2px 6px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Timer buttons — translucent, so white border and neutral bottom shadow */
+        [data-theme="cartoon"] .timer-btn {
+            border: 2px solid rgba(255, 255, 255, 0.25);
+            box-shadow: 0 4px 0 rgba(0, 0, 0, 0.30), 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        [data-theme="cartoon"] .timer-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 0 rgba(0, 0, 0, 0.30), 0 8px 16px rgba(0, 0, 0, 0.20);
+        }
+
+        [data-theme="cartoon"] .timer-btn:active {
+            transform: translateY(3px);
+            box-shadow: 0 1px 0 rgba(0, 0, 0, 0.30), 0 2px 6px rgba(0, 0, 0, 0.12);
+        }
+
+        [data-theme="cartoon"] .timer-btn.timer-active {
+            box-shadow: 0 4px 0 #009A55, 0 6px 12px rgba(0, 215, 126, 0.28) !important;
+        }
+
+        [data-theme="cartoon"] .timer-btn.timer-active:hover {
+            box-shadow: 0 6px 0 #009A55, 0 8px 16px rgba(0, 215, 126, 0.35) !important;
+        }
+
+        /* HUD-style dark overlay buttons */
+        [data-theme="cartoon"] .back-button,
+        [data-theme="cartoon"] .mobile-home-btn,
+        [data-theme="cartoon"] .return-start-btn {
+            border: 2px solid rgba(255, 255, 255, 0.10);
+            box-shadow: 0 5px 0 rgba(0, 0, 0, 0.50), 0 8px 16px rgba(0, 0, 0, 0.22);
+        }
+
+        [data-theme="cartoon"] .back-button:hover,
+        [data-theme="cartoon"] .mobile-home-btn:hover,
+        [data-theme="cartoon"] .return-start-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 0 rgba(0, 0, 0, 0.50), 0 12px 22px rgba(0, 0, 0, 0.28);
+        }
+
+        [data-theme="cartoon"] .back-button:active,
+        [data-theme="cartoon"] .mobile-home-btn:active,
+        [data-theme="cartoon"] .return-start-btn:active {
+            transform: translateY(4px);
+            box-shadow: 0 1px 0 rgba(0, 0, 0, 0.50), 0 2px 6px rgba(0, 0, 0, 0.18);
         }
 
         /* finishReviewButton has inline styles; !important needed to override */
