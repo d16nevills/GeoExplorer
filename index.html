@@ -449,7 +449,54 @@
             height: 500px;
             opacity: 1;
         }
-        
+
+        /* Street-view loading overlay — covers the panorama while the next
+           location loads, preventing a flash of the previous location.
+           No artificial delay: it vanishes as soon as pano_changed fires. */
+        .sv-loader {
+            position: absolute;
+            inset: 0;
+            background: var(--bg-dark);
+            z-index: 103; /* above street view, below map (105) and controls */
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.25s ease;
+        }
+        .sv-loader.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        /* ── Desktop map: flat, modern zoom controls ──
+           Google's default zoom buttons have a 3-D box-shadow and white card
+           styling. Override to match the dark/translucent UI language. */
+        #map button.gm-control-active {
+            background: rgba(28, 28, 30, 0.82) !important;
+            box-shadow: none !important;
+            border: none !important;
+            opacity: 0.85;
+            transition: opacity 0.15s ease, background 0.15s ease !important;
+        }
+        #map button.gm-control-active:hover {
+            opacity: 1;
+            background: rgba(45, 45, 50, 0.95) !important;
+        }
+        /* White +/− icons on the dark background */
+        #map button.gm-control-active img {
+            filter: brightness(0) invert(1) !important;
+        }
+        /* Strip the drop-shadow from the zoom-button card wrapper */
+        #map .gm-bundled-control > div,
+        #map .gm-bundled-control .gmnoprint > div {
+            box-shadow: none !important;
+            background: transparent !important;
+        }
+        /* Round the stacked +/− pair as a unit */
+        #map .gm-bundled-control .gmnoprint > div {
+            border-radius: 8px !important;
+            overflow: hidden !important;
+        }
+
         /* Hide Google's compass completely - every possible selector */
         .gm-svpc,
         div.gm-svpc,
@@ -1723,6 +1770,8 @@
             
             <div class="game-area">
                 <div id="streetview"></div>
+                <!-- Dark overlay shown while the next panorama loads, prevents flash of old location -->
+                <div id="svLoader" class="sv-loader"></div>
                 <div id="map"></div>
                 <div class="custom-compass" id="customCompass"></div>
             </div>
@@ -2108,6 +2157,7 @@
         let timerRemaining = 0;
         let usedLocations = []; // Track locations used in current game to prevent duplicates
         let currentMapKey = '';
+        let roundLoading = false; // True while a new panorama is being fetched
         const TOTAL_ROUNDS = 5;
         const MIN_DISTANCE_BETWEEN_LOCATIONS = 50; // Minimum km between locations in same game
         const MIN_DISTANCE_FROM_HISTORY = 25; // Minimum km from recently used locations across games
@@ -2778,6 +2828,12 @@
         async function loadNewRound() {
             document.getElementById('guessButton').disabled = true;
             guessLocation = null;
+
+            // Cover the street view immediately so the previous panorama isn't
+            // visible while we fetch the next location
+            roundLoading = true;
+            const svLoader = document.getElementById('svLoader');
+            if (svLoader) svLoader.classList.add('active');
             
             // Reset map size and compass/button positions
             const mapElement = document.getElementById('map');
@@ -2924,6 +2980,16 @@
                         // Update custom compass when POV changes
                         streetView.addListener('pov_changed', updateCustomCompass);
                         updateCustomCompass(); // Initial update
+
+                        // Hide the loading overlay once the new panorama is ready.
+                        // A short delay (150 ms) lets the first tiles start rendering
+                        // so there's no white flash when the dark screen lifts.
+                        streetView.addListener('pano_changed', () => {
+                            if (!roundLoading) return;
+                            roundLoading = false;
+                            const loader = document.getElementById('svLoader');
+                            if (loader) setTimeout(() => loader.classList.remove('active'), 150);
+                        });
                     } else {
                         streetView.setPosition(currentLocation);
                         streetView.setPov(initialPOV);
@@ -2940,6 +3006,9 @@
                     return;
             }
             
+            roundLoading = false;
+            const loaderEl = document.getElementById('svLoader');
+            if (loaderEl) loaderEl.classList.remove('active');
             alert('Could not find enough unique Street View locations in this region. Please try another map or clear your location history.');
             backToMenu();
         }
