@@ -1892,6 +1892,12 @@
                     // Oceania
                     {lat:-33.8688,lng:151.2093},{lat:-37.8136,lng:144.9631},{lat:-27.4698,lng:153.0251},
                     {lat:-36.8509,lng:174.7645}
+                ],
+                // South Asia has extremely dense Street View coverage, causing over-representation.
+                // Probabilistically down-weight panoramas found in this region so the world
+                // mode feels more globally balanced. weight=0.35 means ~35% pass through.
+                downweightedRegions: [
+                    { north: 35, south: 5, east: 97, west: 60, weight: 0.35 }
                 ]
             },
             europe: {
@@ -2916,7 +2922,7 @@
                 
                 let foundLocation = false;
                 
-                for (let strategy of searchStrategy) {
+                searchLoop: for (let strategy of searchStrategy) {
                     for (let tryNum = 0; tryNum < strategy.tries; tryNum++) {
                         try {
                             const result = await new Promise((resolve, reject) => {
@@ -2932,6 +2938,11 @@
                                         // business photo or isolated user upload – skip it.
                                         if (!data.links || data.links.length === 0) {
                                             reject('INDOOR');
+                                        } else if (data.copyright && !data.copyright.includes('Google')) {
+                                            // Non-Google panoramas are user-contributed Photo Spheres
+                                            // (e.g. someone on a boat or hiking trail with a 360° camera).
+                                            // These can be disorienting in-game, so skip them.
+                                            reject('NON_STANDARD');
                                         } else {
                                             resolve(data);
                                         }
@@ -2955,7 +2966,20 @@
                             if (isLocationInHistory(currentLocation)) {
                                 break; // Exit tries loop
                             }
-                            
+
+                            // Probabilistically skip panoramas in over-represented regions.
+                            // Break out of both search loops so getRandomLocation() is called
+                            // again from scratch, giving a genuine chance of landing elsewhere.
+                            if (currentMapConfig.downweightedRegions) {
+                                const dwr = currentMapConfig.downweightedRegions.find(r =>
+                                    currentLocation.lat <= r.north && currentLocation.lat >= r.south &&
+                                    currentLocation.lng <= r.east  && currentLocation.lng >= r.west
+                                );
+                                if (dwr && Math.random() > dwr.weight) {
+                                    break searchLoop; // Abandon this seed entirely
+                                }
+                            }
+
                             foundLocation = true;
                             break; // Found good location, exit tries loop
                             
