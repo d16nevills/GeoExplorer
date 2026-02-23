@@ -1601,6 +1601,24 @@
            END CARTOON THEME
            ============================================================ */
 
+        /* On touch-only devices, prevent hover transforms from sticking after tap.
+           The translateY(-2px) lift applied on :hover would otherwise stay applied
+           after the tap ends, making buttons appear to "stick out". */
+        @media (hover: none) {
+            .corner-btn:hover,
+            .corner-btn:focus {
+                transform: none;
+            }
+            .return-start-btn:hover,
+            .return-start-btn:focus {
+                transform: none;
+            }
+            .mobile-home-btn:hover,
+            .mobile-home-btn:focus {
+                transform: none;
+            }
+        }
+
     </style>
 
     <script>
@@ -2828,7 +2846,14 @@
                                     preference: google.maps.StreetViewPreference.NEAREST
                                 }, (data, status) => {
                                     if (status === 'OK') {
-                                        resolve(data);
+                                        // Outdoor Street View always has navigation links.
+                                        // A panorama with no links is typically an indoor
+                                        // business photo or isolated user upload – skip it.
+                                        if (!data.links || data.links.length === 0) {
+                                            reject('INDOOR');
+                                        } else {
+                                            resolve(data);
+                                        }
                                     } else {
                                         reject(status);
                                     }
@@ -3143,14 +3168,30 @@
             
             document.getElementById('resultOverlay').style.display = 'block';
             document.getElementById('resultOverlay').classList.add('active');
-            
+
             document.getElementById('guessButton').disabled = true;
+
+            // On mobile, hide compass and guess button to make room for the result card
+            if (window.innerWidth <= 768) {
+                const compass = document.getElementById('customCompass');
+                const controls = document.querySelector('.controls');
+                if (compass) compass.style.display = 'none';
+                if (controls) controls.style.display = 'none';
+            }
         }
         
         function nextRound() {
             // Hide result overlay
             document.getElementById('resultOverlay').classList.remove('active');
             document.getElementById('resultOverlay').style.display = 'none';
+
+            // Restore compass and controls hidden during result card on mobile
+            if (window.innerWidth <= 768) {
+                const compass = document.getElementById('customCompass');
+                const controls = document.querySelector('.controls');
+                if (compass) compass.style.display = '';
+                if (controls) controls.style.display = '';
+            }
             
             // Increment round
             currentRound++;
@@ -3212,6 +3253,12 @@
             // Close the result overlay so user can see and interact with the map
             document.getElementById('resultOverlay').classList.remove('active');
             document.getElementById('resultOverlay').style.display = 'none';
+
+            // Restore compass on mobile so the user can navigate during review
+            if (window.innerWidth <= 768) {
+                const compass = document.getElementById('customCompass');
+                if (compass) compass.style.display = '';
+            }
             
             // Build and show the review panel above the map
             const panel = document.getElementById('reviewPanel');
