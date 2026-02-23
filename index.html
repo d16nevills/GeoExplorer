@@ -1648,21 +1648,41 @@
            END CARTOON THEME
            ============================================================ */
 
-        /* On touch-only devices, prevent hover transforms from sticking after tap.
-           The translateY(-2px) lift applied on :hover would otherwise stay applied
-           after the tap ends, making buttons appear to "stick out". */
+        /* On touch-only devices, prevent hover styles from sticking after a tap.
+           Mobile browsers apply :hover on touch and it can persist until the
+           next touch event elsewhere — causing an exaggerated lifted/3-D look.
+           !important is required because the cartoon-theme selectors (which
+           include an attribute selector) have higher specificity. */
         @media (hover: none) {
+            /* ── Non-cartoon: suppress hover transform + border brightening ── */
             .corner-btn:hover,
             .corner-btn:focus {
-                transform: none;
+                transform: none !important;
+                border-color: rgba(255, 255, 255, 0.3) !important;
             }
             .return-start-btn:hover,
             .return-start-btn:focus {
-                transform: none;
+                transform: none !important;
+                border-color: rgba(255, 255, 255, 0.3) !important;
             }
             .mobile-home-btn:hover,
             .mobile-home-btn:focus {
-                transform: none;
+                transform: none !important;
+                border-color: rgba(255, 255, 255, 0.3) !important;
+            }
+
+            /* ── Cartoon theme: also reset the elevated box-shadow ── */
+            [data-theme="cartoon"] .corner-btn:hover,
+            [data-theme="cartoon"] .corner-btn:focus {
+                transform: none !important;
+                box-shadow: 0 3px 0 rgba(0, 0, 0, 0.38), 0 5px 12px rgba(0, 0, 0, 0.20) !important;
+            }
+            [data-theme="cartoon"] .return-start-btn:hover,
+            [data-theme="cartoon"] .return-start-btn:focus,
+            [data-theme="cartoon"] .mobile-home-btn:hover,
+            [data-theme="cartoon"] .mobile-home-btn:focus {
+                transform: none !important;
+                box-shadow: 0 3px 0 rgba(0, 0, 0, 0.38), 0 5px 12px rgba(0, 0, 0, 0.20) !important;
             }
         }
 
@@ -3529,6 +3549,9 @@
             reviewPanel.classList.remove('review-mode');
             updateCompassAndControls(false);
             document.getElementById('guessButton').style.display = 'block';
+            // Restore the controls container hidden on mobile during the result card
+            const controlsEl = document.querySelector('.controls');
+            if (controlsEl) controlsEl.style.display = '';
             
             // Start the same game again
             startGame(savedMapKey);
@@ -3567,6 +3590,7 @@
                 streetView.setPov(initialPOV);
                 streetView.setZoom(0);
             }
+            if (document.activeElement) document.activeElement.blur();
         }
         
         // Initialize map selection when script loads
