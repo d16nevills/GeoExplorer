@@ -1648,12 +1648,17 @@
            END CARTOON THEME
            ============================================================ */
 
-        /* On touch-only devices, prevent hover styles from sticking after a tap.
-           Mobile browsers apply :hover on touch and it can persist until the
-           next touch event elsewhere — causing an exaggerated lifted/3-D look.
+        /* On touch devices, prevent hover styles from sticking after a tap.
+           Mobile browsers apply :hover on touch and it persists until the next
+           tap elsewhere — producing an exaggerated lifted/3-D look on release.
+           NOTE: (hover: none) is NOT used here because iOS Safari / Chrome on
+           Android report (hover: hover) even on pure-touch devices, so that
+           query never fires on phones/tablets.  (pointer: coarse) is the
+           reliable detector: it matches any device whose primary pointer is
+           imprecise (i.e. a finger), which is always true for phones/tablets.
            !important is required because the cartoon-theme selectors (which
            include an attribute selector) have higher specificity. */
-        @media (hover: none) {
+        @media (pointer: coarse) {
             /* ── Non-cartoon: suppress hover transform + border brightening ── */
             .corner-btn:hover,
             .corner-btn:focus {
