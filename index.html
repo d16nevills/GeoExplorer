@@ -540,6 +540,7 @@
         }
         
         .custom-compass:hover { opacity: 1; }
+        .custom-compass.opacity-pinned { opacity: 1; cursor: pointer; }
         
         /* Compass needle – north (red) and south (white), both pivoting at centre */
         .custom-compass::before {
@@ -3742,8 +3743,9 @@
 <!-- ═══ END SCROLL-SHRINK-HEADER ═══ -->
 <script>
     (function() {
-        var HEADER_KEY = 'geoexplorer_header_pinned';
-        var TIMER_KEY  = 'geoexplorer_timer_pinned';
+        var HEADER_KEY  = 'geoexplorer_header_pinned';
+        var TIMER_KEY   = 'geoexplorer_timer_pinned';
+        var COMPASS_KEY = 'geoexplorer_compass_pinned';
 
         function isPinned(storageKey) {
             return localStorage.getItem(storageKey) === 'true';
@@ -3779,8 +3781,9 @@
         }
 
         function init() {
-            addOpacityToggle(document.querySelector('.game-header'), HEADER_KEY);
-            addOpacityToggle(document.getElementById('timerDisplay'),  TIMER_KEY);
+            addOpacityToggle(document.querySelector('.game-header'),    HEADER_KEY);
+            addOpacityToggle(document.getElementById('timerDisplay'),   TIMER_KEY);
+            addOpacityToggle(document.getElementById('customCompass'),  COMPASS_KEY);
         }
 
         if (document.readyState === 'loading') {
