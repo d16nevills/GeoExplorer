@@ -990,8 +990,8 @@
         
         @media (max-width: 768px) {
             .game-header {
-                flex-direction: column;
-                gap: 0.3rem;
+                flex-direction: row;
+                gap: 0;
                 padding: 0.5rem 0.8rem;
                 top: 10px;
                 font-size: 0.7rem;
@@ -1000,26 +1000,26 @@
                 transform: translateX(-50%);
                 align-items: center;
             }
-            
+
             .score-info {
                 font-size: 0.75rem;
-                flex: none;
-                padding-left: 0;
-                justify-content: center;
+                flex: 1;
+                padding-left: 0.4rem;
+                justify-content: flex-end;
                 white-space: nowrap;
             }
 
             .round-info {
-                flex: none;
-                padding-right: 0;
+                flex: 1;
+                padding-right: 0.4rem;
                 font-size: 0.7rem;
                 white-space: nowrap;
             }
 
             .region-info {
                 border-left: 1px solid var(--bg-light);
-                border-right: none;
-                padding: 0 0 0 0.4rem;
+                border-right: 1px solid var(--bg-light);
+                padding: 0 0.4rem;
                 font-size: 0.7rem;
                 white-space: nowrap;
             }
