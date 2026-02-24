@@ -539,7 +539,9 @@
             opacity: 0.7;
         }
         
-        .custom-compass:hover { opacity: 1; }
+        @media (hover: hover) {
+            .custom-compass:hover { opacity: 1; }
+        }
         .custom-compass.opacity-pinned { opacity: 1; cursor: pointer; }
         
         /* Compass needle – north (red) and south (white), both pivoting at centre */
