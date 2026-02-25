@@ -141,7 +141,14 @@
             background: rgba(255, 255, 255, 0.25);
         }
 
-        /* Clear history button — red when pressed, returns to normal after */
+        /* Clear history button — red on hover and when pressed */
+        .corner-btn-left:hover {
+            background: rgba(220, 38, 38, 0.35) !important;
+            border-color: rgba(255, 100, 100, 0.8) !important;
+        }
+        .corner-btn-left:hover::before {
+            background: rgba(220, 38, 38, 0.15);
+        }
         .corner-btn-left:active,
         .corner-btn-left.pressing {
             background: rgba(220, 38, 38, 0.35) !important;
@@ -602,7 +609,7 @@
         .return-start-btn:hover,
         .return-start-btn:active {
             opacity: 1;
-            background: rgba(28, 28, 30, 0.9);
+            background: rgba(185, 28, 28, 0.9);
             box-shadow: none;
             transform: none;
         }
@@ -1126,15 +1133,20 @@
             }
 
             .return-start-btn:hover {
-                border-color: rgba(255, 255, 255, 0.5);
+                border-color: rgba(255, 100, 100, 0.8);
                 transform: translateY(-2px);
-                background: transparent;
+                background: rgba(220, 38, 38, 0.35);
                 box-shadow: none;
+            }
+
+            .return-start-btn:hover::before {
+                background: rgba(220, 38, 38, 0.15);
             }
 
             .return-start-btn:active {
                 transform: none;
-                background: transparent;
+                background: rgba(220, 38, 38, 0.35);
+                border-color: rgba(255, 100, 100, 0.8);
             }
 
             .return-start-btn svg {
@@ -1399,8 +1411,9 @@
         [data-theme="cartoon"] .mobile-home-btn:hover,
         [data-theme="cartoon"] .return-start-btn:hover {
             transform: translateY(-3px);
-            border-color: rgba(255, 255, 255, 0.55);
-            box-shadow: 0 7px 0 rgba(0, 0, 0, 0.38), 0 10px 20px rgba(0, 0, 0, 0.25);
+            border-color: rgba(255, 100, 100, 0.8);
+            box-shadow: 0 7px 0 rgba(100, 0, 0, 0.38), 0 10px 20px rgba(0, 0, 0, 0.25);
+            background: rgba(220, 38, 38, 0.35);
         }
 
         [data-theme="cartoon"] .back-button:active {
@@ -1411,7 +1424,9 @@
         [data-theme="cartoon"] .mobile-home-btn:active,
         [data-theme="cartoon"] .return-start-btn:active {
             transform: translateY(3px);
-            box-shadow: 0 1px 0 rgba(0, 0, 0, 0.38), 0 2px 6px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 1px 0 rgba(100, 0, 0, 0.5), 0 2px 6px rgba(0, 0, 0, 0.15);
+            background: rgba(220, 38, 38, 0.40);
+            border-color: rgba(255, 100, 100, 0.8);
         }
 
         /* Mobile circular buttons must stay circular */
@@ -1424,13 +1439,17 @@
 
             [data-theme="cartoon"] .mobile-home-btn:hover,
             [data-theme="cartoon"] .return-start-btn:hover {
-                box-shadow: 0 5px 0 rgba(0, 0, 0, 0.38), 0 8px 16px rgba(0, 0, 0, 0.25);
+                box-shadow: 0 5px 0 rgba(100, 0, 0, 0.38), 0 8px 16px rgba(0, 0, 0, 0.25);
+                background: rgba(220, 38, 38, 0.40);
+                border-color: rgba(255, 100, 100, 0.8);
             }
 
             [data-theme="cartoon"] .mobile-home-btn:active,
             [data-theme="cartoon"] .return-start-btn:active {
                 transform: translateY(2px);
-                box-shadow: 0 1px 0 rgba(0, 0, 0, 0.38), 0 2px 6px rgba(0, 0, 0, 0.15);
+                box-shadow: 0 1px 0 rgba(100, 0, 0, 0.5), 0 2px 6px rgba(0, 0, 0, 0.15);
+                background: rgba(220, 38, 38, 0.40);
+                border-color: rgba(255, 100, 100, 0.8);
             }
         }
 
@@ -1609,6 +1628,12 @@
             box-shadow: 0 7px 0 rgba(0, 0, 0, 0.38), 0 10px 20px rgba(0, 0, 0, 0.25);
         }
 
+        [data-theme="cartoon"] .corner-btn-left:hover {
+            background: rgba(220, 38, 38, 0.40) !important;
+            border-color: rgba(255, 100, 100, 0.8) !important;
+            box-shadow: 0 7px 0 rgba(100, 0, 0, 0.38), 0 10px 20px rgba(0, 0, 0, 0.25) !important;
+        }
+
         [data-theme="cartoon"] .corner-btn:active {
             transform: translateY(3px);
             box-shadow: 0 1px 0 rgba(0, 0, 0, 0.38), 0 2px 6px rgba(0, 0, 0, 0.15);
@@ -1661,10 +1686,16 @@
                 transform: none !important;
                 border-color: rgba(255, 255, 255, 0.3) !important;
             }
+            .corner-btn-left:hover,
+            .corner-btn-left:focus {
+                background: transparent !important;
+                border-color: rgba(255, 255, 255, 0.3) !important;
+            }
             .return-start-btn:hover,
             .return-start-btn:focus {
                 transform: none !important;
                 border-color: rgba(255, 255, 255, 0.3) !important;
+                background: transparent !important;
             }
             .mobile-home-btn:hover,
             .mobile-home-btn:focus {
@@ -1678,12 +1709,20 @@
                 transform: none !important;
                 box-shadow: 0 3px 0 rgba(0, 0, 0, 0.38), 0 5px 12px rgba(0, 0, 0, 0.20) !important;
             }
+            [data-theme="cartoon"] .corner-btn-left:hover,
+            [data-theme="cartoon"] .corner-btn-left:focus {
+                background: transparent !important;
+                border-color: rgba(255, 255, 255, 0.3) !important;
+                box-shadow: 0 3px 0 rgba(0, 0, 0, 0.38), 0 5px 12px rgba(0, 0, 0, 0.20) !important;
+            }
             [data-theme="cartoon"] .return-start-btn:hover,
             [data-theme="cartoon"] .return-start-btn:focus,
             [data-theme="cartoon"] .mobile-home-btn:hover,
             [data-theme="cartoon"] .mobile-home-btn:focus {
                 transform: none !important;
                 box-shadow: 0 3px 0 rgba(0, 0, 0, 0.38), 0 5px 12px rgba(0, 0, 0, 0.20) !important;
+                background: transparent !important;
+                border-color: rgba(255, 255, 255, 0.3) !important;
             }
         }
 
