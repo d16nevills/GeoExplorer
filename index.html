@@ -1002,9 +1002,8 @@
         
         @media (max-width: 768px) {
             .game-header {
-                flex-direction: row;
-                flex-wrap: wrap;
-                gap: 0;
+                flex-direction: column;
+                gap: 0.15rem;
                 padding: 0.5rem 0.8rem;
                 top: 10px;
                 font-size: 0.7rem;
@@ -1015,9 +1014,15 @@
                 justify-content: center;
             }
 
+            .round-region-row {
+                display: flex;
+                align-items: center;
+                white-space: nowrap;
+                overflow: hidden;
+            }
+
             .score-info {
                 font-size: 0.75rem;
-                flex: 0 0 100%;
                 padding-left: 0;
                 justify-content: center;
                 text-align: center;
@@ -1827,10 +1832,12 @@
             </button>
             
             <div class="game-header">
-                <div class="round-info">
-                    Round <span id="currentRound">1</span> of <span id="totalRounds">5</span>
+                <div class="round-region-row">
+                    <div class="round-info">
+                        Round <span id="currentRound">1</span> of <span id="totalRounds">5</span>
+                    </div>
+                    <div class="region-info" id="regionName"></div>
                 </div>
-                <div class="region-info" id="regionName"></div>
                 <div class="score-info">
                     Score: <span id="totalScore">0</span>
                 </div>
