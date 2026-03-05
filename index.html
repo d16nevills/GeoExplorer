@@ -2346,7 +2346,8 @@
             landmarks: {
                 name: 'Landmarks',
                 description: 'Iconic monuments and landmarks from around the world',
-                searchRadius: 1000,
+                searchRadius: 50,
+                fallbackRadii: [50, 100, 200, 500],
                 locations: [
                     // France
                     {lat:48.8584,lng:2.2945,name:'Eiffel Tower, Paris'},
@@ -2367,6 +2368,9 @@
                     {lat:51.5007,lng:-0.1246,name:'Big Ben, London'},
                     {lat:51.5014,lng:-0.1419,name:'Buckingham Palace, London'},
                     {lat:51.5081,lng:-0.0759,name:'Tower of London'},
+                    {lat:51.5055,lng:-0.0754,name:'Tower Bridge, London'},
+                    {lat:51.4994,lng:-0.1273,name:'Westminster Abbey, London'},
+                    {lat:51.5033,lng:-0.1196,name:'London Eye'},
                     {lat:51.1789,lng:-1.8262,name:'Stonehenge, England'},
                     {lat:55.9486,lng:-3.1999,name:'Edinburgh Castle, Scotland'},
                     {lat:55.2408,lng:-6.5116,name:"Giant's Causeway, N. Ireland"},
@@ -2377,6 +2381,7 @@
                     {lat:37.3826,lng:-5.9965,name:'Alcázar of Seville'},
                     // Germany
                     {lat:52.5163,lng:13.3777,name:'Brandenburg Gate, Berlin'},
+                    {lat:52.5075,lng:13.3904,name:'Checkpoint Charlie, Berlin'},
                     {lat:47.5576,lng:10.7498,name:'Neuschwanstein Castle'},
                     {lat:50.9413,lng:6.9583,name:'Cologne Cathedral'},
                     // Greece
@@ -2396,6 +2401,7 @@
                     {lat:47.5072,lng:19.0458,name:'Hungarian Parliament, Budapest'},
                     {lat:50.8465,lng:4.3527,name:'Grand Place, Brussels'},
                     {lat:51.2093,lng:3.2247,name:'Historic Canal District, Bruges'},
+                    {lat:51.8833,lng:4.6333,name:'Kinderdijk Windmills, Netherlands'},
                     {lat:42.6507,lng:18.0944,name:'Old Town, Dubrovnik'},
                     {lat:38.6916,lng:-9.2160,name:'Belém Tower, Lisbon'},
                     {lat:38.7875,lng:-9.3906,name:'Sintra Palace, Portugal'},
@@ -2408,16 +2414,23 @@
                     {lat:39.9163,lng:116.3972,name:'Forbidden City, Beijing'},
                     {lat:40.4319,lng:116.5704,name:'Great Wall of China (Mutianyu)'},
                     {lat:34.3843,lng:109.2736,name:"Terracotta Army, Xi'an"},
+                    {lat:31.2397,lng:121.4997,name:'Oriental Pearl Tower, Shanghai'},
+                    {lat:31.2368,lng:121.4896,name:'The Bund, Shanghai'},
                     {lat:25.0350,lng:110.2992,name:'Li River, Guilin'},
                     {lat:30.2561,lng:120.1551,name:'West Lake, Hangzhou'},
                     // Japan
                     {lat:34.9671,lng:135.7727,name:'Fushimi Inari Shrine, Kyoto'},
                     {lat:35.7148,lng:139.7967,name:'Sensoji Temple, Tokyo'},
                     {lat:35.6595,lng:139.7004,name:'Shibuya Crossing, Tokyo'},
+                    {lat:35.6586,lng:139.7454,name:'Tokyo Tower'},
+                    {lat:35.7101,lng:139.8107,name:'Tokyo Skytree'},
                     {lat:35.0094,lng:135.6692,name:'Arashiyama Bamboo Grove, Kyoto'},
                     {lat:34.3955,lng:132.4536,name:'Hiroshima Peace Memorial'},
+                    // East Asia
+                    {lat:25.0338,lng:121.5646,name:'Taipei 101, Taiwan'},
                     // South Korea
                     {lat:37.5796,lng:126.9770,name:'Gyeongbokgung Palace, Seoul'},
+                    {lat:37.5512,lng:126.9882,name:'N Seoul Tower, South Korea'},
                     // Southeast Asia
                     {lat:13.4125,lng:103.8670,name:'Angkor Wat, Cambodia'},
                     {lat:13.7500,lng:100.4914,name:'Grand Palace, Bangkok'},
@@ -2427,6 +2440,7 @@
                     {lat:21.1717,lng:94.8585,name:'Bagan Temples, Myanmar'},
                     // Middle East
                     {lat:25.1972,lng:55.2744,name:'Burj Khalifa, Dubai'},
+                    {lat:25.1412,lng:55.1852,name:'Burj Al Arab, Dubai'},
                     {lat:24.4130,lng:54.4748,name:'Sheikh Zayed Grand Mosque, Abu Dhabi'},
                     {lat:30.3285,lng:35.4444,name:'Petra, Jordan'},
                     // Egypt
@@ -2440,22 +2454,29 @@
                     {lat:-33.9625,lng:18.4033,name:'Table Mountain, Cape Town'},
                     // Americas
                     {lat:40.6892,lng:-74.0445,name:'Statue of Liberty, New York'},
+                    {lat:40.7484,lng:-73.9857,name:'Empire State Building, New York'},
                     {lat:37.8199,lng:-122.4783,name:'Golden Gate Bridge, San Francisco'},
                     {lat:40.7580,lng:-73.9855,name:'Times Square, New York'},
                     {lat:38.8893,lng:-77.0502,name:'Lincoln Memorial, Washington DC'},
                     {lat:47.6205,lng:-122.3493,name:'Space Needle, Seattle'},
+                    {lat:36.1147,lng:-115.1728,name:'Las Vegas Strip, USA'},
+                    {lat:36.0544,lng:-112.1401,name:'Grand Canyon South Rim, USA'},
+                    {lat:43.8791,lng:-103.4591,name:'Mount Rushmore, USA'},
                     {lat:43.0962,lng:-79.0377,name:'Niagara Falls, Canada'},
+                    {lat:43.6426,lng:-79.3871,name:'CN Tower, Toronto'},
                     {lat:46.8139,lng:-71.2050,name:'Old Quebec City, Canada'},
                     {lat:-22.9519,lng:-43.2105,name:'Christ the Redeemer, Rio'},
                     {lat:20.6843,lng:-88.5678,name:'Chichen Itza, Mexico'},
                     {lat:19.6925,lng:-98.8438,name:'Teotihuacan, Mexico'},
                     {lat:-13.1631,lng:-72.5450,name:'Machu Picchu, Peru'},
                     {lat:-13.5170,lng:-71.9785,name:'Cusco Plaza de Armas, Peru'},
+                    {lat:-25.6953,lng:-54.4367,name:'Iguazu Falls, Argentina'},
                     {lat:10.4244,lng:-75.5523,name:'Old Cartagena, Colombia'},
                     {lat:23.1360,lng:-82.3618,name:'Old Havana, Cuba'},
                     // Oceania
                     {lat:-33.8568,lng:151.2153,name:'Sydney Opera House'},
-                    {lat:-38.6643,lng:143.1051,name:'Twelve Apostles, Australia'}
+                    {lat:-38.6643,lng:143.1051,name:'Twelve Apostles, Australia'},
+                    {lat:-36.8685,lng:174.7624,name:'Auckland Sky Tower, New Zealand'}
                 ]
             }
         };
