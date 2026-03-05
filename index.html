@@ -2225,7 +2225,8 @@
             cities: {
                 name: 'World Cities',
                 description: 'Biggest city downtowns from around the globe',
-                searchRadius: 2000,
+                searchRadius: 500,
+                fallbackRadii: [500, 1000, 2000],
                 locations: [
                     // East Asia
                     {lat:35.6762,lng:139.6503,name:'Tokyo, Japan'},
@@ -2467,6 +2468,7 @@
         let usedLocations = []; // Track locations used in current game to prevent duplicates
         let currentMapKey = '';
         let roundLoading = false; // True while a new panorama is being fetched
+        let lastOutdoorPanoId = null; // Last confirmed outdoor pano, for indoor-navigation guard
         const TOTAL_ROUNDS = 5;
         const MIN_DISTANCE_BETWEEN_LOCATIONS = 50; // Minimum km between locations in same game
         const MIN_DISTANCE_FROM_HISTORY = 25; // Minimum km from recently used locations across games
@@ -3175,7 +3177,7 @@
 
             const streetViewService = new google.maps.StreetViewService();
             // Try tighter radius first, then fall back to wider
-            const radii = [config.searchRadius || 1000, 3000, 8000];
+            const radii = config.fallbackRadii || [config.searchRadius || 1000, 3000, 8000];
 
             for (const idx of pool) {
                 const loc = config.locations[idx];
@@ -3242,6 +3244,21 @@
                     );
                     streetView.addListener('pov_changed', updateCustomCompass);
                     streetView.addListener('pano_changed', () => {
+                        const panoId = streetView.getPano();
+                        // Detect indoor panos: after a short delay, check if the pano
+                        // has navigation links. Indoor/business panoramas typically have none.
+                        setTimeout(() => {
+                            const links = streetView.getLinks();
+                            if (!links || links.length === 0) {
+                                // No links = indoor pano — navigate back to last outdoor pano
+                                if (lastOutdoorPanoId && lastOutdoorPanoId !== panoId) {
+                                    streetView.setPano(lastOutdoorPanoId);
+                                }
+                            } else {
+                                lastOutdoorPanoId = panoId;
+                            }
+                        }, 300);
+
                         if (!roundLoading) return;
                         roundLoading = false;
                         const loader = document.getElementById('svLoader');
@@ -3268,6 +3285,7 @@
         async function loadNewRound() {
             document.getElementById('guessButton').disabled = true;
             guessLocation = null;
+            lastOutdoorPanoId = null; // Reset indoor-navigation guard for new round
 
             // Cover the street view immediately so the previous panorama isn't
             // visible while we fetch the next location
@@ -3446,6 +3464,21 @@
                         // A short delay (150 ms) lets the first tiles start rendering
                         // so there's no white flash when the dark screen lifts.
                         streetView.addListener('pano_changed', () => {
+                            const panoId = streetView.getPano();
+                            // Detect indoor panos: after a short delay, check if the pano
+                            // has navigation links. Indoor/business panoramas typically have none.
+                            setTimeout(() => {
+                                const links = streetView.getLinks();
+                                if (!links || links.length === 0) {
+                                    // No links = indoor pano — navigate back to last outdoor pano
+                                    if (lastOutdoorPanoId && lastOutdoorPanoId !== panoId) {
+                                        streetView.setPano(lastOutdoorPanoId);
+                                    }
+                                } else {
+                                    lastOutdoorPanoId = panoId;
+                                }
+                            }, 300);
+
                             if (!roundLoading) return;
                             roundLoading = false;
                             const loader = document.getElementById('svLoader');
