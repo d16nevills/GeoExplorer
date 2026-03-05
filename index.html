@@ -2221,6 +2221,235 @@
                     {lat:24.5854,lng:73.7125},{lat:30.7333,lng:76.7794},{lat:23.2599,lng:77.4126},
                     {lat:15.8281,lng:74.4977},{lat:9.9312,lng:76.2673}
                 ]
+            },
+            cities: {
+                name: 'World Cities',
+                description: 'Biggest city downtowns from around the globe',
+                searchRadius: 2000,
+                locations: [
+                    // East Asia
+                    {lat:35.6762,lng:139.6503,name:'Tokyo, Japan'},
+                    {lat:34.6937,lng:135.5023,name:'Osaka, Japan'},
+                    {lat:31.2304,lng:121.4737,name:'Shanghai, China'},
+                    {lat:39.9042,lng:116.4074,name:'Beijing, China'},
+                    {lat:37.5665,lng:126.9780,name:'Seoul, South Korea'},
+                    {lat:35.1796,lng:129.0756,name:'Busan, South Korea'},
+                    {lat:25.0330,lng:121.5654,name:'Taipei, Taiwan'},
+                    {lat:22.3193,lng:114.1694,name:'Hong Kong'},
+                    // South Asia
+                    {lat:28.6139,lng:77.2090,name:'Delhi, India'},
+                    {lat:19.0760,lng:72.8777,name:'Mumbai, India'},
+                    {lat:23.8103,lng:90.4125,name:'Dhaka, Bangladesh'},
+                    {lat:24.8607,lng:67.0011,name:'Karachi, Pakistan'},
+                    {lat:31.5497,lng:74.3436,name:'Lahore, Pakistan'},
+                    {lat:6.9271,lng:79.8612,name:'Colombo, Sri Lanka'},
+                    {lat:27.7172,lng:85.3240,name:'Kathmandu, Nepal'},
+                    // Southeast Asia
+                    {lat:13.7563,lng:100.5018,name:'Bangkok, Thailand'},
+                    {lat:14.5995,lng:120.9842,name:'Manila, Philippines'},
+                    {lat:-6.2088,lng:106.8456,name:'Jakarta, Indonesia'},
+                    {lat:10.8231,lng:106.6297,name:'Ho Chi Minh City, Vietnam'},
+                    {lat:21.0278,lng:105.8342,name:'Hanoi, Vietnam'},
+                    {lat:3.1390,lng:101.6869,name:'Kuala Lumpur, Malaysia'},
+                    {lat:1.3521,lng:103.8198,name:'Singapore'},
+                    {lat:16.8661,lng:96.1951,name:'Yangon, Myanmar'},
+                    {lat:11.5564,lng:104.9282,name:'Phnom Penh, Cambodia'},
+                    // Middle East & Central Asia
+                    {lat:25.2048,lng:55.2708,name:'Dubai, UAE'},
+                    {lat:24.7136,lng:46.6753,name:'Riyadh, Saudi Arabia'},
+                    {lat:21.4858,lng:39.1925,name:'Jeddah, Saudi Arabia'},
+                    {lat:25.2854,lng:51.5310,name:'Doha, Qatar'},
+                    {lat:33.8938,lng:35.5018,name:'Beirut, Lebanon'},
+                    {lat:31.9454,lng:35.9284,name:'Amman, Jordan'},
+                    {lat:32.0853,lng:34.7818,name:'Tel Aviv, Israel'},
+                    {lat:35.6892,lng:51.3890,name:'Tehran, Iran'},
+                    {lat:40.4093,lng:49.8671,name:'Baku, Azerbaijan'},
+                    {lat:41.6938,lng:44.8015,name:'Tbilisi, Georgia'},
+                    {lat:41.2995,lng:69.2401,name:'Tashkent, Uzbekistan'},
+                    {lat:43.2220,lng:76.8512,name:'Almaty, Kazakhstan'},
+                    // Africa
+                    {lat:30.0444,lng:31.2357,name:'Cairo, Egypt'},
+                    {lat:6.5244,lng:3.3792,name:'Lagos, Nigeria'},
+                    {lat:9.0320,lng:38.7469,name:'Addis Ababa, Ethiopia'},
+                    {lat:-1.2921,lng:36.8219,name:'Nairobi, Kenya'},
+                    {lat:-26.2041,lng:28.0473,name:'Johannesburg, South Africa'},
+                    {lat:-33.9249,lng:18.4241,name:'Cape Town, South Africa'},
+                    {lat:33.5731,lng:-7.5898,name:'Casablanca, Morocco'},
+                    {lat:36.7372,lng:3.0865,name:'Algiers, Algeria'},
+                    {lat:36.8190,lng:10.1658,name:'Tunis, Tunisia'},
+                    {lat:5.6037,lng:-0.1870,name:'Accra, Ghana'},
+                    {lat:14.6928,lng:-17.4467,name:'Dakar, Senegal'},
+                    {lat:5.3600,lng:-4.0083,name:'Abidjan, Ivory Coast'},
+                    {lat:-6.7924,lng:39.2083,name:'Dar es Salaam, Tanzania'},
+                    {lat:-4.3217,lng:15.3222,name:'Kinshasa, DRC'},
+                    // Europe
+                    {lat:51.5074,lng:-0.1278,name:'London, UK'},
+                    {lat:52.4862,lng:-1.8904,name:'Birmingham, UK'},
+                    {lat:48.8566,lng:2.3522,name:'Paris, France'},
+                    {lat:45.7640,lng:4.8357,name:'Lyon, France'},
+                    {lat:52.5200,lng:13.4050,name:'Berlin, Germany'},
+                    {lat:53.5753,lng:10.0153,name:'Hamburg, Germany'},
+                    {lat:41.9028,lng:12.4964,name:'Rome, Italy'},
+                    {lat:45.4642,lng:9.1900,name:'Milan, Italy'},
+                    {lat:40.4168,lng:-3.7038,name:'Madrid, Spain'},
+                    {lat:41.3851,lng:2.1734,name:'Barcelona, Spain'},
+                    {lat:55.7558,lng:37.6173,name:'Moscow, Russia'},
+                    {lat:59.9311,lng:30.3609,name:'St. Petersburg, Russia'},
+                    {lat:52.3676,lng:4.9041,name:'Amsterdam, Netherlands'},
+                    {lat:50.8503,lng:4.3517,name:'Brussels, Belgium'},
+                    {lat:48.2082,lng:16.3738,name:'Vienna, Austria'},
+                    {lat:50.0755,lng:14.4378,name:'Prague, Czech Republic'},
+                    {lat:47.4979,lng:19.0402,name:'Budapest, Hungary'},
+                    {lat:52.2297,lng:21.0122,name:'Warsaw, Poland'},
+                    {lat:37.9838,lng:23.7275,name:'Athens, Greece'},
+                    {lat:38.7169,lng:-9.1399,name:'Lisbon, Portugal'},
+                    {lat:59.3293,lng:18.0686,name:'Stockholm, Sweden'},
+                    {lat:60.1699,lng:24.9384,name:'Helsinki, Finland'},
+                    {lat:55.6761,lng:12.5683,name:'Copenhagen, Denmark'},
+                    {lat:59.9139,lng:10.7522,name:'Oslo, Norway'},
+                    {lat:53.3498,lng:-6.2603,name:'Dublin, Ireland'},
+                    {lat:44.7866,lng:20.4489,name:'Belgrade, Serbia'},
+                    {lat:44.4268,lng:26.1025,name:'Bucharest, Romania'},
+                    {lat:50.4501,lng:30.5234,name:'Kyiv, Ukraine'},
+                    {lat:41.0082,lng:28.9784,name:'Istanbul, Turkey'},
+                    {lat:39.9334,lng:32.8597,name:'Ankara, Turkey'},
+                    // Americas
+                    {lat:40.7128,lng:-74.0060,name:'New York, USA'},
+                    {lat:34.0522,lng:-118.2437,name:'Los Angeles, USA'},
+                    {lat:-23.5505,lng:-46.6333,name:'São Paulo, Brazil'},
+                    {lat:-22.9068,lng:-43.1729,name:'Rio de Janeiro, Brazil'},
+                    {lat:19.4326,lng:-99.1332,name:'Mexico City, Mexico'},
+                    {lat:20.6597,lng:-103.3496,name:'Guadalajara, Mexico'},
+                    {lat:4.7110,lng:-74.0721,name:'Bogotá, Colombia'},
+                    {lat:6.2442,lng:-75.5812,name:'Medellín, Colombia'},
+                    {lat:-34.6037,lng:-58.3816,name:'Buenos Aires, Argentina'},
+                    {lat:-12.0464,lng:-77.0428,name:'Lima, Peru'},
+                    {lat:-33.4489,lng:-70.6693,name:'Santiago, Chile'},
+                    {lat:10.4806,lng:-66.9036,name:'Caracas, Venezuela'},
+                    {lat:-0.1807,lng:-78.4678,name:'Quito, Ecuador'},
+                    {lat:-34.9011,lng:-56.1645,name:'Montevideo, Uruguay'},
+                    {lat:14.6349,lng:-90.5069,name:'Guatemala City, Guatemala'},
+                    {lat:23.1136,lng:-82.3666,name:'Havana, Cuba'},
+                    // Oceania
+                    {lat:-33.8688,lng:151.2093,name:'Sydney, Australia'},
+                    {lat:-37.8136,lng:144.9631,name:'Melbourne, Australia'}
+                ]
+            },
+            landmarks: {
+                name: 'Landmarks',
+                description: 'Iconic monuments and landmarks from around the world',
+                searchRadius: 1000,
+                locations: [
+                    // France
+                    {lat:48.8584,lng:2.2945,name:'Eiffel Tower, Paris'},
+                    {lat:48.8530,lng:2.3499,name:'Notre-Dame Cathedral, Paris'},
+                    {lat:48.8049,lng:2.1204,name:'Palace of Versailles'},
+                    {lat:48.8606,lng:2.3376,name:'The Louvre, Paris'},
+                    {lat:48.8738,lng:2.2950,name:'Arc de Triomphe, Paris'},
+                    {lat:48.6361,lng:-1.5115,name:'Mont Saint-Michel'},
+                    // Italy
+                    {lat:41.8902,lng:12.4922,name:'Colosseum, Rome'},
+                    {lat:41.9009,lng:12.4833,name:'Trevi Fountain, Rome'},
+                    {lat:41.9022,lng:12.4534,name:"St. Peter's Square, Vatican"},
+                    {lat:43.7230,lng:10.3966,name:'Leaning Tower of Pisa'},
+                    {lat:43.7731,lng:11.2560,name:'Florence Cathedral (Duomo)'},
+                    {lat:40.7506,lng:14.4888,name:'Pompeii, Italy'},
+                    {lat:45.4343,lng:12.3388,name:'Grand Canal, Venice'},
+                    // UK
+                    {lat:51.5007,lng:-0.1246,name:'Big Ben, London'},
+                    {lat:51.5014,lng:-0.1419,name:'Buckingham Palace, London'},
+                    {lat:51.5081,lng:-0.0759,name:'Tower of London'},
+                    {lat:51.1789,lng:-1.8262,name:'Stonehenge, England'},
+                    {lat:55.9486,lng:-3.1999,name:'Edinburgh Castle, Scotland'},
+                    {lat:55.2408,lng:-6.5116,name:"Giant's Causeway, N. Ireland"},
+                    // Spain
+                    {lat:41.4036,lng:2.1744,name:'Sagrada Família, Barcelona'},
+                    {lat:37.1761,lng:-3.5881,name:'Alhambra, Granada'},
+                    {lat:41.4145,lng:2.1527,name:'Park Güell, Barcelona'},
+                    {lat:37.3826,lng:-5.9965,name:'Alcázar of Seville'},
+                    // Germany
+                    {lat:52.5163,lng:13.3777,name:'Brandenburg Gate, Berlin'},
+                    {lat:47.5576,lng:10.7498,name:'Neuschwanstein Castle'},
+                    {lat:50.9413,lng:6.9583,name:'Cologne Cathedral'},
+                    // Greece
+                    {lat:37.9715,lng:23.7267,name:'Acropolis, Athens'},
+                    {lat:36.3932,lng:25.4615,name:'Santorini, Greece'},
+                    // Turkey
+                    {lat:41.0086,lng:28.9802,name:'Hagia Sophia, Istanbul'},
+                    {lat:38.6431,lng:34.8289,name:'Cappadocia, Turkey'},
+                    {lat:41.0054,lng:28.9768,name:'Blue Mosque, Istanbul'},
+                    // Russia
+                    {lat:55.7539,lng:37.6208,name:"Red Square / St. Basil's, Moscow"},
+                    {lat:59.8860,lng:29.9072,name:'Peterhof Palace, Russia'},
+                    {lat:59.9399,lng:30.3146,name:'Winter Palace (Hermitage), St. Petersburg'},
+                    // Central Europe
+                    {lat:48.1845,lng:16.3122,name:'Schönbrunn Palace, Vienna'},
+                    {lat:50.0902,lng:14.4002,name:'Prague Castle'},
+                    {lat:47.5072,lng:19.0458,name:'Hungarian Parliament, Budapest'},
+                    {lat:50.8465,lng:4.3527,name:'Grand Place, Brussels'},
+                    {lat:51.2093,lng:3.2247,name:'Historic Canal District, Bruges'},
+                    {lat:42.6507,lng:18.0944,name:'Old Town, Dubrovnik'},
+                    {lat:38.6916,lng:-9.2160,name:'Belém Tower, Lisbon'},
+                    {lat:38.7875,lng:-9.3906,name:'Sintra Palace, Portugal'},
+                    // India
+                    {lat:27.1751,lng:78.0421,name:'Taj Mahal, Agra'},
+                    {lat:26.9855,lng:75.8513,name:'Amber Fort, Jaipur'},
+                    {lat:28.5244,lng:77.1855,name:'Qutub Minar, Delhi'},
+                    {lat:12.3052,lng:76.6552,name:'Mysore Palace'},
+                    // China
+                    {lat:39.9163,lng:116.3972,name:'Forbidden City, Beijing'},
+                    {lat:40.4319,lng:116.5704,name:'Great Wall of China (Mutianyu)'},
+                    {lat:34.3843,lng:109.2736,name:"Terracotta Army, Xi'an"},
+                    {lat:25.0350,lng:110.2992,name:'Li River, Guilin'},
+                    {lat:30.2561,lng:120.1551,name:'West Lake, Hangzhou'},
+                    // Japan
+                    {lat:34.9671,lng:135.7727,name:'Fushimi Inari Shrine, Kyoto'},
+                    {lat:35.7148,lng:139.7967,name:'Sensoji Temple, Tokyo'},
+                    {lat:35.6595,lng:139.7004,name:'Shibuya Crossing, Tokyo'},
+                    {lat:35.0094,lng:135.6692,name:'Arashiyama Bamboo Grove, Kyoto'},
+                    {lat:34.3955,lng:132.4536,name:'Hiroshima Peace Memorial'},
+                    // South Korea
+                    {lat:37.5796,lng:126.9770,name:'Gyeongbokgung Palace, Seoul'},
+                    // Southeast Asia
+                    {lat:13.4125,lng:103.8670,name:'Angkor Wat, Cambodia'},
+                    {lat:13.7500,lng:100.4914,name:'Grand Palace, Bangkok'},
+                    {lat:3.1578,lng:101.7117,name:'Petronas Towers, Kuala Lumpur'},
+                    {lat:1.2834,lng:103.8607,name:'Marina Bay Sands, Singapore'},
+                    {lat:-7.6079,lng:110.2038,name:'Borobudur, Indonesia'},
+                    {lat:21.1717,lng:94.8585,name:'Bagan Temples, Myanmar'},
+                    // Middle East
+                    {lat:25.1972,lng:55.2744,name:'Burj Khalifa, Dubai'},
+                    {lat:24.4130,lng:54.4748,name:'Sheikh Zayed Grand Mosque, Abu Dhabi'},
+                    {lat:30.3285,lng:35.4444,name:'Petra, Jordan'},
+                    // Egypt
+                    {lat:29.9792,lng:31.1342,name:'Pyramids of Giza'},
+                    {lat:25.7188,lng:32.6573,name:'Karnak Temple, Luxor'},
+                    {lat:25.6997,lng:32.6391,name:'Luxor Temple'},
+                    // North Africa
+                    {lat:31.6258,lng:-7.9891,name:"Djemaa el-Fna, Marrakech"},
+                    {lat:34.0633,lng:-4.9733,name:'Historic Medina, Fez'},
+                    // Sub-Saharan Africa
+                    {lat:-33.9625,lng:18.4033,name:'Table Mountain, Cape Town'},
+                    // Americas
+                    {lat:40.6892,lng:-74.0445,name:'Statue of Liberty, New York'},
+                    {lat:37.8199,lng:-122.4783,name:'Golden Gate Bridge, San Francisco'},
+                    {lat:40.7580,lng:-73.9855,name:'Times Square, New York'},
+                    {lat:38.8893,lng:-77.0502,name:'Lincoln Memorial, Washington DC'},
+                    {lat:47.6205,lng:-122.3493,name:'Space Needle, Seattle'},
+                    {lat:43.0962,lng:-79.0377,name:'Niagara Falls, Canada'},
+                    {lat:46.8139,lng:-71.2050,name:'Old Quebec City, Canada'},
+                    {lat:-22.9519,lng:-43.2105,name:'Christ the Redeemer, Rio'},
+                    {lat:-25.6953,lng:-54.4367,name:'Iguazu Falls'},
+                    {lat:20.6843,lng:-88.5678,name:'Chichen Itza, Mexico'},
+                    {lat:19.6925,lng:-98.8438,name:'Teotihuacan, Mexico'},
+                    {lat:-13.1631,lng:-72.5450,name:'Machu Picchu, Peru'},
+                    {lat:-13.5170,lng:-71.9785,name:'Cusco Plaza de Armas, Peru'},
+                    {lat:10.4244,lng:-75.5523,name:'Old Cartagena, Colombia'},
+                    {lat:23.1360,lng:-82.3618,name:'Old Havana, Cuba'},
+                    // Oceania
+                    {lat:-33.8568,lng:151.2153,name:'Sydney Opera House'},
+                    {lat:-38.6643,lng:143.1051,name:'Twelve Apostles, Australia'}
+                ]
             }
         };
         
@@ -2322,6 +2551,29 @@
             }
             return false;
         }
+
+        // Per-mode location history: tracks the last 10 location indices used for
+        // fixed-location modes (cities / landmarks) so each view isn't repeated
+        // within the past 10 rounds.
+        function getModeHistory(mapKey) {
+            try {
+                const stored = localStorage.getItem('geoexplorer_mode_history_' + mapKey);
+                return stored ? JSON.parse(stored) : [];
+            } catch (e) {
+                return [];
+            }
+        }
+
+        function saveModeHistory(mapKey, locationIndex) {
+            try {
+                let history = getModeHistory(mapKey);
+                history.push(locationIndex);
+                if (history.length > 10) history = history.slice(-10);
+                localStorage.setItem('geoexplorer_mode_history_' + mapKey, JSON.stringify(history));
+            } catch (e) {
+                // Ignore storage errors
+            }
+        }
         
         const MAP_CARD_META = {
             world:        { emoji: '🌍', difficulty: 'legendary', tagline: 'Every corner of the globe. No mercy.' },
@@ -2346,6 +2598,8 @@
             russia:       { emoji: '🐻', difficulty: 'hard',      tagline: 'Eleven time zones. One brutal challenge.' },
             thailand:     { emoji: '🐘', difficulty: 'medium',    tagline: 'Golden temples, street food & jungle magic.' },
             india:        { emoji: '🪔', difficulty: 'hard',      tagline: 'A billion stories. Find your place in them.' },
+            cities:       { emoji: '🏙️', difficulty: 'medium',    tagline: "100 of the world's biggest downtowns. Know your skylines?" },
+            landmarks:    { emoji: '🗿', difficulty: 'easy',       tagline: 'Eiffel Tower to Angkor Wat. Place the icons.' },
         };
 
         function initMapSelection() {
@@ -2905,6 +3159,112 @@
             };
         }
         
+        // Handles a round for fixed-location modes (cities / landmarks).
+        // Picks from the config's locations array, respecting the 10-round
+        // per-mode history and the within-game duplicate check.
+        async function loadFixedLocationRound() {
+            const config = currentMapConfig;
+            const recentIndices = getModeHistory(currentMapKey);
+
+            // Build shuffled pool of available indices (not used in last 10 rounds)
+            const allIndices = config.locations.map((_, i) => i);
+            const available = allIndices.filter(i => !recentIndices.includes(i));
+            const pool = (available.length > 0 ? available : allIndices)
+                .slice()
+                .sort(() => Math.random() - 0.5);
+
+            const streetViewService = new google.maps.StreetViewService();
+            // Try tighter radius first, then fall back to wider
+            const radii = [config.searchRadius || 1000, 3000, 8000];
+
+            for (const idx of pool) {
+                const loc = config.locations[idx];
+                const candidate = { lat: loc.lat, lng: loc.lng };
+
+                if (isLocationTooClose(candidate)) continue;
+
+                let foundData = null;
+                for (const radius of radii) {
+                    try {
+                        foundData = await new Promise((resolve, reject) => {
+                            streetViewService.getPanorama({
+                                location: candidate,
+                                radius,
+                                source: google.maps.StreetViewSource.OUTDOOR,
+                                preference: google.maps.StreetViewPreference.NEAREST
+                            }, (data, status) => {
+                                if (status === 'OK' &&
+                                    data.links && data.links.length > 0 &&
+                                    (!data.copyright || data.copyright.includes('Google'))) {
+                                    resolve(data);
+                                } else {
+                                    reject(status);
+                                }
+                            });
+                        });
+                        break; // Found one — stop trying wider radii
+                    } catch (e) {
+                        continue;
+                    }
+                }
+
+                if (!foundData) continue;
+
+                currentLocation = {
+                    lat: foundData.location.latLng.lat(),
+                    lng: foundData.location.latLng.lng()
+                };
+
+                if (isLocationTooClose(currentLocation)) continue;
+
+                // Lock in this location
+                usedLocations.push(currentLocation);
+                saveModeHistory(currentMapKey, idx);
+
+                initialPosition = currentLocation;
+                initialPOV = { heading: 0, pitch: 0 };
+
+                if (!streetView) {
+                    streetView = new google.maps.StreetViewPanorama(
+                        document.getElementById('streetview'),
+                        {
+                            zoom: 0,
+                            disableDefaultUI: false,
+                            linksControl: true,
+                            panControl: false,
+                            addressControl: false,
+                            showRoadLabels: false,
+                            zoomControl: false,
+                            fullscreenControl: false,
+                            motionTracking: false,
+                            motionTrackingControl: false
+                        }
+                    );
+                    streetView.addListener('pov_changed', updateCustomCompass);
+                    streetView.addListener('pano_changed', () => {
+                        if (!roundLoading) return;
+                        roundLoading = false;
+                        const loader = document.getElementById('svLoader');
+                        if (loader) setTimeout(() => loader.classList.remove('active'), 150);
+                    });
+                }
+                streetView.setPosition(currentLocation);
+                streetView.setPov(initialPOV);
+                streetView.setOptions({ zoomControl: false, fullscreenControl: false });
+                updateCustomCompass();
+
+                startTimer();
+                return;
+            }
+
+            // No valid location found in entire pool
+            roundLoading = false;
+            const loaderEl = document.getElementById('svLoader');
+            if (loaderEl) loaderEl.classList.remove('active');
+            alert('Could not find Street View coverage for available locations. Try clearing your mode history or selecting a different map.');
+            backToMenu();
+        }
+
         async function loadNewRound() {
             document.getElementById('guessButton').disabled = true;
             guessLocation = null;
@@ -2940,9 +3300,15 @@
             polylines.forEach(polyline => polyline.setMap(null));
             polylines = [];
             
+            // Fixed-location modes (cities / landmarks) use their own picker
+            if (currentMapConfig.locations) {
+                await loadFixedLocationRound();
+                return;
+            }
+
             let attempts = 0;
             const maxAttempts = 250; // Many attempts for urban locations
-            
+
             while (attempts < maxAttempts) {
                 currentLocation = getRandomLocation(currentMapConfig);
                 
@@ -3060,8 +3426,6 @@
                         streetView = new google.maps.StreetViewPanorama(
                             document.getElementById('streetview'),
                             {
-                                position: currentLocation,
-                                pov: initialPOV,
                                 zoom: 0,
                                 disableDefaultUI: false,
                                 linksControl: true,
@@ -3074,10 +3438,9 @@
                                 motionTrackingControl: false
                             }
                         );
-                        
+
                         // Update custom compass when POV changes
                         streetView.addListener('pov_changed', updateCustomCompass);
-                        updateCustomCompass(); // Initial update
 
                         // Hide the loading overlay once the new panorama is ready.
                         // A short delay (150 ms) lets the first tiles start rendering
@@ -3088,16 +3451,12 @@
                             const loader = document.getElementById('svLoader');
                             if (loader) setTimeout(() => loader.classList.remove('active'), 150);
                         });
-                    } else {
-                        streetView.setPosition(currentLocation);
-                        streetView.setPov(initialPOV);
-                        streetView.setOptions({
-                            zoomControl: false,
-                            fullscreenControl: false
-                        });
-                        updateCustomCompass(); // Update for new round
                     }
-                    
+                    streetView.setPosition(currentLocation);
+                    streetView.setPov(initialPOV);
+                    streetView.setOptions({ zoomControl: false, fullscreenControl: false });
+                    updateCustomCompass();
+
                     // Start timer for this round
                     startTimer();
                     
