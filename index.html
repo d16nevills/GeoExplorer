@@ -2552,9 +2552,9 @@
             return false;
         }
 
-        // Per-mode location history: tracks the last 10 location indices used for
+        // Per-mode location history: tracks the last 25 location indices used for
         // fixed-location modes (cities / landmarks) so each view isn't repeated
-        // within the past 10 rounds.
+        // within the past 25 rounds.
         function getModeHistory(mapKey) {
             try {
                 const stored = localStorage.getItem('geoexplorer_mode_history_' + mapKey);
@@ -2568,7 +2568,7 @@
             try {
                 let history = getModeHistory(mapKey);
                 history.push(locationIndex);
-                if (history.length > 10) history = history.slice(-10);
+                if (history.length > 25) history = history.slice(-25);
                 localStorage.setItem('geoexplorer_mode_history_' + mapKey, JSON.stringify(history));
             } catch (e) {
                 // Ignore storage errors
@@ -3160,13 +3160,13 @@
         }
         
         // Handles a round for fixed-location modes (cities / landmarks).
-        // Picks from the config's locations array, respecting the 10-round
+        // Picks from the config's locations array, respecting the 25-round
         // per-mode history and the within-game duplicate check.
         async function loadFixedLocationRound() {
             const config = currentMapConfig;
             const recentIndices = getModeHistory(currentMapKey);
 
-            // Build shuffled pool of available indices (not used in last 10 rounds)
+            // Build shuffled pool of available indices (not used in last 25 rounds)
             const allIndices = config.locations.map((_, i) => i);
             const available = allIndices.filter(i => !recentIndices.includes(i));
             const pool = (available.length > 0 ? available : allIndices)
