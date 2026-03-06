@@ -2581,9 +2581,9 @@
             return false;
         }
 
-        // Per-mode location history: tracks the last 25 location indices used for
+        // Per-mode location history: tracks the last 50 location indices used for
         // fixed-location modes (cities / landmarks) so each view isn't repeated
-        // within the past 25 rounds.
+        // within the past 50 rounds.
         function getModeHistory(mapKey) {
             try {
                 const stored = localStorage.getItem('geoexplorer_mode_history_' + mapKey);
@@ -2597,7 +2597,7 @@
             try {
                 let history = getModeHistory(mapKey);
                 history.push(locationIndex);
-                if (history.length > 25) history = history.slice(-25);
+                if (history.length > 50) history = history.slice(-50);
                 localStorage.setItem('geoexplorer_mode_history_' + mapKey, JSON.stringify(history));
             } catch (e) {
                 // Ignore storage errors
@@ -3195,7 +3195,7 @@
             const config = currentMapConfig;
             const recentIndices = getModeHistory(currentMapKey);
 
-            // Build shuffled pool of available indices (not used in last 25 rounds)
+            // Build shuffled pool of available indices (not used in last 50 rounds)
             const allIndices = config.locations.map((_, i) => i);
             const available = allIndices.filter(i => !recentIndices.includes(i));
             const pool = (available.length > 0 ? available : allIndices)
@@ -3243,6 +3243,10 @@
                     lat: foundData.location.latLng.lat(),
                     lng: foundData.location.latLng.lng()
                 };
+
+                // Reject panoramas that Google returned far outside the search area
+                // (guards against API geolocation errors returning completely wrong locations)
+                if (geoDistanceM(candidate.lat, candidate.lng, currentLocation.lat, currentLocation.lng) > 1000) continue;
 
                 if (isLocationTooClose(currentLocation)) continue;
 
@@ -3587,6 +3591,16 @@
             return distance;
         }
         
+        function geoDistanceM(lat1, lng1, lat2, lng2) {
+            const R = 6371000;
+            const dLat = (lat2 - lat1) * Math.PI / 180;
+            const dLng = (lng2 - lng1) * Math.PI / 180;
+            const a = Math.sin(dLat/2)**2 +
+                      Math.cos(lat1 * Math.PI/180) * Math.cos(lat2 * Math.PI/180) *
+                      Math.sin(dLng/2)**2;
+            return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        }
+
         function isLocationTooClose(newLocation) {
             // Check if new location is too close to any previously used location
             for (let usedLoc of usedLocations) {
