@@ -2232,8 +2232,9 @@
             cities: {
                 name: 'World Cities',
                 description: 'Biggest city downtowns from around the globe',
-                searchRadius: 500,
-                fallbackRadii: [500, 1000, 2000],
+                searchRadius: 100,
+                fallbackRadii: [100, 250, 500],
+                minLinks: 2,
                 locations: [
                     // East Asia
                     {lat:35.6762,lng:139.6503,name:'Tokyo, Japan'},
@@ -2277,19 +2278,19 @@
                     {lat:43.2220,lng:76.8512,name:'Almaty, Kazakhstan'},
                     // Africa
                     {lat:30.0444,lng:31.2357,name:'Cairo, Egypt'},
-                    {lat:6.5244,lng:3.3792,name:'Lagos, Nigeria'},
-                    {lat:9.0320,lng:38.7469,name:'Addis Ababa, Ethiopia'},
+                    {lat:6.4551,lng:3.3847,name:'Lagos, Nigeria'},
+                    {lat:9.0116,lng:38.7613,name:'Addis Ababa, Ethiopia'},
                     {lat:-1.2921,lng:36.8219,name:'Nairobi, Kenya'},
-                    {lat:-26.2041,lng:28.0473,name:'Johannesburg, South Africa'},
+                    {lat:-26.1067,lng:28.0567,name:'Johannesburg, South Africa'},
                     {lat:-33.9249,lng:18.4241,name:'Cape Town, South Africa'},
                     {lat:33.5731,lng:-7.5898,name:'Casablanca, Morocco'},
                     {lat:36.7372,lng:3.0865,name:'Algiers, Algeria'},
                     {lat:36.8190,lng:10.1658,name:'Tunis, Tunisia'},
-                    {lat:5.6037,lng:-0.1870,name:'Accra, Ghana'},
+                    {lat:5.5502,lng:-0.2174,name:'Accra, Ghana'},
                     {lat:14.6928,lng:-17.4467,name:'Dakar, Senegal'},
                     {lat:5.3600,lng:-4.0083,name:'Abidjan, Ivory Coast'},
-                    {lat:-6.7924,lng:39.2083,name:'Dar es Salaam, Tanzania'},
-                    {lat:-4.3217,lng:15.3222,name:'Kinshasa, DRC'},
+                    {lat:-6.8160,lng:39.2803,name:'Dar es Salaam, Tanzania'},
+                    {lat:-4.3077,lng:15.3083,name:'Kinshasa, DRC'},
                     // Europe
                     {lat:51.5074,lng:-0.1278,name:'London, UK'},
                     {lat:52.4862,lng:-1.8904,name:'Birmingham, UK'},
@@ -3223,7 +3224,7 @@
                                 preference: google.maps.StreetViewPreference.NEAREST
                             }, (data, status) => {
                                 if (status === 'OK' &&
-                                    data.links && data.links.length > 0 &&
+                                    data.links && data.links.length >= (config.minLinks || 1) &&
                                     (!data.copyright || data.copyright.includes('Google'))) {
                                     resolve(data);
                                 } else {
