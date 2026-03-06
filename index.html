@@ -3244,6 +3244,10 @@
                     lng: foundData.location.latLng.lng()
                 };
 
+                // Reject panoramas that Google returned far outside the search area
+                // (guards against API geolocation errors returning completely wrong locations)
+                if (geoDistanceM(candidate.lat, candidate.lng, currentLocation.lat, currentLocation.lng) > 1000) continue;
+
                 if (isLocationTooClose(currentLocation)) continue;
 
                 // Lock in this location
@@ -3587,6 +3591,16 @@
             return distance;
         }
         
+        function geoDistanceM(lat1, lng1, lat2, lng2) {
+            const R = 6371000;
+            const dLat = (lat2 - lat1) * Math.PI / 180;
+            const dLng = (lng2 - lng1) * Math.PI / 180;
+            const a = Math.sin(dLat/2)**2 +
+                      Math.cos(lat1 * Math.PI/180) * Math.cos(lat2 * Math.PI/180) *
+                      Math.sin(dLng/2)**2;
+            return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        }
+
         function isLocationTooClose(newLocation) {
             // Check if new location is too close to any previously used location
             for (let usedLoc of usedLocations) {
