@@ -218,8 +218,24 @@
             overflow-y: auto;
             scrollbar-gutter: stable;
             z-index: 10;
+            /* Firefox */
+            scrollbar-width: thin;
+            scrollbar-color: rgba(255,255,255,0.2) transparent;
         }
-        
+
+        /* Chrome / Edge / Safari — desktop only */
+        @media (hover: hover) {
+            #menu-screen::-webkit-scrollbar { width: 5px; }
+            #menu-screen::-webkit-scrollbar-track { background: transparent; }
+            #menu-screen::-webkit-scrollbar-thumb {
+                background: rgba(255,255,255,0.2);
+                border-radius: 99px;
+            }
+            #menu-screen::-webkit-scrollbar-thumb:hover {
+                background: rgba(255,255,255,0.4);
+            }
+        }
+
         #high-scores-screen::before {
             content: '';
             position: fixed;
@@ -2461,7 +2477,7 @@
                     {lat:25.6997,lng:32.6391,name:'Luxor Temple'},
                     // North Africa
                     {lat:31.6258,lng:-7.9891,name:"Djemaa el-Fna, Marrakech"},
-                    {lat:34.0633,lng:-4.9733,name:'Historic Medina, Fez'},
+                    {lat:33.6086,lng:-7.6325,name:'Hassan II Mosque, Casablanca'},
                     // Sub-Saharan Africa
                     {lat:-33.9628,lng:18.4097,name:'Table Mountain, Cape Town'},
                     // Americas
