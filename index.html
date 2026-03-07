@@ -885,7 +885,7 @@
             
             .timer-card {
                 padding: 1rem;
-                margin: 1.5rem auto 1rem;
+                margin: 1.5rem auto;
             }
             
             .timer-card-header {
@@ -4176,11 +4176,16 @@
             var spacer = document.createElement('div');
             spacer.id  = 'ribbon-spacer';
             menuInner.insertBefore(spacer, menuInner.firstChild);
+            function updateSpacer() {
+                spacer.style.height = header.offsetHeight + 'px';
+            }
             requestAnimationFrame(function () {
-                requestAnimationFrame(function () {
-                    spacer.style.height = header.offsetHeight + 'px';
-                });
+                requestAnimationFrame(updateSpacer);
             });
+            /* Re-measure once the logo image has its natural dimensions */
+            if (!logo.complete) {
+                logo.addEventListener('load', updateSpacer);
+            }
 
             function tick() {
                 /* At the very top: reset everything and bail — avoids relying on
