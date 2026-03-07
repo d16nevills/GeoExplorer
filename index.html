@@ -2400,6 +2400,8 @@
                     {lat:48.1845,lng:16.3122,name:'Schönbrunn Palace, Vienna'},
                     {lat:50.0902,lng:14.4002,name:'Prague Castle'},
                     {lat:47.5072,lng:19.0458,name:'Hungarian Parliament, Budapest'},
+                    {lat:50.0543,lng:19.9352,name:'Wawel Castle, Kraków'},
+                    {lat:52.2149,lng:21.0350,name:'Łazienki Palace, Warsaw'},
                     {lat:50.8465,lng:4.3527,name:'Grand Place, Brussels'},
                     {lat:51.2093,lng:3.2247,name:'Historic Canal District, Bruges'},
                     {lat:51.8833,lng:4.6333,name:'Kinderdijk Windmills, Netherlands'},
@@ -3199,9 +3201,13 @@
             // Build shuffled pool of available indices (not used in last 50 rounds)
             const allIndices = config.locations.map((_, i) => i);
             const available = allIndices.filter(i => !recentIndices.includes(i));
-            const pool = (available.length > 0 ? available : allIndices)
-                .slice()
-                .sort(() => Math.random() - 0.5);
+            const poolSrc = (available.length > 0 ? available : allIndices).slice();
+            // Fisher-Yates shuffle for unbiased randomization
+            for (let i = poolSrc.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [poolSrc[i], poolSrc[j]] = [poolSrc[j], poolSrc[i]];
+            }
+            const pool = poolSrc;
 
             const streetViewService = new google.maps.StreetViewService();
             // Try tighter radius first, then fall back to wider
@@ -3614,11 +3620,8 @@
         }
         
         function calculatePoints(distance) {
-            // Max points for perfect guess (< 1km)
-            if (distance < 1) return 5000;
-            
-            // Exponential decay for larger distances
-            const maxDistance = 20000; // 20,000 km
+            // GeoGuessr-style scoring: continuous exponential decay
+            // 5000 pts at 0 km, ~4500 at ~150 km, ~1800 at ~1000 km, ~0 at ~5000+ km
             const points = Math.round(5000 * Math.exp(-distance / 2000));
             return Math.max(0, points);
         }
