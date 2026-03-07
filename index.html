@@ -218,8 +218,24 @@
             overflow-y: auto;
             scrollbar-gutter: stable;
             z-index: 10;
+            /* Firefox */
+            scrollbar-width: thin;
+            scrollbar-color: rgba(255,255,255,0.2) transparent;
         }
-        
+
+        /* Chrome / Edge / Safari — desktop only */
+        @media (hover: hover) {
+            #menu-screen::-webkit-scrollbar { width: 5px; }
+            #menu-screen::-webkit-scrollbar-track { background: transparent; }
+            #menu-screen::-webkit-scrollbar-thumb {
+                background: rgba(255,255,255,0.2);
+                border-radius: 99px;
+            }
+            #menu-screen::-webkit-scrollbar-thumb:hover {
+                background: rgba(255,255,255,0.4);
+            }
+        }
+
         #high-scores-screen::before {
             content: '';
             position: fixed;
