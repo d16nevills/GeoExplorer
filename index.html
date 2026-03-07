@@ -2502,7 +2502,7 @@
                     {lat:-27.1255,lng:-109.2761,name:'Easter Island Moai, Chile'},
                     {lat:23.1356,lng:-82.3568,name:'Old Havana, Cuba'},
                     // Oceania
-                    {lat:-33.8573,lng:151.2140,name:'Sydney Opera House'},
+                    {lat:-33.8513,lng:151.2117,name:'Sydney Opera House',allowIndoor:true},
                     {lat:-38.6643,lng:143.1051,name:'Twelve Apostles, Australia'},
                     {lat:-36.8485,lng:174.7633,name:'Auckland Sky Tower, New Zealand'}
                 ]
@@ -2524,6 +2524,7 @@
         let currentMapKey = '';
         let roundLoading = false; // True while a new panorama is being fetched
         let lastOutdoorPanoId = null; // Last confirmed outdoor pano, for indoor-navigation guard
+        let allowIndoorPano = false; // True when the current location intentionally allows indoor/tunnel panos
         const TOTAL_ROUNDS = 5;
         const MIN_DISTANCE_BETWEEN_LOCATIONS = 50; // Minimum km between locations in same game
         const MIN_DISTANCE_FROM_HISTORY = 25; // Minimum km from recently used locations across games
@@ -3241,21 +3242,25 @@
             for (const idx of pool) {
                 const loc = config.locations[idx];
                 const candidate = { lat: loc.lat, lng: loc.lng };
+                const locAllowsIndoor = !!loc.allowIndoor;
 
                 if (isLocationTooClose(candidate)) continue;
 
                 let foundData = null;
-                for (const radius of radii) {
+                const searchRadii = locAllowsIndoor ? [50] : radii; // Tight radius for indoor/tunnel panos
+                for (const radius of searchRadii) {
                     try {
                         foundData = await new Promise((resolve, reject) => {
                             streetViewService.getPanorama({
                                 location: candidate,
                                 radius,
-                                source: google.maps.StreetViewSource.OUTDOOR,
+                                source: locAllowsIndoor
+                                    ? google.maps.StreetViewSource.DEFAULT
+                                    : google.maps.StreetViewSource.OUTDOOR,
                                 preference: google.maps.StreetViewPreference.NEAREST
                             }, (data, status) => {
                                 if (status === 'OK' &&
-                                    data.links && data.links.length >= (config.minLinks || 1) &&
+                                    (locAllowsIndoor || (data.links && data.links.length >= (config.minLinks || 1))) &&
                                     (!data.copyright || data.copyright.includes('Google'))) {
                                     resolve(data);
                                 } else {
@@ -3278,13 +3283,15 @@
 
                 // Reject panoramas that Google returned far outside the search area
                 // (guards against API geolocation errors returning completely wrong locations)
-                if (geoDistanceM(candidate.lat, candidate.lng, currentLocation.lat, currentLocation.lng) > 1000) continue;
+                // For indoor/tunnel locations use the candidate coords directly for scoring
+                if (!locAllowsIndoor && geoDistanceM(candidate.lat, candidate.lng, currentLocation.lat, currentLocation.lng) > 1000) continue;
 
                 if (isLocationTooClose(currentLocation)) continue;
 
                 // Lock in this location
                 usedLocations.push(currentLocation);
                 saveModeHistory(currentMapKey, idx);
+                allowIndoorPano = locAllowsIndoor;
 
                 initialPosition = currentLocation;
                 initialPOV = { heading: 0, pitch: 0 };
@@ -3310,15 +3317,18 @@
                         const panoId = streetView.getPano();
                         // Detect indoor panos: after a short delay, check if the pano
                         // has navigation links. Indoor/business panoramas typically have none.
+                        // Skip this check for locations that intentionally allow indoor/tunnel views.
                         setTimeout(() => {
-                            const links = streetView.getLinks();
-                            if (!links || links.length === 0) {
-                                // No links = indoor pano — navigate back to last outdoor pano
-                                if (lastOutdoorPanoId && lastOutdoorPanoId !== panoId) {
-                                    streetView.setPano(lastOutdoorPanoId);
+                            if (!allowIndoorPano) {
+                                const links = streetView.getLinks();
+                                if (!links || links.length === 0) {
+                                    // No links = indoor pano — navigate back to last outdoor pano
+                                    if (lastOutdoorPanoId && lastOutdoorPanoId !== panoId) {
+                                        streetView.setPano(lastOutdoorPanoId);
+                                    }
+                                } else {
+                                    lastOutdoorPanoId = panoId;
                                 }
-                            } else {
-                                lastOutdoorPanoId = panoId;
                             }
                         }, 300);
 
@@ -3349,6 +3359,7 @@
             document.getElementById('guessButton').disabled = true;
             guessLocation = null;
             lastOutdoorPanoId = null; // Reset indoor-navigation guard for new round
+            allowIndoorPano = false; // Reset; will be set true only for allowIndoor locations
 
             // Cover the street view immediately so the previous panorama isn't
             // visible while we fetch the next location
@@ -3530,15 +3541,18 @@
                             const panoId = streetView.getPano();
                             // Detect indoor panos: after a short delay, check if the pano
                             // has navigation links. Indoor/business panoramas typically have none.
+                            // Skip this check for locations that intentionally allow indoor/tunnel views.
                             setTimeout(() => {
-                                const links = streetView.getLinks();
-                                if (!links || links.length === 0) {
-                                    // No links = indoor pano — navigate back to last outdoor pano
-                                    if (lastOutdoorPanoId && lastOutdoorPanoId !== panoId) {
-                                        streetView.setPano(lastOutdoorPanoId);
+                                if (!allowIndoorPano) {
+                                    const links = streetView.getLinks();
+                                    if (!links || links.length === 0) {
+                                        // No links = indoor pano — navigate back to last outdoor pano
+                                        if (lastOutdoorPanoId && lastOutdoorPanoId !== panoId) {
+                                            streetView.setPano(lastOutdoorPanoId);
+                                        }
+                                    } else {
+                                        lastOutdoorPanoId = panoId;
                                     }
-                                } else {
-                                    lastOutdoorPanoId = panoId;
                                 }
                             }, 300);
 
