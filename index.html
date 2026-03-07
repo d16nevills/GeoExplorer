@@ -384,7 +384,9 @@
             transition: opacity 0.2s ease;
         }
 
-        .game-header:hover { opacity: 1; }
+        @media (hover: hover) {
+            .game-header:hover { opacity: 1; }
+        }
         .game-header.opacity-pinned { opacity: 1; }
         
         .game-header > div {
@@ -786,7 +788,9 @@
             transition: opacity 0.2s ease;
         }
 
-        #timerDisplay:hover { opacity: 1; }
+        @media (hover: hover) {
+            #timerDisplay:hover { opacity: 1; }
+        }
         #timerDisplay.opacity-pinned { opacity: 1; cursor: pointer; }
 
         #timerDisplay.timer-warning { color: #FF9500 !important; }
