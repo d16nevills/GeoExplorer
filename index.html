@@ -3614,11 +3614,8 @@
         }
         
         function calculatePoints(distance) {
-            // Max points for perfect guess (< 1km)
-            if (distance < 1) return 5000;
-            
-            // Exponential decay for larger distances
-            const maxDistance = 20000; // 20,000 km
+            // GeoGuessr-style scoring: continuous exponential decay
+            // 5000 pts at 0 km, ~4500 at ~150 km, ~1800 at ~1000 km, ~0 at ~5000+ km
             const points = Math.round(5000 * Math.exp(-distance / 2000));
             return Math.max(0, points);
         }
