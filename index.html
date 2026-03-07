@@ -384,7 +384,9 @@
             transition: opacity 0.2s ease;
         }
 
-        .game-header:hover { opacity: 1; }
+        @media (hover: hover) {
+            .game-header:hover { opacity: 1; }
+        }
         .game-header.opacity-pinned { opacity: 1; }
         
         .game-header > div {
@@ -786,7 +788,9 @@
             transition: opacity 0.2s ease;
         }
 
-        #timerDisplay:hover { opacity: 1; }
+        @media (hover: hover) {
+            #timerDisplay:hover { opacity: 1; }
+        }
         #timerDisplay.opacity-pinned { opacity: 1; cursor: pointer; }
 
         #timerDisplay.timer-warning { color: #FF9500 !important; }
@@ -885,7 +889,7 @@
             
             .timer-card {
                 padding: 1rem;
-                margin: 1.5rem auto 1rem;
+                margin: 1.5rem auto;
             }
             
             .timer-card-header {
@@ -2384,7 +2388,7 @@
                     {lat:41.4036,lng:2.1744,name:'Sagrada Família, Barcelona'},
                     {lat:37.1761,lng:-3.5881,name:'Alhambra, Granada'},
                     {lat:41.4145,lng:2.1527,name:'Park Güell, Barcelona'},
-                    {lat:37.3826,lng:-5.9965,name:'Alcázar of Seville'},
+                    {lat:37.3826,lng:-5.9959,name:'Torre del Oro, Seville'},
                     // Germany
                     {lat:52.5163,lng:13.3777,name:'Brandenburg Gate, Berlin'},
                     {lat:52.5075,lng:13.3904,name:'Checkpoint Charlie, Berlin'},
@@ -2429,7 +2433,7 @@
                     // Japan
                     {lat:34.9671,lng:135.7727,name:'Fushimi Inari Shrine, Kyoto'},
                     {lat:35.7148,lng:139.7967,name:'Sensoji Temple, Tokyo'},
-                    {lat:35.6595,lng:139.7004,name:'Shibuya Crossing, Tokyo'},
+                    {lat:35.6592,lng:139.7005,name:'Shibuya Crossing, Tokyo'},
                     {lat:35.6586,lng:139.7454,name:'Tokyo Tower'},
                     {lat:35.7101,lng:139.8107,name:'Tokyo Skytree'},
                     {lat:35.0094,lng:135.6692,name:'Arashiyama Bamboo Grove, Kyoto'},
@@ -2447,7 +2451,7 @@
                     {lat:-7.6079,lng:110.2038,name:'Borobudur, Indonesia'},
                     {lat:21.1717,lng:94.8585,name:'Bagan Temples, Myanmar'},
                     // Middle East
-                    {lat:25.1972,lng:55.2744,name:'Burj Khalifa, Dubai'},
+                    {lat:25.1952,lng:55.2751,name:'Burj Khalifa, Dubai'},
                     {lat:25.1412,lng:55.1852,name:'Burj Al Arab, Dubai'},
                     {lat:24.4130,lng:54.4748,name:'Sheikh Zayed Grand Mosque, Abu Dhabi'},
                     {lat:30.3285,lng:35.4444,name:'Petra, Jordan'},
@@ -2468,7 +2472,7 @@
                     {lat:38.8893,lng:-77.0502,name:'Lincoln Memorial, Washington DC'},
                     {lat:47.6205,lng:-122.3493,name:'Space Needle, Seattle'},
                     {lat:36.1147,lng:-115.1728,name:'Las Vegas Strip, USA'},
-                    {lat:36.0544,lng:-112.1401,name:'Grand Canyon South Rim, USA'},
+                    {lat:36.0579,lng:-112.1440,name:'Grand Canyon South Rim, USA'},
                     {lat:43.8791,lng:-103.4591,name:'Mount Rushmore, USA'},
                     {lat:43.0799,lng:-79.0747,name:'Niagara Falls, Canada'},
                     {lat:43.6426,lng:-79.3871,name:'CN Tower, Toronto'},
@@ -4176,11 +4180,16 @@
             var spacer = document.createElement('div');
             spacer.id  = 'ribbon-spacer';
             menuInner.insertBefore(spacer, menuInner.firstChild);
+            function updateSpacer() {
+                spacer.style.height = header.offsetHeight + 'px';
+            }
             requestAnimationFrame(function () {
-                requestAnimationFrame(function () {
-                    spacer.style.height = header.offsetHeight + 'px';
-                });
+                requestAnimationFrame(updateSpacer);
             });
+            /* Re-measure once the logo image has its natural dimensions */
+            if (!logo.complete) {
+                logo.addEventListener('load', updateSpacer);
+            }
 
             function tick() {
                 /* At the very top: reset everything and bail — avoids relying on
