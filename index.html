@@ -2459,6 +2459,7 @@
                     {lat:25.0338,lng:121.5646,name:'Taipei 101, Taiwan'},
                     // South Korea
                     {lat:37.5796,lng:126.9770,name:'Gyeongbokgung Palace, Seoul'},
+                    {lat:37.5512,lng:126.9883,name:'N Seoul Tower, South Korea',maxRadius:50},
                     // Southeast Asia
                     {lat:13.4125,lng:103.8670,name:'Angkor Wat, Cambodia',minLinks:0},
                     {lat:13.7500,lng:100.4914,name:'Grand Palace, Bangkok'},
@@ -3249,7 +3250,7 @@
                 if (isLocationTooClose(candidate)) continue;
 
                 let foundData = null;
-                const searchRadii = locAllowsIndoor ? [50] : radii; // Tight radius for indoor/tunnel panos
+                const searchRadii = locAllowsIndoor ? [50] : (loc.maxRadius ? radii.filter(r => r <= loc.maxRadius) : radii); // Tight radius for indoor/tunnel panos
                 for (const radius of searchRadii) {
                     try {
                         foundData = await new Promise((resolve, reject) => {
