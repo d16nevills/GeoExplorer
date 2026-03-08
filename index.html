@@ -2505,7 +2505,7 @@
                     {lat:-27.1255,lng:-109.2761,name:'Easter Island Moai, Chile',minLinks:0},
                     {lat:23.1418,lng:-82.3600,name:'Old Havana, Cuba',minLinks:0},
                     // Oceania
-                    {lat:-33.8513,lng:151.2117,name:'Sydney Opera House',allowIndoor:true},
+                    {lat:-33.854692,lng:151.209945,name:'Sydney Opera House'},
                     {lat:-38.6643,lng:143.1051,name:'Twelve Apostles, Australia',minLinks:0},
                     {lat:-36.8485,lng:174.7633,name:'Auckland Sky Tower, New Zealand'}
                 ]
@@ -3263,8 +3263,7 @@
                                 preference: google.maps.StreetViewPreference.NEAREST
                             }, (data, status) => {
                                 if (status === 'OK' &&
-                                    (locAllowsIndoor || (data.links && data.links.length >= (loc.minLinks !== undefined ? loc.minLinks : (config.minLinks || 1)))) &&
-                                    (!data.copyright || data.copyright.includes('Google'))) {
+                                    (locAllowsIndoor || (data.links && data.links.length >= (loc.minLinks !== undefined ? loc.minLinks : (config.minLinks || 1))))) {
                                     resolve(data);
                                 } else {
                                     reject(status);
@@ -3448,11 +3447,6 @@
                                         // business photo or isolated user upload – skip it.
                                         if (!data.links || data.links.length === 0) {
                                             reject('INDOOR');
-                                        } else if (data.copyright && !data.copyright.includes('Google')) {
-                                            // Non-Google panoramas are user-contributed Photo Spheres
-                                            // (e.g. someone on a boat or hiking trail with a 360° camera).
-                                            // These can be disorienting in-game, so skip them.
-                                            reject('NON_STANDARD');
                                         } else {
                                             resolve(data);
                                         }
