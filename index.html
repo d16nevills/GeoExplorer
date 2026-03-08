@@ -2392,14 +2392,14 @@
                     {lat:45.4343,lng:12.3388,name:'Grand Canal, Venice'},
                     // UK
                     {lat:51.5007,lng:-0.1246,name:'Big Ben, London'},
-                    {lat:51.5014,lng:-0.1419,name:'Buckingham Palace, London'},
+                    {lat:51.5013,lng:-0.1415,name:'Buckingham Palace, London'},
                     {lat:51.5081,lng:-0.0759,name:'Tower of London'},
                     {lat:51.5044,lng:-0.0742,name:'Tower Bridge, London'},
                     {lat:51.4994,lng:-0.1273,name:'Westminster Abbey, London'},
                     {lat:51.5033,lng:-0.1196,name:'London Eye'},
                     {lat:51.1789,lng:-1.8262,name:'Stonehenge, England'},
                     {lat:55.9486,lng:-3.1999,name:'Edinburgh Castle, Scotland'},
-                    {lat:55.2408,lng:-6.5116,name:"Giant's Causeway, N. Ireland"},
+                    {lat:55.2408,lng:-6.5116,name:"Giant's Causeway, N. Ireland",minLinks:0},
                     // Spain
                     {lat:41.4028,lng:2.1737,name:'Sagrada Família, Barcelona'},
                     {lat:37.1761,lng:-3.5881,name:'Alhambra, Granada'},
@@ -2439,19 +2439,19 @@
                     {lat:12.3052,lng:76.6552,name:'Mysore Palace'},
                     // China
                     {lat:39.9163,lng:116.3972,name:'Forbidden City, Beijing'},
-                    {lat:40.4319,lng:116.5704,name:'Great Wall of China (Mutianyu)'},
-                    {lat:34.3857,lng:109.2770,name:"Terracotta Army, Xi'an"},
-                    {lat:31.2397,lng:121.4997,name:'Oriental Pearl Tower, Shanghai'},
-                    {lat:31.2368,lng:121.4896,name:'The Bund, Shanghai'},
-                    {lat:24.8780,lng:110.4817,name:'Li River, Xingping'},
-                    {lat:30.2561,lng:120.1551,name:'West Lake, Hangzhou'},
+                    {lat:40.4329,lng:116.5693,name:'Great Wall of China (Mutianyu)'},
+                    {lat:34.3836,lng:109.2783,name:"Terracotta Army, Xi'an"},
+                    {lat:31.2393,lng:121.4981,name:'Oriental Pearl Tower, Shanghai'},
+                    {lat:31.2413,lng:121.4904,name:'The Bund, Shanghai'},
+                    {lat:24.8752,lng:110.4800,name:'Li River, Xingping'},
+                    {lat:30.2585,lng:120.1489,name:'West Lake, Hangzhou'},
                     // Japan
                     {lat:34.9671,lng:135.7727,name:'Fushimi Inari Shrine, Kyoto'},
                     {lat:35.7148,lng:139.7967,name:'Sensoji Temple, Tokyo'},
                     {lat:35.6592,lng:139.7005,name:'Shibuya Crossing, Tokyo'},
                     {lat:35.6586,lng:139.7454,name:'Tokyo Tower'},
                     {lat:35.7101,lng:139.8107,name:'Tokyo Skytree'},
-                    {lat:35.0094,lng:135.6692,name:'Arashiyama Bamboo Grove, Kyoto'},
+                    {lat:35.0094,lng:135.6692,name:'Arashiyama Bamboo Grove, Kyoto',minLinks:0},
                     {lat:34.3955,lng:132.4536,name:'Hiroshima Peace Memorial'},
                     // East Asia
                     {lat:25.0338,lng:121.5646,name:'Taipei 101, Taiwan'},
@@ -2464,7 +2464,7 @@
                     {lat:3.1578,lng:101.7117,name:'Petronas Towers, Kuala Lumpur'},
                     {lat:1.2834,lng:103.8607,name:'Marina Bay Sands, Singapore'},
                     {lat:-7.6079,lng:110.2038,name:'Borobudur, Indonesia'},
-                    {lat:21.1732,lng:94.8591,name:'Bagan Temples, Myanmar'},
+                    {lat:21.1718,lng:94.8621,name:'Bagan Temples, Myanmar'},
                     // Middle East
                     {lat:25.1952,lng:55.2751,name:'Burj Khalifa, Dubai'},
                     {lat:25.1412,lng:55.1852,name:'Burj Al Arab, Dubai'},
@@ -2472,8 +2472,8 @@
                     {lat:30.3222,lng:35.4502,name:'Petra, Jordan'},
                     // Egypt
                     {lat:29.9792,lng:31.1342,name:'Pyramids of Giza'},
-                    {lat:25.7190,lng:32.6552,name:'Karnak Temple, Luxor'},
-                    {lat:25.6994,lng:32.6399,name:'Luxor Temple'},
+                    {lat:25.7199,lng:32.6582,name:'Karnak Temple, Luxor'},
+                    {lat:25.6999,lng:32.6408,name:'Luxor Temple'},
                     // North Africa
                     {lat:31.6252,lng:-7.9884,name:"Djemaa el-Fna, Marrakech"},
                     {lat:33.6086,lng:-7.6325,name:'Hassan II Mosque, Casablanca'},
@@ -2499,7 +2499,7 @@
                     {lat:-13.5170,lng:-71.9785,name:'Cusco Plaza de Armas, Peru'},
                     {lat:-25.6953,lng:-54.4367,name:'Iguazu Falls, Argentina'},
                     {lat:-27.1255,lng:-109.2761,name:'Easter Island Moai, Chile'},
-                    {lat:23.1356,lng:-82.3568,name:'Old Havana, Cuba'},
+                    {lat:23.1418,lng:-82.3600,name:'Old Havana, Cuba'},
                     // Oceania
                     {lat:-33.8513,lng:151.2117,name:'Sydney Opera House',allowIndoor:true},
                     {lat:-38.6643,lng:143.1051,name:'Twelve Apostles, Australia'},
@@ -3259,7 +3259,7 @@
                                 preference: google.maps.StreetViewPreference.NEAREST
                             }, (data, status) => {
                                 if (status === 'OK' &&
-                                    (locAllowsIndoor || (data.links && data.links.length >= (config.minLinks || 1))) &&
+                                    (locAllowsIndoor || (data.links && data.links.length >= (loc.minLinks !== undefined ? loc.minLinks : (config.minLinks || 1)))) &&
                                     (!data.copyright || data.copyright.includes('Google'))) {
                                     resolve(data);
                                 } else {
