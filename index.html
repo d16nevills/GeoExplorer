@@ -3123,23 +3123,27 @@
                 if (mapElement.dataset.reviewLocked) return;
                 if (!mapElement.classList.contains('mobile-expanded')) {
                     mapElement.classList.add('mobile-expanded');
+                    // Move controls immediately so they animate up in sync with the
+                    // expanding map rather than staying hidden behind it for 300ms.
+                    updateCompassAndControls(true);
                     setTimeout(() => {
                         google.maps.event.trigger(map, 'resize');
-                        updateCompassAndControls(true);
                     }, 300);
                 }
             }, { passive: true });
-            
+
             // When touching street view area, collapse the map
             gameArea.addEventListener('touchstart', (e) => {
                 if (mapElement.dataset.reviewLocked) return;
                 if (mapElement.contains(e.target)) return;
-                
+
                 if (mapElement.classList.contains('mobile-expanded')) {
                     mapElement.classList.remove('mobile-expanded');
+                    // Move controls immediately so they animate down in sync with
+                    // the collapsing map.
+                    updateCompassAndControls(false);
                     setTimeout(() => {
                         google.maps.event.trigger(map, 'resize');
-                        updateCompassAndControls(false);
                     }, 300);
                 }
             }, { passive: true });
